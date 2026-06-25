@@ -1,72 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Kyle Hunady</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Kyle Hunady</title>
+  <meta name="description" content="About Kyle Hunady — materials science PhD candidate at Caltech.">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">Kyle Hunady</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html" class="active">About</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
+
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="latte.html">Latte Log</a></li>
+        <li><a href="about.html" aria-current="page">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:kyokobra@gmail.com" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer">
+  <a href="research.html">Research</a>
+  <a href="projects.html">Projects</a>
+  <a href="latte.html">Latte Log</a>
+  <a href="about.html" aria-current="page">About</a>
+  <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:kyokobra@gmail.com">kyokobra@gmail.com</a>
+</div>
+
+<main>
+  <div class="container">
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="section-label">About</div>
+      <h1>Kyle Hunady</h1>
+      <p>PhD candidate in Materials Science at Caltech, expected 2027.</p>
+    </header>
+
+    <!-- ── BIO + SIDEBAR ── -->
+    <section class="section" aria-labelledby="bio-heading">
+      <div class="bio-grid reveal">
+
+        <div class="bio-text">
+          <h2 id="bio-heading">Background</h2>
+          <p>
+            I'm a fourth-year PhD student at the California Institute of Technology working in
+            materials science. My research spans two pretty different problems: understanding
+            the thermodynamic role of entropy in high-entropy alloys, and engineering a
+            miniaturized Mössbauer spectrometer for Mars surface mineralogy.
+          </p>
+          <p>
+            The second is the kind of project where you spend years making something smaller
+            and more robust so that, one day, it might answer a question about another planet.
+          </p>
+          <p>
+            Outside the lab, I write code, lead things, and make latte art. I've documented
+            every latte attempt I've made. It's a data set now.
+          </p>
         </div>
-    </nav>
 
-    <main class="container page-content">
-        <h1>About Me</h1>
-        
-        <section class="about-section">
-            <h2>Background</h2>
-            <p>
-                I'm a graduate student passionate about [your field of study]. My work focuses on 
-                [your research area/interests], and I'm dedicated to [your goals/values].
-            </p>
-        </section>
+        <aside class="bio-sidebar">
+          <div class="bio-sidebar-block">
+            <div class="bio-sidebar-label">Currently</div>
+            <p>PhD candidate, Caltech<br>Materials Science<br>Expected 2027</p>
+          </div>
 
-        <section class="about-section">
-            <h2>Education</h2>
-            <div class="education-item">
-                <h3>Master's Degree / PhD</h3>
-                <p class="school">[University Name] • [Year - Present]</p>
-                <p>Program: [Your Program]</p>
-            </div>
-            <div class="education-item">
-                <h3>Bachelor's Degree</h3>
-                <p class="school">[University Name] • [Graduation Year]</p>
-                <p>Major: [Your Major]</p>
-            </div>
-        </section>
+          <div class="bio-sidebar-block">
+            <div class="bio-sidebar-label">Research areas</div>
+            <ul>
+              <li>High-entropy alloys</li>
+              <li>Mössbauer spectroscopy</li>
+              <li>Mars mineralogy</li>
+              <li>Materials thermodynamics</li>
+            </ul>
+          </div>
 
-        <section class="about-section">
-            <h2>Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-tag">Research</div>
-                <div class="skill-tag">Data Analysis</div>
-                <div class="skill-tag">Python</div>
-                <div class="skill-tag">Machine Learning</div>
-                <div class="skill-tag">Communication</div>
-                <div class="skill-tag">Problem Solving</div>
-            </div>
-        </section>
+          <div class="bio-sidebar-block">
+            <div class="bio-sidebar-label">Also into</div>
+            <ul>
+              <li>Latte art</li>
+              <li>Building tools</li>
+              <li>Leadership</li>
+            </ul>
+          </div>
+        </aside>
 
-        <section class="about-section">
-            <h2>Interests</h2>
-            <p>
-                Outside of my academic work, I enjoy [your hobbies/interests]. I'm always eager 
-                to collaborate on interesting projects and explore new ideas.
-            </p>
-        </section>
-    </main>
+      </div>
+    </section>
 
-    <footer>
-        <p>&copy; 2026 Kyle Hunady. All rights reserved.</p>
-    </footer>
+    <hr class="section-divider">
+
+    <!-- ── EDUCATION ── -->
+    <section class="section reveal" aria-labelledby="edu-heading">
+      <div class="section-label">Education</div>
+      <h2 class="section-title" id="edu-heading">Academic background</h2>
+
+      <div style="margin-top: 24px;">
+        <div class="edu-item">
+          <div class="edu-degree">PhD, Materials Science</div>
+          <div class="edu-school">California Institute of Technology (Caltech)</div>
+          <div class="edu-year">2021 – Expected 2027</div>
+        </div>
+        <!--
+          ADD YOUR UNDERGRAD:
+          Copy the edu-item block above and fill in your bachelor's degree details.
+        -->
+        <div class="edu-item wip-block">
+          <div class="edu-degree">B.S. — filling this in</div>
+          <div class="edu-school">&nbsp;</div>
+          <div class="edu-year">&nbsp;</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── LEADERSHIP ── -->
+    <section class="section reveal" aria-labelledby="leadership-heading">
+      <div class="section-label">Leadership &amp; Service</div>
+      <h2 class="section-title" id="leadership-heading">Roles &amp; involvement</h2>
+      <p class="section-sub">
+        <!--
+          ADD YOUR LEADERSHIP ROLES:
+          Replace the placeholder text below with your actual roles.
+          Each role should go in a project-card for visual consistency.
+        -->
+        Organizations, committees, mentorship, and other ways I've contributed
+        beyond the bench.
+      </p>
+
+      <div class="wip-label">filling this in</div>
+      <div class="project-list wip-block">
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="project-name">Role / Organization</span>
+            <span class="project-meta">—</span>
+          </div>
+          <p class="project-desc">Coming soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── CONTACT ── -->
+    <section class="section reveal" aria-labelledby="contact-heading">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title" id="contact-heading">Get in touch</h2>
+      <p class="section-sub">
+        I'm happy to hear from researchers, collaborators, or anyone who wants to talk
+        about materials science, Mars, or latte art.
+      </p>
+      <div class="pill-row">
+        <a href="mailto:kyokobra@gmail.com" class="pill pill-accent">kyokobra@gmail.com →</a>
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" class="pill">GitHub →</a>
+        <a href="research.html" class="pill">View research →</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:kyokobra@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
 </body>
 </html>

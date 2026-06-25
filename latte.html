@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latte Log — Kyle Hunady</title>
+  <meta name="description" content="Kyle Hunady's latte art gallery. Every attempt, documented.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="latte.html" aria-current="page">Latte Log</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:kyokobra@gmail.com" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer">
+  <a href="research.html">Research</a>
+  <a href="projects.html">Projects</a>
+  <a href="latte.html" aria-current="page">Latte Log</a>
+  <a href="about.html">About</a>
+  <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:kyokobra@gmail.com">kyokobra@gmail.com</a>
+</div>
+
+<main>
+  <div class="container">
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="section-label">Latte Log</div>
+      <h1>Every attempt, documented</h1>
+      <p>
+        I started making latte art a while ago. I document every attempt.
+        Some are good. Most aren't. The data set keeps growing.
+      </p>
+    </header>
+
+    <!-- ── GALLERY ── -->
+    <section aria-label="Latte art gallery">
+
+      <div class="latte-top">
+        <!--
+          UPDATE THE COUNT:
+          Change the number below to match how many photos you have.
+          The JS below reads data-count to keep the badge in sync.
+        -->
+        <div class="latte-badge" id="latte-badge">
+          <!-- filled by JS -->
+        </div>
+        <button class="latte-shuffle" id="latte-shuffle" aria-label="Show attempts in random order">
+          ↺ shuffle
+        </button>
+      </div>
+
+      <!--
+        HOW TO ADD YOUR PHOTOS:
+        1. Create the folder: assets/img/latte/
+        2. Name your photos: 001.jpg, 002.jpg, 003.jpg, ... (zero-padded)
+        3. Update TOTAL_ATTEMPTS below to match your count.
+        4. The gallery will render them automatically.
+
+        If you have photos with dates or notes, you can add a data-caption
+        attribute to each cell: <div class="latte-cell" data-num="001" data-caption="Jan 2024">
+
+        The lightbox will show the caption.
+      -->
+
+      <div class="latte-grid" id="latte-grid" role="list" aria-label="Latte art attempts">
+        <!-- Populated by JS -->
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Latte art enlarged view">
+  <div class="lightbox-card">
+    <img id="lightbox-img" src="" alt="" class="lightbox-img">
+    <div class="lightbox-footer">
+      <span class="lightbox-caption" id="lightbox-caption"></span>
+      <button class="lightbox-close" id="lightbox-close">✕ close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:kyokobra@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+(function () {
+  // ── CONFIGURATION ──────────────────────────────────────────────
+  // Update TOTAL_ATTEMPTS to match how many photos you have in
+  // assets/img/latte/. Photos should be named 001.jpg, 002.jpg, etc.
+  const TOTAL_ATTEMPTS = 116; // ← change this number
+
+  // File extension for your photos (jpg, jpeg, png, webp)
+  const EXT = 'jpg';
+
+  // Path to your latte photos folder
+  const BASE = 'assets/img/latte/';
+  // ───────────────────────────────────────────────────────────────
+
+  const grid   = document.getElementById('latte-grid');
+  const badge  = document.getElementById('latte-badge');
+  const shuffle = document.getElementById('latte-shuffle');
+  const lb     = document.getElementById('lightbox');
+  const lbImg  = document.getElementById('lightbox-img');
+  const lbCap  = document.getElementById('lightbox-caption');
+  const lbClose = document.getElementById('lightbox-close');
+
+  // Decide what to render
+  const hasPhotos = TOTAL_ATTEMPTS > 0;
+  const PLACEHOLDER_COUNT = 16; // how many empty cells to show before photos are added
+
+  // Badge text
+  badge.textContent = hasPhotos
+    ? `${TOTAL_ATTEMPTS} attempt${TOTAL_ATTEMPTS === 1 ? '' : 's'}`
+    : 'Add your photos to get started';
+
+  // Build indices
+  let indices = hasPhotos
+    ? Array.from({ length: TOTAL_ATTEMPTS }, (_, i) => i + 1)
+    : Array.from({ length: PLACEHOLDER_COUNT }, (_, i) => i + 1);
+
+  function pad(n) { return String(n).padStart(3, '0'); }
+
+  function renderGrid(order) {
+    grid.innerHTML = '';
+    order.forEach((n) => {
+      const cell = document.createElement('div');
+      cell.className = 'latte-cell';
+      cell.setAttribute('role', 'listitem');
+
+      if (hasPhotos) {
+        const img = document.createElement('img');
+        img.src = `${BASE}${pad(n)}.${EXT}`;
+        img.alt = `Latte art attempt #${pad(n)}`;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        cell.appendChild(img);
+
+        const num = document.createElement('div');
+        num.className = 'latte-num';
+        num.textContent = `#${pad(n)}`;
+        num.setAttribute('aria-hidden', 'true');
+        cell.appendChild(num);
+
+        cell.setAttribute('tabindex', '0');
+        cell.setAttribute('aria-label', `Latte art attempt ${n} — click to enlarge`);
+        cell.dataset.num = pad(n);
+        cell.dataset.src = img.src;
+
+        cell.addEventListener('click', () => openLightbox(img.src, `Attempt #${pad(n)}`));
+        cell.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLightbox(img.src, `Attempt #${pad(n)}`);
+          }
+        });
+      } else {
+        // Placeholder cell
+        cell.innerHTML = `
+          <div class="latte-ph" aria-hidden="true">
+            <div class="latte-ph-num">#${pad(n)}</div>
+            <div class="latte-ph-add">add photo</div>
+          </div>`;
+        cell.setAttribute('aria-hidden', 'true');
+      }
+
+      grid.appendChild(cell);
+    });
+  }
+
+  renderGrid(indices);
+
+  // Shuffle
+  shuffle.addEventListener('click', () => {
+    const shuffled = [...indices].sort(() => Math.random() - 0.5);
+    renderGrid(shuffled);
+  });
+
+  // Lightbox
+  function openLightbox(src, caption) {
+    lbImg.src = src;
+    lbImg.alt = caption;
+    lbCap.textContent = caption;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbClose.focus();
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+  });
+})();
+</script>
+</body>
+</html>
