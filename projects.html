@@ -1,90 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - Kyle Hunady</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Kyle Hunady</title>
+  <meta name="description" content="Kyle Hunady's coding projects, tools, and experiments.">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">Kyle Hunady</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="projects.html" class="active">Projects</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <main class="container page-content">
-        <h1>Projects & Research</h1>
-        
-        <section class="projects-grid">
-            <article class="project-card">
-                <h3>Project Title 1</h3>
-                <p class="meta">Year • [Category]</p>
-                <p>
-                    Brief description of your project. Explain what problem it solves 
-                    and what technologies you used.
-                </p>
-                <div class="project-tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Research</span>
-                </div>
-                <a href="#" class="project-link">Learn More →</a>
-            </article>
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="latte.html">Latte Log</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:kyokobra@gmail.com" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
 
-            <article class="project-card">
-                <h3>Project Title 2</h3>
-                <p class="meta">Year • [Category]</p>
-                <p>
-                    Brief description of your project. Explain what problem it solves 
-                    and what technologies you used.
-                </p>
-                <div class="project-tags">
-                    <span class="tag">Machine Learning</span>
-                    <span class="tag">Data Analysis</span>
-                </div>
-                <a href="#" class="project-link">Learn More →</a>
-            </article>
+<div class="nav-drawer" id="nav-drawer">
+  <a href="research.html">Research</a>
+  <a href="projects.html" aria-current="page">Projects</a>
+  <a href="latte.html">Latte Log</a>
+  <a href="about.html">About</a>
+  <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:kyokobra@gmail.com">kyokobra@gmail.com</a>
+</div>
 
-            <article class="project-card">
-                <h3>Project Title 3</h3>
-                <p class="meta">Year • [Category]</p>
-                <p>
-                    Brief description of your project. Explain what problem it solves 
-                    and what technologies you used.
-                </p>
-                <div class="project-tags">
-                    <span class="tag">Web Development</span>
-                    <span class="tag">Full Stack</span>
-                </div>
-                <a href="#" class="project-link">Learn More →</a>
-            </article>
-        </section>
+<main>
+  <div class="container">
 
-        <section class="publications">
-            <h2>Publications</h2>
-            <ul class="publication-list">
-                <li>
-                    <strong>Your Publication Title</strong>. First Author, Second Author. 
-                    <em>Journal Name</em>, Year. 
-                    <a href="#">Read Paper</a>
-                </li>
-                <li>
-                    <strong>Another Publication Title</strong>. First Author, Second Author. 
-                    <em>Conference Proceedings</em>, Year. 
-                    <a href="#">Read Paper</a>
-                </li>
-            </ul>
-        </section>
-    </main>
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="section-label">Projects</div>
+      <h1>Code &amp; experiments</h1>
+      <p>
+        Side projects, tools, and things I built because I wanted them to exist.
+        Most live on <a href="https://github.com/kylehunady" target="_blank" rel="noopener" style="color: var(--accent); border-bottom: 1px solid transparent; transition: border-color 0.15s;" onmouseover="this.style.borderBottomColor='var(--accent)'" onmouseout="this.style.borderBottomColor='transparent'">GitHub</a>.
+      </p>
+    </header>
 
-    <footer>
-        <p>&copy; 2026 Kyle Hunady. All rights reserved.</p>
-    </footer>
+    <!-- ── PROJECTS ── -->
+    <section class="section" aria-labelledby="projects-heading">
+      <div class="section-label">Featured</div>
+
+      <div class="project-list">
+
+        <!--
+          HOW TO ADD A PROJECT:
+          Copy one of the <article class="project-card"> blocks below.
+          Fill in: project name, year, description, tags, and GitHub/demo URLs.
+          Remove the placeholder-card divs when you have real projects to show.
+        -->
+
+        <article class="project-card reveal">
+          <div class="project-card-header">
+            <span class="project-name">[Project Name]</span>
+            <span class="project-meta">[YEAR]</span>
+          </div>
+          <p class="project-desc">
+            [Describe what this project does and why you built it. What problem does it solve?
+            What's interesting or non-obvious about the approach? 2–3 sentences.]
+          </p>
+          <div class="tag-row">
+            <span class="tag">[Language]</span>
+            <span class="tag">[Tool / Framework]</span>
+            <span class="tag">[Domain]</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/kylehunady" target="_blank" rel="noopener" class="project-link">GitHub →</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" style="transition-delay: 0.08s">
+          <div class="project-card-header">
+            <span class="project-name">[Project Name]</span>
+            <span class="project-meta">[YEAR]</span>
+          </div>
+          <p class="project-desc">
+            [Describe what this project does and why you built it. What problem does it solve?
+            What's interesting or non-obvious about the approach? 2–3 sentences.]
+          </p>
+          <div class="tag-row">
+            <span class="tag">[Language]</span>
+            <span class="tag">[Tool / Framework]</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/kylehunady" target="_blank" rel="noopener" class="project-link">GitHub →</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" style="transition-delay: 0.16s">
+          <div class="project-card-header">
+            <span class="project-name">[Project Name]</span>
+            <span class="project-meta">[YEAR]</span>
+          </div>
+          <p class="project-desc">
+            [Describe what this project does and why you built it. What problem does it solve?
+            What's interesting or non-obvious about the approach? 2–3 sentences.]
+          </p>
+          <div class="tag-row">
+            <span class="tag">[Language]</span>
+            <span class="tag">[Domain]</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/kylehunady" target="_blank" rel="noopener" class="project-link">GitHub →</a>
+            <a href="#" class="project-link">Live demo →</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── GITHUB CTA ── -->
+    <section class="section reveal" aria-labelledby="github-heading">
+      <div class="section-label">More</div>
+      <h2 class="section-title" id="github-heading">Everything else on GitHub</h2>
+      <p class="section-sub">
+        Scripts, experiments, and work-in-progress things that aren't polished enough for
+        a card but might still be useful to someone.
+      </p>
+      <div class="pill-row">
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" class="pill pill-accent">
+          github.com/kylehunady →
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:kyokobra@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
 </body>
 </html>

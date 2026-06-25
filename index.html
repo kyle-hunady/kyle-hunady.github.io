@@ -1,55 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyle Hunady - Graduate Student</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kyle Hunady</title>
+  <meta name="description" content="Kyle Hunady — PhD candidate in Materials Science at Caltech. Studying entropy, building spectrometers for Mars, and documenting latte art.">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">Kyle Hunady</div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Hi, I'm Kyle Hunady</h1>
-            <p class="tagline">Graduate Student | Researcher | Developer</p>
-            <p class="description">Welcome to my portfolio. I'm passionate about creating meaningful work through research and development.</p>
-            <a href="about.html" class="btn btn-primary">Learn More</a>
-        </div>
-    </section>
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Kyle Hunady — home">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="latte.html">Latte Log</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kylehunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:khunady@caltech.edu" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
 
-    <section class="highlights" id="contact">
-        <div class="container">
-            <h2>Connect With Me</h2>
-            <div class="contact-links">
-                <a href="mailto:your.email@example.com" class="contact-card">
-                    <h3>Email</h3>
-                    <p>your.email@example.com</p>
-                </a>
-                <a href="https://github.com" target="_blank" class="contact-card">
-                    <h3>GitHub</h3>
-                    <p>github.com/kylehunady</p>
-                </a>
-                <a href="https://linkedin.com" target="_blank" class="contact-card">
-                    <h3>LinkedIn</h3>
-                    <p>linkedin.com/in/kylehunady</p>
-                </a>
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
+  <a href="research.html">Research</a>
+  <a href="projects.html">Projects</a>
+  <a href="latte.html">Latte Log</a>
+  <a href="about.html">About</a>
+  <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
+</div>
+
+<!-- ── HERO ── -->
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+
+        <!-- Profile flip card -->
+        <div class="hero-left">
+          <div class="flip-card" aria-label="Profile photo (hover to reveal a latte art attempt)" role="img">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <!--
+                  ADD YOUR HEADSHOT:
+                  1. Save your photo as assets/img/headshot.jpg
+                  2. Replace the placeholder div below with:
+                     <img src="assets/img/headshot.jpg" alt="Kyle Hunady">
+                -->
+                <!-- <div class="flip-placeholder">
+                  <div class="flip-placeholder-icon">🧑‍🔬</div>
+                  <div class="flip-placeholder-label">Add headshot<br>assets/img/headshot.jpg</div>
+                </div> -->
+                <img src="assets/img/headshot.jpg" alt="Kyle Hunady">
+              </div>
+              <div class="flip-card-back">
+                <!--
+                  ADD A LATTE ART PHOTO:
+                  1. Save a latte photo as assets/img/latte-hero.jpg
+                  2. Replace the placeholder div below with:
+                     <img src="assets/img/latte-hero.jpg" alt="A latte art attempt">
+                -->
+                <!-- <div class="flip-placeholder">
+                  <div class="flip-placeholder-icon">☕</div>
+                  <div class="flip-placeholder-label">Add latte photo<br>assets/img/latte-hero.jpg</div>
+                </div> -->
+                <img src="assets/img/latte-hero.jpg" alt="A latte art attempt">
+              </div>
             </div>
+          </div>
+          <p class="flip-hint" aria-hidden="true">↑ hover</p>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; 2026 Kyle Hunady. All rights reserved.</p>
-    </footer>
+        <!-- Text content -->
+        <div class="hero-right">
+          <div class="hero-label">PhD Candidate · Materials Science · Caltech · 2027</div>
+          <h1>Kyle Hunady</h1>
+          <p class="hero-tagline">
+            Studying entropy.
+          </p>
+          <p class="hero-bio">
+            I'm a fourth-year PhD candidate at Caltech working on two things that happen to be
+            very far apart: the <a href="research.html#alloys">thermodynamics of high-entropy alloys</a>
+            and building a <a href="research.html#mars">miniaturized Mössbauer spectrometer</a> for
+            studying mineralogy on the surface of Mars. In between, I write code, document
+            <a href="latte.html">every latte art attempt I make</a>, and occasionally lead things.
+          </p>
+          <div class="pill-row">
+            <a href="research.html" class="pill pill-accent">Research →</a>
+            <a href="projects.html" class="pill">Projects →</a>
+            <a href="latte.html" class="pill">Latte Log →</a>
+            <a href="about.html" class="pill">About →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PREVIEW CARDS ── -->
+  <section class="preview-section" aria-label="Site sections">
+    <div class="container">
+      <div class="preview-grid">
+
+        <a href="research.html" class="preview-card reveal">
+          <div class="card-label">Research</div>
+          <h2>High-entropy alloys &amp; Mars mineralogy</h2>
+          <p>Probing thermodynamic disorder in multi-principal-element alloys. Also: making a spectrometer small enough to fly to another planet.</p>
+          <span class="card-link">View research →</span>
+        </a>
+
+        <a href="projects.html" class="preview-card reveal" style="transition-delay: 0.08s">
+          <div class="card-label">Projects</div>
+          <h2>Code, tools &amp; experiments</h2>
+          <p>Side projects built because I wanted them to exist. More on GitHub.</p>
+          <span class="card-link">View projects →</span>
+        </a>
+
+        <a href="latte.html" class="preview-card reveal" style="transition-delay: 0.16s">
+          <div class="card-label">Latte Log</div>
+          <h2>Every attempt, documented</h2>
+          <p>Several hundred latte art attempts and counting. Some are good. Most aren't. The data set is still growing.</p>
+          <span class="card-link">View gallery →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kylehunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:khunady@caltech.edu">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
 </body>
 </html>
