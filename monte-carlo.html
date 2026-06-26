@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monte Carlo Mössbauer Ray-Tracer — Kyle Hunady</title>
+  <meta name="description" content="A Monte Carlo photon ray-tracer for optimizing Mössbauer spectrometer geometry — balancing count rate against spectral distortion for miniaturized Mars instrumentation.">
+  <link rel="canonical" href="https://kyle-hunady.github.io/monte-carlo.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kyle-hunady.github.io/monte-carlo.html">
+  <meta property="og:title" content="Monte Carlo Mössbauer Ray-Tracer — Kyle Hunady">
+  <meta property="og:description" content="Monte Carlo photon simulation for Mössbauer spectrometer geometry optimization. Built for Mars and lunar instrumentation work at Caltech.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Monte Carlo Mössbauer Ray-Tracer — Kyle Hunady">
+  <meta name="twitter:description" content="Monte Carlo photon simulation for Mössbauer spectrometer geometry optimization.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .viz-frame-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #0a0a0a;
+      margin: 32px 0 8px;
+    }
+    .viz-frame-wrap iframe {
+      display: block;
+      width: 100%;
+      height: 560px;
+      border: none;
+    }
+    .viz-caption {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+    @media (max-width: 640px) {
+      .method-grid { grid-template-columns: 1fr; }
+      .viz-frame-wrap iframe { height: 380px; }
+    }
+    .method-block {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .method-block-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .method-block h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 10px;
+      color: var(--text-primary);
+    }
+    .method-block p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin: 0;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="latte.html">Latte Log</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:khunady@caltech.edu" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer">
+  <a href="research.html">Research</a>
+  <a href="projects.html" aria-current="page">Projects</a>
+  <a href="latte.html">Latte Log</a>
+  <a href="about.html">About</a>
+  <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
+</div>
+
+<main>
+  <div class="container">
+
+    <a href="projects.html" class="back-link">← Projects</a>
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="section-label">Project · Instrumentation · Python</div>
+      <h1>Monte Carlo Mössbauer Ray-Tracer</h1>
+      <p>
+        A photon simulation for finding the best source, sample, and detector geometry
+        in a miniaturized Mössbauer spectrometer — and for quantifying exactly what
+        you give up when you can't have the ideal one.
+      </p>
+    </header>
+
+    <!-- ── VISUALIZATION ── -->
+    <section class="section" aria-labelledby="viz-heading">
+      <div class="section-label">Interactive</div>
+      <h2 class="section-title" id="viz-heading">Ray trace — Fe backscatter, tilted geometry</h2>
+      <p class="section-sub">
+        Each line is a simulated photon path. Drag to rotate, scroll to zoom.
+        This run models an iron (Fe-57) backscatter configuration with a tilted
+        detector arrangement — a geometry relevant to compact lander designs where
+        source and detector share a surface.
+      </p>
+
+      <div class="viz-frame-wrap">
+        <iframe
+          src="assets/viz/rays.html"
+          title="Interactive 3D Mössbauer photon ray trace"
+          loading="lazy"
+          scrolling="no"
+        ></iframe>
+      </div>
+      <p class="viz-caption">Plotly · rotate · zoom · hover for path data</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── CONTEXT ── -->
+    <section class="section reveal" aria-labelledby="context-heading">
+      <div class="section-label">Background</div>
+      <h2 class="section-title" id="context-heading">The geometry problem</h2>
+      <p class="section-sub">
+        Mössbauer spectroscopy is built on a narrow nuclear resonance — Fe-57 absorbs
+        gamma rays at 14.4 keV with extraordinary specificity, making it one of the
+        best tools for identifying iron-bearing minerals. On Earth, instruments can be
+        large. The source, sample, and detector can be arranged at leisure.
+      </p>
+      <p class="section-sub" style="margin-top: 16px;">
+        On a Mars lander, that luxury disappears. Mass budgets are tight, and the instrument
+        needs to work in backscatter — source and detector on the same side as the sample,
+        aimed at the rock face rather than through it. The geometry gets compact, and compact
+        geometry introduces a problem: photons don't all travel the same path. Some scatter.
+        Some enter the detector at oblique angles. The velocity axis of the Doppler drive —
+        what makes Mössbauer spectroscopy work — gets smeared.
+      </p>
+      <p class="section-sub" style="margin-top: 16px;">
+        You can collect more counts by opening up the geometry. But more counts at the cost
+        of a distorted spectrum isn't always a good trade.
+      </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── HOW IT WORKS ── -->
+    <section class="section reveal" aria-labelledby="method-heading">
+      <div class="section-label">Method</div>
+      <h2 class="section-title" id="method-heading">How the simulator works</h2>
+
+      <div class="method-grid">
+        <div class="method-block">
+          <div class="method-block-label">Step 01</div>
+          <h3>Spawn photons</h3>
+          <p>
+            Photons are generated at the source with random directions sampled from the
+            emission distribution. Each photon carries a velocity — the Doppler shift
+            the detector will see — determined by its angle of incidence relative to the
+            drive axis.
+          </p>
+        </div>
+        <div class="method-block">
+          <div class="method-block-label">Step 02</div>
+          <h3>Trace paths</h3>
+          <p>
+            Each photon is propagated through the geometry: source → sample →
+            detector. Photons that miss the detector are discarded.
+            Those that reach it are binned by their effective Doppler velocity.
+          </p>
+        </div>
+        <div class="method-block">
+          <div class="method-block-label">Step 03</div>
+          <h3>Build the smearing kernel</h3>
+          <p>
+            The distribution of detected velocities for a monochromatic input is the
+            smearing kernel — a fingerprint of how much the geometry distorts the
+            spectrum. A perfect geometry gives a delta function. Real geometries
+            spread it out.
+          </p>
+        </div>
+        <div class="method-block">
+          <div class="method-block-label">Step 04</div>
+          <h3>Correct the data</h3>
+          <p>
+            The kernel can be convolved into a model spectrum to simulate what a real
+            detector would see — or used to deconvolve an experimental spectrum back
+            toward the true signal. This lets you fit data from non-ideal geometries
+            without ignoring the distortion.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── RELEVANCE ── -->
+    <section class="section reveal" aria-labelledby="relevance-heading">
+      <div class="section-label">Application</div>
+      <h2 class="section-title" id="relevance-heading">Why this matters for miniaturization</h2>
+      <p class="section-sub">
+        The goal of the broader <a href="research.html#mars">Mössbauer miniaturization project</a>
+        is a spectrometer small enough to fly on next-generation Mars landers and lunar surface
+        missions without dominating the mass and power budget. At those scales, the ideal
+        transmission geometry is simply not available — the detector has to sit beside the source,
+        and the sample geometry is whatever the planet hands you.
+      </p>
+      <p class="section-sub" style="margin-top: 16px;">
+        The simulator makes it possible to explore the design space before anything is built:
+        compare geometries, quantify the count-rate versus distortion tradeoff for each,
+        and generate the correction kernel that turns the chosen geometry's raw data into
+        something you can actually fit. You don't have to pick between sensitivity and
+        interpretability — you just have to know what you're working with.
+      </p>
+
+      <div class="pill-row" style="margin-top: 32px;">
+        <a href="research.html#mars" class="pill pill-accent">Mössbauer research →</a>
+        <a href="projects.html" class="pill">All projects →</a>
+        <a href="mailto:khunady@caltech.edu" class="pill">Get in touch →</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:khunady@caltech.edu">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

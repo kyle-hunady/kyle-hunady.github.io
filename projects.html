@@ -72,22 +72,45 @@
     <section class="section" aria-labelledby="projects-heading">
       <div class="section-label">Featured</div>
 
-      <div class="wip-label">filling this in</div>
-      <div class="project-list wip-block">
+      <div class="project-list">
+        <a href="monte-carlo.html" class="project-card" style="text-decoration:none; display:block; color: inherit;">
+          <div class="project-card-header">
+            <span class="project-name">Monte Carlo Mössbauer Ray-Tracer</span>
+            <span class="project-meta">Python · Plotly →</span>
+          </div>
+          <p class="project-desc">
+            Designing a miniaturized Mössbauer spectrometer for Mars means making hard tradeoffs
+            between photon count rate and spectral fidelity — more signal often means accepting
+            geometric distortion. I built a Monte Carlo photon ray-tracer to model these tradeoffs
+            across different source, sample, and detector arrangements. The simulator characterizes
+            spectral distortion through a smearing kernel that can correct fits on real hardware.
+            Output includes interactive 3D Plotly visualizations of photon trajectories.
+          </p>
+        </a>
         <article class="project-card">
           <div class="project-card-header">
-            <span class="project-name">Project</span>
-            <span class="project-meta">—</span>
+            <span class="project-name">ESP32 Subway Tracker</span>
+            <span class="project-meta">C++ · ESP32 · Hardware</span>
           </div>
-          <p class="project-desc">Coming soon.</p>
+          <p class="project-desc">
+            Subway arrival displays typically run on a Raspberry Pi (~$40) parsing transit protocol
+            data. I got it working on an ESP32 ($5) with a 2" OLED display ($5). A $10 desktop
+            widget that does the same job. Code on
+            <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" style="color: var(--accent)">GitHub</a>.
+          </p>
         </article>
-        <article class="project-card">
+        <a href="coffee-cropper.html" class="project-card" style="text-decoration:none; display:block; color: inherit;">
           <div class="project-card-header">
-            <span class="project-name">Project</span>
-            <span class="project-meta">—</span>
+            <span class="project-name">Coffee Cropper</span>
+            <span class="project-meta">Python · OpenCV →</span>
           </div>
-          <p class="project-desc">Coming soon.</p>
-        </article>
+          <p class="project-desc">
+            The latte art photos on this site don't crop themselves. Coffee Cropper uses bilateral
+            filtering and Hough circle detection to find the coffee surface in a photo and
+            batch-export the results. The hardest part: distinguishing the cup rim from the plate
+            beneath it. Built specifically for this site.
+          </p>
+        </a>
       </div>
     </section>
 

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Cropper — Kyle Hunady</title>
+  <meta name="description" content="How I automatically detect and crop the coffee circle in 116+ latte art photos using OpenCV bilateral filtering and Hough circle detection.">
+  <link rel="canonical" href="https://kyle-hunady.github.io/coffee-cropper.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kyle-hunady.github.io/coffee-cropper.html">
+  <meta property="og:title" content="Coffee Cropper — Kyle Hunady">
+  <meta property="og:description" content="Automatic latte photo cropping using OpenCV bilateral filtering and Hough circle detection.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Coffee Cropper — Kyle Hunady">
+  <meta name="twitter:description" content="Automatic latte photo cropping using OpenCV bilateral filtering and Hough circle detection.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ── pipeline diagram ── */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 28px 0 16px;
+      scrollbar-width: none;
+    }
+    .pipeline::-webkit-scrollbar { display: none; }
+    .pipe-step {
+      flex: 0 0 auto;
+      text-align: center;
+      min-width: 100px;
+    }
+    .pipe-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 88px;
+      height: 56px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      background: var(--surface);
+      padding: 6px;
+      line-height: 1.3;
+    }
+    .pipe-box.pipe-highlight {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,200,150,0.06);
+    }
+    .pipe-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+    .pipe-arrow {
+      flex: 0 0 auto;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 0 4px;
+      margin-bottom: 22px;
+    }
+
+    /* ── test case toggle ── */
+    .case-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .case-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .case-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,200,150,0.08);
+    }
+
+    /* ── comparison strip ── */
+    .compare-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    @media (max-width: 700px) {
+      .compare-strip {
+        grid-template-columns: repeat(5, 160px);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+    .compare-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .compare-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .compare-name {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+    .compare-badge {
+      flex: 0 0 auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .badge-pass { background: rgba(0,200,150,0.15); color: var(--accent); }
+    .badge-fail { background: rgba(220,60,60,0.15); color: #e05555; }
+    .compare-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: #111;
+    }
+    .compare-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .compare-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── bilateral explainer ── */
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) { .filter-grid { grid-template-columns: 1fr; } }
+    .filter-block {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .filter-block-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .filter-block h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+    .filter-block p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── code block ── */
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-top: 24px;
+    }
+    .code-block pre {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .code-comment { color: var(--text-muted); }
+    .code-keyword { color: var(--accent); }
+    .code-fn { color: #7ec8e3; }
+    .code-num { color: #e5a86a; }
+
+    /* ── result pair ── */
+    .result-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 500px) { .result-pair { grid-template-columns: 1fr; } }
+    .result-img-wrap { position: relative; }
+    .result-img-wrap img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .result-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text-primary); }
+
+    .prod-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(0,200,150,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,200,150,0.3);
+      border-radius: 3px;
+      padding: 2px 7px;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav" role="navigation" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KH</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="research.html">Research</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="latte.html">Latte Log</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-icons">
+        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="mailto:khunady@caltech.edu" aria-label="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer">
+  <a href="research.html">Research</a>
+  <a href="projects.html" aria-current="page">Projects</a>
+  <a href="latte.html">Latte Log</a>
+  <a href="about.html">About</a>
+  <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub ↗</a>
+  <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
+</div>
+
+<main>
+  <div class="container">
+
+    <a href="projects.html" class="back-link">← Projects</a>
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="section-label">Project · Python · OpenCV</div>
+      <h1>Coffee Cropper</h1>
+      <p>
+        Automated circle detection for latte art photos — because manually cropping
+        116+ images is not a plan. Five methods, one winner, and a wood grain problem
+        that turned out to be the whole game.
+      </p>
+    </header>
+
+    <!-- ── THE PROBLEM ── -->
+    <section class="section" aria-labelledby="problem-heading">
+      <div class="section-label">Context</div>
+      <h2 class="section-title" id="problem-heading">The problem</h2>
+      <p class="section-sub">
+        Every latte art photo on <a href="latte.html">this site</a> gets the same treatment:
+        find the coffee circle, crop to it with a small buffer, export. The alternative
+        is doing it by hand for each of 116+ photos, and then again every time a new one
+        is added. Not a plan.
+      </p>
+      <p class="section-sub" style="margin-top:14px;">
+        The complication: the photos vary. Different cup colors — white ceramic one day,
+        brown stoneware another. Different distances, different angles. And always the
+        same dark walnut table in the background, whose wood grain produces circular-ish
+        edge patterns that confuse naive edge detectors.
+      </p>
+      <p class="section-sub" style="margin-top:14px;">
+        Classic approach: <strong>Hough circle transform.</strong> The challenge: picking
+        the right circle out of everything the algorithm finds.
+      </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── PIPELINE ── -->
+    <section class="section reveal" aria-labelledby="pipeline-heading">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title" id="pipeline-heading">The pipeline</h2>
+
+      <div class="pipeline" role="img" aria-label="Processing pipeline: input photo to crop">
+        <div class="pipe-step">
+          <div class="pipe-box">Input photo</div>
+          <div class="pipe-label">Original</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-box">Resize to 900px</div>
+          <div class="pipe-label">Normalize</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-box pipe-highlight">Bilateral filter</div>
+          <div class="pipe-label">Denoise</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-box pipe-highlight">Hough circles</div>
+          <div class="pipe-label">Detect</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-box">Pick nearest center</div>
+          <div class="pipe-label">Select</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-box">Crop + buffer</div>
+          <div class="pipe-label">Export</div>
+        </div>
+      </div>
+
+      <p class="section-sub" style="margin-top:8px;">
+        All five methods tested below share this skeleton. The differences are in what
+        happens between resize and the Hough call — and that difference turns out to matter a lot.
+      </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── METHOD COMPARISON ── -->
+    <section class="section reveal" aria-labelledby="compare-heading">
+      <div class="section-label">Experiments</div>
+      <h2 class="section-title" id="compare-heading">Five methods, two hard cases</h2>
+      <p class="section-sub">
+        Each method was tested on 8 photos. The green circle shows where the algorithm
+        thinks the coffee is. The red dot is the detected center.
+        Two test cases expose the methods' weaknesses most clearly:
+      </p>
+
+      <div class="case-toggle" role="group" aria-label="Select test case">
+        <button class="case-btn active" data-case="white" id="btn-white">
+          White cup — spurious circle test
+        </button>
+        <button class="case-btn" data-case="brown" id="btn-brown">
+          Brown cup — missing anchor test
+        </button>
+      </div>
+
+      <div class="compare-strip" id="compare-strip" role="list">
+
+        <div class="compare-card" role="listitem">
+          <div class="compare-header">
+            <div class="compare-name">01 · Grayscale Hough</div>
+            <span class="compare-badge badge-fail" id="badge-m1">✗</span>
+          </div>
+          <div class="compare-img-wrap">
+            <img id="img-m1" src="assets/img/coffee-cropper/debug-m1-white.jpg"
+                 alt="Method 1 detection result" loading="lazy">
+          </div>
+          <div class="compare-desc" id="desc-m1">
+            Detects a large spurious circle (r≈1361) that wraps the plate, not the coffee.
+            Wood grain and plate edge compete as strong circular features at this scale.
+          </div>
+        </div>
+
+        <div class="compare-card" role="listitem">
+          <div class="compare-header">
+            <div class="compare-name">02 · White saucer anchor</div>
+            <span class="compare-badge badge-pass" id="badge-m2">✓</span>
+          </div>
+          <div class="compare-img-wrap">
+            <img id="img-m2" src="assets/img/coffee-cropper/debug-m2-white.jpg"
+                 alt="Method 2 detection result" loading="lazy">
+          </div>
+          <div class="compare-desc" id="desc-m2">
+            Finds the bright white saucer blob first, uses it to anchor the Hough search.
+            Works here — but entirely depends on the cup being white ceramic.
+          </div>
+        </div>
+
+        <div class="compare-card" role="listitem">
+          <div class="compare-header">
+            <div class="compare-name">03 · Two-stage</div>
+            <span class="compare-badge badge-pass" id="badge-m3">✓</span>
+          </div>
+          <div class="compare-img-wrap">
+            <img id="img-m3" src="assets/img/coffee-cropper/debug-m3-white.jpg"
+                 alt="Method 3 detection result" loading="lazy">
+          </div>
+          <div class="compare-desc" id="desc-m3">
+            Finds the outer mug circle first, then searches within it at a constrained
+            radius ratio for the inner coffee surface. More focused than single-pass Hough.
+          </div>
+        </div>
+
+        <div class="compare-card" role="listitem">
+          <div class="compare-header">
+            <div class="compare-name">04 · Bilateral + Hough</div>
+            <span class="compare-badge badge-pass" id="badge-m4">✓</span>
+          </div>
+          <div class="compare-img-wrap">
+            <img id="img-m4" src="assets/img/coffee-cropper/debug-m4-white.jpg"
+                 alt="Method 4 detection result" loading="lazy">
+          </div>
+          <div class="compare-desc" id="desc-m4">
+            Bilateral filter first: preserves the cup rim edge while smoothing out wood
+            grain texture. Hough on the clean result finds the right circle immediately.
+          </div>
+        </div>
+
+        <div class="compare-card" role="listitem">
+          <div class="compare-header">
+            <div class="compare-name">05 · Bilateral two-stage</div>
+            <span class="compare-badge badge-pass" id="badge-m5">✓</span>
+          </div>
+          <div class="compare-img-wrap">
+            <img id="img-m5" src="assets/img/coffee-cropper/debug-m5-white.jpg"
+                 alt="Method 5 detection result" loading="lazy">
+          </div>
+          <div class="compare-desc" id="desc-m5">
+            Bilateral filter + two-stage search targeting the inner coffee surface.
+            Tighter crop than method 4 — sometimes better, sometimes locks on foam patterns.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── WHY BILATERAL ── -->
+    <section class="section reveal" aria-labelledby="bilateral-heading">
+      <div class="section-label">Key insight</div>
+      <h2 class="section-title" id="bilateral-heading">Why bilateral filtering wins</h2>
+      <p class="section-sub">
+        A Gaussian blur would kill the wood grain noise — but it would also kill the
+        cup rim edge. A bilateral filter does something more selective: it averages
+        pixels together only when they're both spatially close <em>and</em> similar in
+        intensity. The cup rim, with its sharp gradient from ceramic to coffee, is
+        preserved. The wood grain, with its low-contrast texture, gets smoothed out.
+      </p>
+
+      <div class="filter-grid">
+        <div class="filter-block">
+          <div class="filter-block-label">σ_color = 80</div>
+          <h3>Controls what gets smoothed</h3>
+          <p>
+            Pixel pairs with intensity difference &lt; σ_color are treated as "same region"
+            and averaged together. Wood grain has small local contrasts — it gets blurred.
+            The cup rim has a large gradient — it's preserved as a sharp edge.
+          </p>
+        </div>
+        <div class="filter-block">
+          <div class="filter-block-label">σ_space = 80, d = 9</div>
+          <h3>Controls the spatial reach</h3>
+          <p>
+            Within a 9-pixel diameter neighborhood, pixels contribute to the average
+            weighted by both their spatial distance and intensity similarity. Large σ_space
+            lets the filter average across a wide enough area to suppress the grain pattern.
+          </p>
+        </div>
+      </div>
+
+      <p class="section-sub" style="margin-top:20px;">
+        The result: the cup rim becomes the dominant circular feature in the edge map.
+        Hough circles finds it reliably on white cups, brown stoneware, anything with a visible rim.
+      </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── THE CODE ── -->
+    <section class="section reveal" aria-labelledby="code-heading">
+      <div class="section-label">Implementation</div>
+      <h2 class="section-title" id="code-heading">
+        The production method <span class="prod-badge">in use</span>
+      </h2>
+      <p class="section-sub">
+        Method 4 — bilateral + Hough — is what runs on every new latte photo.
+        The core detection is about 20 lines:
+      </p>
+
+      <div class="code-block">
+        <pre><span class="code-comment"># resize to working resolution so radius ratios are consistent</span>
+scale = WORK_SIZE / max(h, w)          <span class="code-comment"># WORK_SIZE = 900</span>
+small = cv2.resize(image, ...)
+
+<span class="code-comment"># bilateral filter: preserves cup rim, kills wood grain</span>
+gray     = cv2.<span class="code-fn">cvtColor</span>(small, cv2.COLOR_BGR2GRAY)
+filtered = cv2.<span class="code-fn">bilateralFilter</span>(gray, d=<span class="code-num">9</span>, sigmaColor=<span class="code-num">80</span>, sigmaSpace=<span class="code-num">80</span>)
+
+<span class="code-comment"># Hough circle detection on the clean image</span>
+circles = cv2.<span class="code-fn">HoughCircles</span>(
+    filtered, cv2.HOUGH_GRADIENT,
+    dp=<span class="code-num">1</span>, minDist=int(min_dim * <span class="code-num">0.30</span>),
+    param1=<span class="code-num">60</span>, param2=<span class="code-num">28</span>,
+    minRadius=int(min_dim * <span class="code-num">0.12</span>),   <span class="code-comment"># MIN_R_RATIO</span>
+    maxRadius=int(min_dim * <span class="code-num">0.62</span>),   <span class="code-comment"># MAX_R_RATIO</span>
+)
+
+<span class="code-comment"># pick the circle closest to the image center</span>
+best = <span class="code-fn">min</span>(circles[<span class="code-num">0</span>], key=<span class="code-keyword">lambda</span> c: dist(c[:<span class="code-num">2</span>], image_center))
+cx, cy, r = best / scale              <span class="code-comment"># back to original resolution</span></pre>
+      </div>
+
+      <p class="section-sub" style="margin-top:16px;">
+        The radius ratio bounds (<code>0.12</code>–<code>0.62</code> of the smaller image dimension)
+        reject circles that are too small to be the coffee surface or too large to be
+        anything other than spurious noise. The "closest to center" selection assumes the
+        photo is reasonably composed — which, for a latte art photo, it almost always is.
+      </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── RESULTS ── -->
+    <section class="section reveal" aria-labelledby="results-heading">
+      <div class="section-label">Output</div>
+      <h2 class="section-title" id="results-heading">Final crops</h2>
+      <p class="section-sub">
+        After detection, the circle is expanded by a small buffer ratio and cropped to a
+        square. Both white and brown cup cases:
+      </p>
+
+      <div class="result-pair">
+        <div class="result-img-wrap">
+          <img src="assets/img/coffee-cropper/crop-m4-white.jpg"
+               alt="Final crop — white cup" loading="lazy">
+          <div class="result-label">White cup · method 4</div>
+        </div>
+        <div class="result-img-wrap">
+          <img src="assets/img/coffee-cropper/crop-m4-brown.jpg"
+               alt="Final crop — brown cup" loading="lazy">
+          <div class="result-label">Brown cup · method 4</div>
+        </div>
+      </div>
+
+      <div class="pill-row" style="margin-top:36px;">
+        <a href="latte.html" class="pill pill-accent">See the latte log →</a>
+        <a href="projects.html" class="pill">All projects →</a>
+        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" class="pill">GitHub →</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Kyle Hunady</span>
+    <div class="footer-links">
+      <a href="research.html">Research</a>
+      <a href="projects.html">Projects</a>
+      <a href="latte.html">Latte Log</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:khunady@caltech.edu">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+(function () {
+  const CASES = {
+    white: {
+      badges: { m1: false, m2: true,  m3: true, m4: true, m5: true },
+      descs: {
+        m1: 'Detects a large spurious circle (r≈1361) that wraps the plate, not the coffee. Wood grain and plate edge compete as strong circular features at this scale.',
+        m2: 'Finds the bright white saucer blob first, uses it to anchor the Hough search. Works here — but entirely depends on the cup being white ceramic.',
+        m3: 'Finds the outer mug circle first, then searches within it at a constrained radius ratio for the inner coffee surface. More focused than single-pass Hough.',
+        m4: 'Bilateral filter first: preserves the cup rim edge while smoothing out wood grain texture. Hough on the clean result finds the right circle immediately.',
+        m5: 'Bilateral filter + two-stage search targeting the inner coffee surface. Tighter crop than method 4 — sometimes better, sometimes locks on foam patterns.',
+      }
+    },
+    brown: {
+      badges: { m1: true,  m2: false, m3: true, m4: true, m5: true },
+      descs: {
+        m1: 'Happens to work here — the cup rim still produces a detectable circular edge even without white ceramic contrast.',
+        m2: 'Fails completely. The white saucer anchor relies on finding a bright white blob. There is no white blob. The detected circle drifts far off center (dist=0.34).',
+        m3: 'Two-stage outer→inner search handles the brown cup without issue — not anchored to cup color.',
+        m4: 'Bilateral filter works on edges regardless of color. The brown ceramic rim is still a sharp gradient. Detection is clean.',
+        m5: 'The inner search finds the coffee surface rather than the rim. Correct, but occasionally trips on visible foam texture in brown cups.',
+      }
+    }
+  };
+
+  const btns   = document.querySelectorAll('.case-btn');
+  const imgs   = ['m1','m2','m3','m4','m5'].map(id => document.getElementById('img-' + id));
+  const badges = ['m1','m2','m3','m4','m5'].map(id => document.getElementById('badge-' + id));
+  const descs  = ['m1','m2','m3','m4','m5'].map(id => document.getElementById('desc-' + id));
+  const ids    = ['m1','m2','m3','m4','m5'];
+
+  function switchCase(caseKey) {
+    const data = CASES[caseKey];
+    imgs.forEach((img, i) => {
+      img.style.opacity = '0.4';
+      img.src = `assets/img/coffee-cropper/debug-${ids[i]}-${caseKey}.jpg`;
+      img.onload = () => { img.style.opacity = '1'; };
+    });
+    badges.forEach((badge, i) => {
+      const pass = data.badges[ids[i]];
+      badge.textContent = pass ? '✓' : '✗';
+      badge.className = 'compare-badge ' + (pass ? 'badge-pass' : 'badge-fail');
+    });
+    descs.forEach((desc, i) => {
+      desc.textContent = data.descs[ids[i]];
+    });
+    btns.forEach(b => b.classList.toggle('active', b.dataset.case === caseKey));
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => switchCase(btn.dataset.case));
+  });
+})();
+</script>
+</body>
+</html>
