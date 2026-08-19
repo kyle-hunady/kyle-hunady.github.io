@@ -20,4 +20,16 @@
     <loc>https://kyle-hunady.github.io/projects.html</loc>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://kyle-hunady.github.io/monte-carlo.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kyle-hunady.github.io/coffee-cropper.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kyle-hunady.github.io/gumball.html</loc>
+    <priority>0.4</priority>
+  </url>
 </urlset>

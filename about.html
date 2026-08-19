@@ -13,12 +13,19 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="About — Kyle Hunady">
   <meta name="twitter:description" content="About Kyle Hunady — materials science PhD candidate at Caltech, studying high-entropy alloys and Mars instrumentation.">
+  <meta name="theme-color" content="#0a0e13">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600&display=swap">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+
 
 <!-- ── NAV ── -->
-<nav class="nav" role="navigation" aria-label="Main">
+<nav class="nav" aria-label="Main">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">KH</a>
     <div class="nav-right">
@@ -41,7 +48,11 @@
           </svg>
         </a>
       </div>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -55,7 +66,7 @@
   <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
 </div>
 
-<main>
+<main id="main">
   <div class="container">
 
     <!-- ── PAGE HEADER ── -->
@@ -72,24 +83,23 @@
         <div class="bio-text">
           <h2 id="bio-heading">Background</h2>
           <p>
-            I grew up taking things apart — appliances, recipes, whatever was available.
-            Materials science was the right fit because it's embedded in everything.
-            I started research as a freshman at Georgia Tech after responding to a cold
-            email from a grad student looking for help — that landed me in Li-ion battery
-            work, and from there, toward a deeper curiosity: how do atoms actually organize
-            themselves, and what happens at the boundary of order and disorder?
+            I grew up taking things apart: appliances, recipes, whatever was around. Materials
+            science fit because it sits inside everything else. I started research as a freshman at
+            Georgia Tech by answering a cold email from a grad student who needed help, which put me
+            in a Li-ion battery lab and left me with the question I still work on. How do atoms
+            arrange themselves, and what happens at the boundary between order and disorder?
           </p>
           <p>
-            That question brought me to Caltech, where I'm now a fourth-year PhD candidate
-            working on two problems that share a lot of underlying physics and almost nothing
-            else on the surface: the thermodynamics of <a href="research.html#alloys">high-entropy alloys</a>,
-            and building a <a href="research.html#mars">Mössbauer spectrometer</a> small enough
-            to fly to another planet.
+            That question brought me to Caltech, where I work on two problems that look unrelated
+            and share most of their physics: the thermodynamics of
+            <a href="research.html#alloys">high-entropy alloys</a>, and a
+            <a href="research.html#mars">M&ouml;ssbauer spectrometer</a> small enough to fly to
+            another planet.
           </p>
           <p>
-            Outside the lab, I write code, run student organizations, and make latte art.
-            I've documented every attempt. The longitudinal record is more interesting
-            than I expected.
+            Outside the lab I write code, run student organizations, and make latte art. I've
+            photographed every attempt since August 2025. The longitudinal record is more
+            interesting than I expected.
           </p>
         </div>
 
@@ -134,12 +144,12 @@
         <div class="edu-item">
           <div class="edu-degree">PhD, Materials Science</div>
           <div class="edu-school">California Institute of Technology (Caltech)</div>
-          <div class="edu-year">2021 – Expected 2027</div>
+          <div class="edu-year">2022 – Expected 2027</div>
         </div>
         <div class="edu-item">
-          <div class="edu-degree">B.S., Materials Science and Engineering</div>
+          <div class="edu-degree">B.S. &amp; M.S., Materials Science and Engineering</div>
           <div class="edu-school">Georgia Institute of Technology</div>
-          <div class="edu-year">2017 – 2021</div>
+          <div class="edu-year">2018 – 2022</div>
         </div>
       </div>
     </section>
@@ -151,7 +161,7 @@
       <div class="section-label">Leadership &amp; Service</div>
       <h2 class="section-title" id="leadership-heading">Roles &amp; involvement</h2>
       <p class="section-sub">
-        Organizations, committees, and other ways I've tried to make the people around me more effective.
+        Roles where the job is mostly making other people's work easier.
       </p>
 
       <div class="project-list">
@@ -209,13 +219,11 @@
       <div class="section-label">Contact</div>
       <h2 class="section-title" id="contact-heading">Get in touch</h2>
       <p class="section-sub">
-        I'm happy to hear from researchers, collaborators, or anyone who wants to talk
-        about materials science, Mars, or latte art.
+        Happy to hear from anyone working on materials science, Mars instrumentation, or espresso.
       </p>
       <div class="pill-row">
-        <a href="mailto:khunady@caltech.edu" class="pill pill-accent">khunady@caltech.edu →</a>
-        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" class="pill">GitHub →</a>
-        <a href="research.html" class="pill">View research →</a>
+        <a href="mailto:khunady@caltech.edu" class="pill pill-accent">khunady@caltech.edu &rarr;</a>
+        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" class="pill">GitHub &rarr;</a>
       </div>
     </section>
 

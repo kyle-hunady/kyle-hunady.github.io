@@ -13,12 +13,19 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Research — Kyle Hunady">
   <meta name="twitter:description" content="Kyle Hunady's research on high-entropy alloys and Mössbauer spectrometer miniaturization for Mars mineralogy at Caltech.">
+  <meta name="theme-color" content="#0a0e13">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600&display=swap">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+
 
 <!-- ── NAV ── -->
-<nav class="nav" role="navigation" aria-label="Main">
+<nav class="nav" aria-label="Main">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">KH</a>
     <div class="nav-right">
@@ -41,7 +48,11 @@
           </svg>
         </a>
       </div>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -55,17 +66,16 @@
   <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
 </div>
 
-<main>
+<main id="main">
   <div class="container">
 
     <!-- ── PAGE HEADER ── -->
     <header class="page-header">
       <div class="section-label">Research</div>
-      <h1>Materials at the edge of order</h1>
+      <h1>Entropy, and an instrument for Mars</h1>
       <p>
-        My work lives at the intersection of thermodynamics, spectroscopy, and extreme environments —
-        from alloys that embrace disorder as a design principle to instruments built to answer
-        questions about planets we've never stood on.
+        Two projects. One measures where the entropy in a high-entropy alloy actually comes from.
+        The other shrinks a M&ouml;ssbauer spectrometer until it fits on a Mars lander.
       </p>
     </header>
 
@@ -74,42 +84,37 @@
       <div class="section-label">Current Work</div>
       <div class="research-grid reveal">
 
-        <div id="alloys">
-          <article class="research-block">
+        <article class="research-block" id="alloys">
             <div class="research-block-label">Project 01 · Materials Thermodynamics</div>
             <h3>Entropy of High-Entropy Alloys</h3>
             <p>
-              High-entropy alloys (HEAs) are multi-principal-element alloys — materials with
-              five or more elements in roughly equal proportions — that derive their stability
-              from configurational entropy rather than from a single dominant element.
+              High-entropy alloys mix five or more elements in near-equal amounts. The premise of
+              the field is that configurational entropy, the number of ways those atoms can be
+              arranged, is what stabilizes the single-phase solid solution.
             </p>
             <p>
-              My research tests that assumption directly. Using heat capacity measurements from
-              2K to 400K, we measured the absolute entropy of Al-doped CoCrFe(Mn)Ni and
-              NbTa₀.₅TiZr systems. The result runs counter to the common assumption in the
-              field: Al addition decreases entropy. A manuscript on these findings is currently
-              under review.
+              I measure that entropy instead of assuming it. Heat capacity from 2 K to 400 K gives
+              the absolute entropy of Al-doped CoCrFe(Mn)Ni and NbTa<sub>0.5</sub>TiZr. Adding
+              aluminum lowers it, which is the opposite of what the configurational argument
+              predicts. That manuscript is under review.
             </p>
-          </article>
-        </div>
+        </article>
 
-        <div id="mars">
-          <article class="research-block">
+        <article class="research-block is-blue" id="mars">
             <div class="research-block-label">Project 02 · Instrumentation · Space Science</div>
             <h3>Mössbauer Spectrometer Miniaturization for Mars</h3>
             <p>
-              Mössbauer spectroscopy is one of the most powerful tools for identifying iron-bearing
-              minerals — which makes it uniquely valuable for understanding Mars' geological
-              history and the potential for past habitability.
+              M&ouml;ssbauer spectroscopy identifies iron-bearing minerals and the oxidation state
+              of the iron in them. On Mars that covers most of the interesting geology, which is why
+              the technique flew on both Spirit and Opportunity.
             </p>
             <p>
-              The challenge: existing Mössbauer instruments are too large and power-hungry for
-              next-generation Mars landers and rovers with tight mass and power budgets. My work
-              focuses on miniaturizing the spectrometer hardware without sacrificing the
-              sensitivity needed to do real science on the Martian surface.
+              Those instruments are too heavy and draw too much power for the mass budget of the
+              next generation of landers. I'm shrinking the hardware while keeping enough signal to
+              do real mineralogy: the velocity drive, the source geometry and the detector each have
+              to get smaller without costing sensitivity.
             </p>
-          </article>
-        </div>
+        </article>
 
       </div>
     </section>
@@ -144,13 +149,12 @@
     <!-- ── CV ── -->
     <section class="section reveal" aria-labelledby="cv-heading">
       <div class="section-label">Curriculum Vitae</div>
-      <h2 class="section-title" id="cv-heading">Full CV</h2>
+      <h2 class="section-title" id="cv-heading">CV</h2>
       <p class="section-sub">
-        A complete record of education, research experience, publications, and presentations.
+        Not posted here yet. Email me and I'll send the current version.
       </p>
       <div class="pill-row">
-        <span class="pill wip-block" style="cursor:default;">Download CV (PDF) →</span>
-        <a href="mailto:khunady@caltech.edu" class="pill">Get in touch →</a>
+        <a href="mailto:khunady@caltech.edu?subject=CV%20request" class="pill pill-accent">Ask for my CV &rarr;</a>
       </div>
     </section>
 

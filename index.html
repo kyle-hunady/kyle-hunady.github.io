@@ -13,6 +13,11 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Kyle Hunady — Materials Science PhD, Caltech">
   <meta name="twitter:description" content="PhD candidate at Caltech studying thermodynamics of high-entropy alloys and building Mössbauer spectrometers for Mars mineralogy.">
+  <meta name="theme-color" content="#0a0e13">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600&display=swap">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="assets/css/style.css">
   <script type="application/ld+json">
   {
@@ -28,6 +33,11 @@
       "alternateName": "Caltech",
       "url": "https://www.caltech.edu"
     },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Georgia Institute of Technology",
+      "url": "https://www.gatech.edu"
+    },
     "url": "https://kyle-hunady.github.io",
     "email": "khunady@caltech.edu",
     "sameAs": ["https://github.com/kyle-hunady"],
@@ -36,9 +46,11 @@
   </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+
 
 <!-- ── NAV ── -->
-<nav class="nav" role="navigation" aria-label="Main">
+<nav class="nav" aria-label="Main">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Kyle Hunady — home">KH</a>
     <div class="nav-right">
@@ -61,7 +73,11 @@
           </svg>
         </a>
       </div>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-drawer">≡</button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -77,65 +93,43 @@
 </div>
 
 <!-- ── HERO ── -->
-<main>
+<main id="main">
   <section class="hero">
     <div class="container">
       <div class="hero-inner">
 
-        <!-- Profile flip card -->
+        <!-- Profile flip card — a button, so it works on touch and by keyboard -->
         <div class="hero-left">
-          <div class="flip-card" aria-label="Profile photo (hover to reveal a latte art attempt)" role="img">
-            <div class="flip-card-inner">
-              <div class="flip-card-front">
-                <!--
-                  ADD YOUR HEADSHOT:
-                  1. Save your photo as assets/img/headshot.jpg
-                  2. Replace the placeholder div below with:
-                     <img src="assets/img/headshot.jpg" alt="Kyle Hunady">
-                -->
-                <!-- <div class="flip-placeholder">
-                  <div class="flip-placeholder-icon">🧑‍🔬</div>
-                  <div class="flip-placeholder-label">Add headshot<br>assets/img/headshot.jpg</div>
-                </div> -->
-                <img src="assets/img/headshot.jpg" alt="Kyle Hunady">
-              </div>
-              <div class="flip-card-back">
-                <!--
-                  ADD A LATTE ART PHOTO:
-                  1. Save a latte photo as assets/img/latte-hero.jpg
-                  2. Replace the placeholder div below with:
-                     <img src="assets/img/latte-hero.jpg" alt="A latte art attempt">
-                -->
-                <!-- <div class="flip-placeholder">
-                  <div class="flip-placeholder-icon">☕</div>
-                  <div class="flip-placeholder-label">Add latte photo<br>assets/img/latte-hero.jpg</div>
-                </div> -->
-                <img src="assets/img/latte-hero.jpg" alt="A latte art attempt">
-              </div>
-            </div>
-          </div>
-          <p class="flip-hint" aria-hidden="true">↑ hover</p>
+          <button class="flip-card" id="flip-card" type="button" aria-label="Flip the photo to see a latte">
+            <span class="flip-card-inner">
+              <span class="flip-card-front">
+                <img src="assets/img/headshot.jpg" alt="Kyle Hunady" width="200" height="200" fetchpriority="high">
+              </span>
+              <span class="flip-card-back">
+                <img src="assets/img/latte-hero.jpg" alt="A latte art attempt" width="200" height="200">
+              </span>
+            </span>
+          </button>
+          <p class="flip-hint" aria-hidden="true">flip me</p>
         </div>
 
         <!-- Text content -->
         <div class="hero-right">
-          <div class="hero-label">PhD Candidate · Materials Science · Caltech · 2027</div>
+          <div class="hero-label">PhD Candidate · Materials Science · Caltech</div>
           <h1>Kyle Hunady</h1>
           <p class="hero-tagline">
             Studying entropy.
           </p>
           <p class="hero-bio">
-            I'm a fourth-year PhD candidate at Caltech working on two things that happen to be
-            very far apart: the <a href="research.html#alloys">thermodynamics of high-entropy alloys</a>
-            and building a <a href="research.html#mars">miniaturized Mössbauer spectrometer</a> for
-            studying mineralogy on the surface of Mars. In between, I write code, document
-            <a href="latte.html">every latte art attempt I make</a>, and run student organizations at Caltech.
+            I'm a PhD candidate at Caltech. I measure
+            <a href="research.html#alloys">the entropy of high-entropy alloys</a>, and I'm building a
+            <a href="research.html#mars">Mössbauer spectrometer</a> small enough to fly to Mars.
+            The rest of the time I write code, run student organizations, and
+            <a href="latte.html">photograph every latte I make</a>.
           </p>
           <div class="pill-row">
-            <a href="research.html" class="pill pill-accent">Research →</a>
-            <a href="projects.html" class="pill">Projects →</a>
-            <a href="latte.html" class="pill">Latte Log →</a>
-            <a href="about.html" class="pill">About →</a>
+            <a href="research.html" class="pill pill-accent">Read the research →</a>
+            <a href="mailto:khunady@caltech.edu" class="pill">Email me</a>
           </div>
         </div>
 
@@ -151,21 +145,21 @@
         <a href="research.html" class="preview-card reveal">
           <div class="card-label">Research</div>
           <h2>High-entropy alloys &amp; Mars mineralogy</h2>
-          <p>Probing thermodynamic disorder in multi-principal-element alloys. Also: making a spectrometer small enough to fly to another planet.</p>
+          <p>What aluminum does to the entropy of CoCrFeMnNi, measured from 2 K to 400 K. And a spectrometer built to fit a Mars lander.</p>
           <span class="card-link">View research →</span>
         </a>
 
-        <a href="projects.html" class="preview-card reveal" style="transition-delay: 0.08s">
+        <a href="projects.html" class="preview-card reveal">
           <div class="card-label">Projects</div>
           <h2>Code, tools &amp; experiments</h2>
-          <p>Monte Carlo photon simulations, cheap hardware hacks, and the script that crops this site's latte photos. More on GitHub.</p>
+          <p>A Monte Carlo photon ray-tracer, a $10 subway clock, and the script that crops the latte photos on this site.</p>
           <span class="card-link">View projects →</span>
         </a>
 
-        <a href="latte.html" class="preview-card reveal" style="transition-delay: 0.16s">
+        <a href="latte.html" class="preview-card reveal">
           <div class="card-label">Latte Log</div>
           <h2>Every attempt, documented</h2>
-          <p>Several hundred latte art attempts and counting. Some are good. Most aren't. The data set is still growing.</p>
+          <p>Every latte I've poured since August 2025, numbered and dated. Longitudinal data is always fascinating.</p>
           <span class="card-link">View gallery →</span>
         </a>
 
