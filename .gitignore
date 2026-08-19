@@ -1,6 +1,12 @@
 # Reference files (inspiration only, not part of the site)
 .claude
 
+# Internal copy source. Kept in the working tree, never published: it holds
+# voice notes, unfilled placeholders and claims the manuscript does not
+# support, and GitHub Pages serves the repo root, so anything tracked here is
+# a live URL. Purged from history 2026-08-19.
+knowledge.md
+
 # OS specific files
 .DS_Store
 Thumbs.db
