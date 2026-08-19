@@ -1,0 +1,428 @@
+/* ============================================================================
+   kyle-hunady.github.io -- one-page portfolio
+   Structure follows the pattern Kyle liked on jedi-alindogan.github.io:
+   dark page, monospace UI, narrow centred column, floating icon nav,
+   kicker + title section headers, a tile grid of projects.
+
+   The palette is NOT Jedi's. It is sampled from Kyle's own headshot
+   (photo/make_variants.py prints the samples): page black from the photo's
+   background #050504, sage from the shirt #4B5853. Same genre, own colours.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+:root {
+  /* sampled from assets/img/headshot.jpg */
+  --bg: #0B0C0B;          /* photo background is #050504 -- close enough to dissolve into */
+  --surface: #151714;
+  --surface-2: #1E211D;
+  --accent: #8FA095;      /* shirt, lifted */
+  --accent-deep: #4B5853; /* shirt, as sampled */
+  --accent-dim: rgba(143, 160, 149, 0.16);
+  --white: #F2F3F0;
+  --muted: rgba(242, 243, 240, 0.58);
+  --faint: rgba(242, 243, 240, 0.50);   /* 4.90:1 on --bg -- AA for the 10-12px text
+                                           that uses it (eyebrow, tags, dates, chips) */
+  --rule: rgba(242, 243, 240, 0.10);
+
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+
+  --transition: all 320ms ease;
+  --w-lg: 58rem;
+  --w-md: 86%;
+  --w-sm: 90%;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--white);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { width: var(--w-lg); margin: 0 auto; }
+
+h1, h2, h3, h4, h5 { font-weight: 500; line-height: 1.3; }
+h1 { font-size: 2.1rem; letter-spacing: -0.02em; }
+
+p { font-size: 0.9rem; font-family: var(--sans); color: var(--muted); }
+p strong { color: var(--white); font-weight: 500; }
+
+a { color: var(--accent); transition: var(--transition); }
+a:hover { color: var(--white); }
+
+section { margin-top: 8rem; scroll-margin-top: 2rem; }
+
+/* No .kicker rule. Jedi's sections lead with a small line above the title
+   ("Get To Know" / "See My Recent Work"); those are the slogan surface Kyle
+   asked to remove, so the sections just carry a plain title. */
+
+section > h2 {
+  text-align: center;
+  color: var(--accent);
+  font-size: 1.35rem;
+  margin-bottom: 3rem;
+}
+
+.btn {
+  width: max-content;
+  display: inline-block;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  border: 1px solid var(--accent-deep);
+  transition: var(--transition);
+}
+.btn:hover { background: var(--accent-deep); color: var(--bg); border-color: transparent; }
+.btn-primary { background: var(--accent); color: var(--bg); border-color: transparent; }
+.btn-primary:hover { background: var(--white); color: var(--bg); }
+
+img { display: block; width: 100%; object-fit: cover; }
+
+/* ---------------------------------------------------------------- nav ---- */
+nav {
+  background: rgba(11, 12, 11, 0.55);
+  width: max-content;
+  display: flex;
+  padding: 0.6rem 1.4rem;
+  z-index: 20;
+  position: fixed;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  gap: 0.5rem;
+  border-radius: 3rem;
+  border: 1px solid var(--rule);
+  backdrop-filter: blur(14px);
+}
+nav a {
+  display: flex;
+  padding: 0.7rem;
+  border-radius: 50%;
+  color: var(--faint);
+  font-size: 1rem;
+  line-height: 0;
+}
+nav a svg { width: 1.05rem; height: 1.05rem; }
+nav a:hover { background: var(--accent-dim); color: var(--white); }
+nav a.active { background: var(--accent-dim); color: var(--accent); }
+
+/* ------------------------------------------------------------- header ---- */
+header { padding-top: 6rem; overflow: hidden; }
+.header__container { text-align: center; position: relative; }
+
+.header__eyebrow {
+  color: var(--faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.header__role { color: var(--muted); font-size: 0.95rem; margin-top: 0.4rem; }
+.header__line {
+  font-family: var(--sans);
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 34rem;
+  margin: 1.1rem auto 0;
+}
+
+.cta { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; }
+
+.header__socials {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  position: absolute;
+  left: 0;
+  bottom: 3rem;
+  color: var(--accent);
+}
+.header__socials a { display: flex; line-height: 0; }
+.header__socials svg { width: 1.05rem; height: 1.05rem; }
+.header__socials::before,
+.header__socials::after {
+  content: '';
+  width: 1px;
+  height: 2rem;
+  background: var(--accent-deep);
+}
+
+.scroll__down {
+  position: absolute;
+  right: -2.6rem;
+  bottom: 5rem;
+  transform: rotate(90deg);
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ------------------------------------------------- hero portrait modes ----
+   Four treatments of the same source photo. Swap the class on .me to change
+   which one ships; the images are all built by photo/make_variants.py.
+   Jedi's site uses a full-body cutout in a 32rem arch. We do not have a
+   full-body photo, so every mode here is built to look deliberate at
+   head-and-shoulders scale rather than like a cropped stand-in.          */
+
+.me { position: relative; margin: 3.5rem auto 0; }
+.me img { width: 100%; }
+
+/* A -- narrow arch. Jedi's shape, sized down so a head-and-shoulders crop
+       fills it properly instead of floating in a 32rem opening. */
+.me--arch {
+  width: 19rem;
+  background: linear-gradient(var(--accent-dim), transparent 78%);
+  border-radius: 9.5rem 9.5rem 0 0;
+  padding: 1.4rem 1.1rem 0;
+}
+
+/* B -- vignette. No frame at all: the photo's own black dissolves into the
+       page. Reads as a hero image rather than a profile picture. */
+.me--vignette { width: 26rem; }
+.me--vignette img { margin-bottom: -3rem; }
+
+/* C -- duotone. Same dissolve, mapped onto the sage ramp so the portrait
+       reads as part of the palette instead of the only colour on the page. */
+.me--duotone { width: 26rem; }
+.me--duotone img { margin-bottom: -3rem; }
+
+/* D -- disc. THE SHIPPING ONE. Small and centred above the name. The source is
+       a head-and-shoulders crop; at hero scale it competed with the text, and a
+       second copy in About made it redundant, so the page carries one photo. */
+.me--disc { width: 13rem; margin: 0 auto 2rem; }
+.me--disc img { border-radius: 50%; border: 1px solid var(--rule); }
+
+/* E -- no portrait in the hero at all: the work is the hero image and the
+       headshot moves down into About. Nothing to style here beyond hiding. */
+.me--none { display: none; }
+
+/* -------------------------------------------------------------- about ---- */
+/* Single column: the About portrait was removed, the page has one photo. */
+.about__container { display: block; }
+.about__content p + p { margin-top: 1rem; }
+
+.about__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.8rem;
+}
+.about__fact {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+  padding: 1rem 0.8rem;
+  text-align: center;
+}
+.about__fact .fact__value { font-size: 1.05rem; font-weight: 500; color: var(--accent); }
+.about__fact small { font-size: 0.68rem; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* --------------------------------------------------------- experience ---- */
+.exp__item {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.exp__item:last-child { border-bottom: 1px solid var(--rule); }
+.exp__when { color: var(--faint); font-size: 0.75rem; letter-spacing: 0.04em; padding-top: 0.15rem; }
+.exp__role { font-size: 0.95rem; color: var(--white); }
+.exp__where { color: var(--accent); font-size: 0.78rem; margin-bottom: 0.5rem; }
+.exp__item p { font-size: 0.85rem; }
+
+/* ----------------------------------------------------------- projects ---- */
+.projects__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+.project {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.7rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+.project:hover { border-color: var(--accent-deep); transform: translateY(-3px); }
+
+.project__thumb { aspect-ratio: 16 / 10; background: var(--surface-2); overflow: hidden; }
+.project__thumb img { height: 100%; }
+.project__thumb--empty {
+  display: grid;
+  place-items: center;
+  color: var(--faint);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.project__body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; flex: 1; }
+.project__tag { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+h3.project__title { font-size: 0.9rem; font-weight: 500; margin: 0.3rem 0 0.45rem;
+                   color: var(--white); line-height: 1.35; }
+.project__body p { font-size: 0.8rem; line-height: 1.55; flex: 1; }
+
+/* the quick links Kyle wanted: one row of small labelled chips per card */
+.project__links { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+.project__links a {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.3rem;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.project__links a:hover { border-color: var(--accent-deep); color: var(--white); background: var(--accent-dim); }
+.project__links svg { width: 0.78rem; height: 0.78rem; }
+
+/* ------------------------------------------------------------ contact ---- */
+.contact__row { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+
+footer {
+  margin-top: 7rem;
+  padding: 2.5rem 0 6rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+footer small { color: var(--faint); font-size: 0.72rem; }
+
+/* ------------------------------------------------------------- medium ---- */
+@media screen and (max-width: 1024px) {
+  .container { width: var(--w-md); }
+  section { margin-top: 6rem; }
+  .projects__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* -------------------------------------------------------------- small ---- */
+@media screen and (max-width: 640px) {
+  .container { width: var(--w-sm); }
+  h1 { font-size: 1.6rem; }
+  .projects__grid { grid-template-columns: 1fr; }
+  /* Three tiles across a 375px screen leaves 98px each, which wrapped
+     "Fultz group, 2022-" onto four lines. One per row, label and value on
+     the same line. */
+  .about__facts { grid-template-columns: 1fr; gap: 0.5rem; }
+  .about__fact {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    text-align: left;
+    padding: 0.6rem 0.9rem;
+  }
+  .scroll__down { display: none; }
+  .header__socials {
+    flex-direction: row;
+    position: relative;
+    bottom: 0;
+    margin-top: 1.6rem;
+    justify-content: center;
+  }
+  .header__socials::before, .header__socials::after { display: none; }
+  .exp__item { grid-template-columns: 1fr; gap: 0.4rem; }
+  .me--arch { width: 15rem; border-radius: 7.5rem 7.5rem 0 0; }
+  .me--disc { width: 10rem; }
+  .me--vignette, .me--duotone { width: 100%; }
+  nav { padding: 0.5rem 0.9rem; gap: 0.2rem; }
+}
+
+/* A quick-link slot that has no URL yet (paper in review, unpublished repo).
+   Rendered flat and unclickable rather than faked as a link. */
+.project__links .chip--state {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.55rem;
+  border: 1px dashed var(--rule);
+  border-radius: 0.3rem;
+  color: var(--faint);
+}
+
+/* ----------------------------------------------------- copy-to-clipboard ---
+   No mailto: anywhere (Kyle, 2026-08-19) -- it hands the visitor to whatever
+   the OS thinks their mail client is. These copy the address instead and say
+   so, via a .copied class that site.js toggles for a moment. */
+.icon-btn {
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  line-height: 0;
+  padding: 0;
+  transition: var(--transition);
+}
+.icon-btn:hover { color: var(--white); }
+.icon-btn svg { width: 1.05rem; height: 1.05rem; }
+
+button.btn { font-size: 0.8rem; }
+
+.js-copy { position: relative; }
+.js-copy.copied { background: var(--accent-deep); color: var(--white); }
+.js-copy.copied::after {
+  content: 'copied';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.45rem);
+  transform: translateX(-50%);
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* the rail runs vertically down the left edge, so its tooltip goes beside it */
+.header__socials .js-copy.copied::after {
+  left: calc(100% + 0.5rem);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* If the clipboard is refused -- unfocused document, insecure context, a
+   locked-down browser -- say so and select the address so Ctrl+C still works.
+   A button that silently does nothing is worse than no button. */
+.js-copy.copy-manual { background: var(--surface-2); color: var(--white); }
+.js-copy.copy-manual::after {
+  content: 'select + copy';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.45rem);
+  transform: translateX(-50%);
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  pointer-events: none;
+}

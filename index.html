@@ -1,188 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kyle Hunady</title>
-  <meta name="description" content="Kyle Hunady — PhD candidate in Materials Science at Caltech. Studying entropy, building spectrometers for Mars, and documenting latte art.">
-  <link rel="canonical" href="https://kyle-hunady.github.io/">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kyle-hunady.github.io/">
-  <meta property="og:title" content="Kyle Hunady — Materials Science PhD, Caltech">
-  <meta property="og:description" content="PhD candidate at Caltech studying thermodynamics of high-entropy alloys and building Mössbauer spectrometers for Mars mineralogy.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Kyle Hunady — Materials Science PhD, Caltech">
-  <meta name="twitter:description" content="PhD candidate at Caltech studying thermodynamics of high-entropy alloys and building Mössbauer spectrometers for Mars mineralogy.">
-  <meta name="theme-color" content="#0a0e13">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600&display=swap">
-  <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Kyle Hunady",
-    "givenName": "Kyle",
-    "familyName": "Hunady",
-    "jobTitle": "PhD Candidate in Materials Science",
-    "affiliation": {
-      "@type": "Organization",
-      "name": "California Institute of Technology",
-      "alternateName": "Caltech",
-      "url": "https://www.caltech.edu"
-    },
-    "alumniOf": {
-      "@type": "CollegeOrUniversity",
-      "name": "Georgia Institute of Technology",
-      "url": "https://www.gatech.edu"
-    },
-    "url": "https://kyle-hunady.github.io",
-    "email": "khunady@caltech.edu",
-    "sameAs": ["https://github.com/kyle-hunady"],
-    "knowsAbout": ["High-entropy alloys", "Materials thermodynamics", "Mössbauer spectroscopy", "Mars mineralogy", "Materials science"]
-  }
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyle Hunady</title>
+<meta name="description" content="Materials science PhD candidate at Caltech. I study entropy in alloys and work on planetary instrumentation.">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
 
+<!-- Icon sprite. Kept inline so the page has zero third-party JS and works
+     offline; react-icons is what Jedi's site pulls this from. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.29-1.71-1.29-1.71-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+</svg>
 
-<!-- ── NAV ── -->
-<nav class="nav" aria-label="Main">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo" aria-label="Kyle Hunady — home">KH</a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="research.html">Research</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="latte.html">Latte Log</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-      <div class="nav-icons">
-        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-          </svg>
-        </a>
-        <a href="mailto:khunady@caltech.edu" aria-label="Email">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2" y="4" width="20" height="16" rx="2"/>
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-          </svg>
-        </a>
-      </div>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M3 6h18M3 12h18M3 18h18"/>
-        </svg>
-      </button>
+<!-- =========================================================== header ==== -->
+<header>
+  <div class="container header__container">
+    <!-- The page's only photo. Circular and small on purpose: the source is a
+         head-and-shoulders crop, and at hero scale it competed with the text.
+         Other treatments live in ../photo/hero-options.html. -->
+    <div class="me me--disc">
+      <img src="assets/img/hero-disc.png" alt="Kyle Hunady">
     </div>
+
+    <p class="header__eyebrow">Kyle Hunady</p>
+    <h1>Materials science PhD candidate</h1>
+    <p class="header__role">Caltech &middot; Brent Fultz group</p>
+    <p class="header__line">
+      I study entropy in alloys and work on planetary instrumentation.
+    </p>
+
+    <div class="cta">
+      <a href="assets/Kyle_Hunady_Resume.pdf" class="btn" download>Resume</a>
+      <button type="button" class="btn btn-primary js-copy" data-copy="khunady@caltech.edu">khunady@caltech.edu</button>
+    </div>
+
+    <div class="header__socials">
+      <a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button type="button" class="icon-btn js-copy" data-copy="khunady@caltech.edu" aria-label="Copy email address"><svg><use href="#i-mail"/></svg></button>
+      <!-- add LinkedIn / Google Scholar here once you want them public -->
+    </div>
+
+    <a href="#about" class="scroll__down">Scroll</a>
   </div>
+</header>
+
+<!-- ============================================================== nav ==== -->
+<nav>
+  <a href="#top"       data-nav="top"      aria-label="Top"><svg><use href="#i-home"/></svg></a>
+  <a href="#about"     data-nav="about"    aria-label="About"><svg><use href="#i-user"/></svg></a>
+  <a href="#research"  data-nav="research" aria-label="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="#projects"  data-nav="projects" aria-label="Projects"><svg><use href="#i-folder"/></svg></a>
+  <a href="#contact"   data-nav="contact"  aria-label="Contact"><svg><use href="#i-mail"/></svg></a>
 </nav>
 
-<!-- Mobile drawer -->
-<div class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
-  <a href="research.html">Research</a>
-  <a href="projects.html">Projects</a>
-  <a href="latte.html">Latte Log</a>
-  <a href="about.html">About</a>
-  <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub ↗</a>
-  <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
-</div>
+<!-- ============================================================ about ==== -->
+<section id="about">
+  <h2>About</h2>
 
-<!-- ── HERO ── -->
-<main id="main">
-  <section class="hero">
-    <div class="container">
-      <div class="hero-inner">
-
-        <!-- Profile flip card — a button, so it works on touch and by keyboard -->
-        <div class="hero-left">
-          <button class="flip-card" id="flip-card" type="button" aria-label="Flip the photo to see a latte">
-            <span class="flip-card-inner">
-              <span class="flip-card-front">
-                <img src="assets/img/headshot.jpg" alt="Kyle Hunady" width="200" height="200" fetchpriority="high">
-              </span>
-              <span class="flip-card-back">
-                <img src="assets/img/latte-hero.jpg" alt="A latte art attempt" width="200" height="200">
-              </span>
-            </span>
-          </button>
-          <p class="flip-hint" aria-hidden="true">flip me</p>
-        </div>
-
-        <!-- Text content -->
-        <div class="hero-right">
-          <div class="hero-label">PhD Candidate · Materials Science · Caltech</div>
-          <h1>Kyle Hunady</h1>
-          <p class="hero-tagline">
-            Studying entropy.
-          </p>
-          <p class="hero-bio">
-            I'm a PhD candidate at Caltech. I measure
-            <a href="research.html#alloys">the entropy of high-entropy alloys</a>, and I'm building a
-            <a href="research.html#mars">Mössbauer spectrometer</a> small enough to fly to Mars.
-            The rest of the time I write code, run student organizations, and
-            <a href="latte.html">photograph every latte I make</a>.
-          </p>
-          <div class="pill-row">
-            <a href="research.html" class="pill pill-accent">Read the research →</a>
-            <a href="mailto:khunady@caltech.edu" class="pill">Email me</a>
-          </div>
-        </div>
-
+  <div class="container about__container">
+    <div class="about__content">
+      <div class="about__facts">
+        <div class="about__fact"><div class="fact__value">Caltech</div><small>Fultz group, 2022&ndash;</small></div>
+        <div class="about__fact"><div class="fact__value">&#8309;&#8311;Fe</div><small>M&ouml;ssbauer and XRF</small></div>
+        <div class="about__fact"><div class="fact__value">Cp + DFT</div><small>Entropy measurements</small></div>
       </div>
-    </div>
-  </section>
 
-  <!-- ── PREVIEW CARDS ── -->
-  <section class="preview-section" aria-label="Site sections">
-    <div class="container">
-      <div class="preview-grid">
+      <p>I'm a materials science PhD candidate at Caltech, in Brent Fultz's group.</p>
 
-        <a href="research.html" class="preview-card reveal">
-          <div class="card-label">Research</div>
-          <h2>High-entropy alloys &amp; Mars mineralogy</h2>
-          <p>What aluminum does to the entropy of CoCrFeMnNi, measured from 2 K to 400 K. And a spectrometer built to fit a Mars lander.</p>
-          <span class="card-link">View research →</span>
-        </a>
+      <p>Most of my work is on entropy in alloys. A high-entropy alloy is named for the idea that
+         mixing many elements buys enough configurational entropy &mdash; <i>k</i><sub>B</sub>ln(N)
+         &mdash; to stabilize a solid solution. I measure the total entropy by precision calorimetry
+         from 2 to 400&nbsp;K across Al-added CoCrFeNi, CoCrFeMnNi and NbTa<sub>0.5</sub>TiZr, and
+         that picture does not predict the trends. Vibrational entropy dominates, and together with
+         B2 ordering it can overwhelm the configurational gain from adding a component.</p>
 
-        <a href="projects.html" class="preview-card reveal">
-          <div class="card-label">Projects</div>
-          <h2>Code, tools &amp; experiments</h2>
-          <p>A Monte Carlo photon ray-tracer, a $10 subway clock, and the script that crops the latte photos on this site.</p>
-          <span class="card-link">View projects →</span>
-        </a>
+      <p>The caveat matters: those Al-rich ordered states still form. They are driven by
+         Al&ndash;transition-metal bonding enthalpy, which the entropy changes oppose rather than
+         determine &mdash; so measuring the entropy of the phase that forms does not by itself
+         settle phase stability.</p>
 
-        <a href="latte.html" class="preview-card reveal">
-          <div class="card-label">Latte Log</div>
-          <h2>Every attempt, documented</h2>
-          <p>Every latte I've poured since August 2025, numbered and dated. Longitudinal data is always fascinating.</p>
-          <span class="card-link">View gallery →</span>
-        </a>
+      <p>The rest is instrumentation. With JPL I work on a miniaturized <sup>57</sup>Fe
+         M&ouml;ssbauer/XRF spectrometer for planetary surfaces. That covers the piezoelectric
+         drive and its feedback loop, the multichannel scaler firmware, and the detector pulse
+         processing.</p>
 
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- ── FOOTER ── -->
-<footer class="footer">
-  <div class="footer-inner">
-    <span class="footer-copy">© 2026 Kyle Hunady</span>
-    <div class="footer-links">
-      <a href="research.html">Research</a>
-      <a href="projects.html">Projects</a>
-      <a href="latte.html">Latte Log</a>
-      <a href="about.html">About</a>
-      <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub</a>
-      <a href="mailto:khunady@caltech.edu">Email</a>
+      <p>Before Caltech I was at Georgia Tech, where I worked on battery processing in Gleb
+         Yushin's lab and taught in the makerspaces. Outside the lab I lead group hikes for the
+         Caltech Y and the Alpine Club, do a lot of 3D printing, and write small tools when I
+         need one.</p>
     </div>
   </div>
+</section>
+
+<!-- ========================================================= research ==== -->
+<section id="research">
+  <h2>Research</h2>
+
+  <div class="container">
+    <div class="exp__item">
+      <div class="exp__when">2022 &ndash; ongoing</div>
+      <div>
+        <div class="exp__role">Planetary Exploration Instrumentation</div>
+        <div class="exp__where">Fultz group &middot; Caltech and JPL</div>
+        <p>Miniaturization and flight qualification of a combined <sup>57</sup>Fe M&ouml;ssbauer/XRF
+           spectrometer. I built the drive and counting chain: closed-loop piezoelectric velocity
+           control, the multichannel scaler firmware, and the silicon drift detector pulse
+           processing. I also wrote the group's Python tools for fitting the spectra.</p>
+      </div>
+    </div>
+
+    <div class="exp__item">
+      <div class="exp__when">2022 &ndash; ongoing</div>
+      <div>
+        <div class="exp__role">High-Entropy Alloy Thermodynamics</div>
+        <div class="exp__where">Fultz group &middot; Caltech</div>
+        <p>Precision calorimetry from 2 to 400&nbsp;K on Al-added CoCrFeNi, CoCrFeMnNi and
+           NbTa<sub>0.5</sub>TiZr, alongside M&ouml;ssbauer spectroscopy, diffraction, electron
+           microscopy and spin-polarized DFT. Vibrational entropy dominates and, with B2 ordering,
+           can overwhelm the configurational gain from adding a component &mdash; so ideal mixing
+           does not predict the trends.</p>
+      </div>
+    </div>
+
+    <div class="exp__item">
+      <div class="exp__when">2019 &ndash; 2022</div>
+      <div>
+        <div class="exp__role">Li-Battery Processing Optimization</div>
+        <div class="exp__where">Gleb Yushin Nanotech Lab &middot; Georgia Tech</div>
+        <p>Optimized a milling procedure that raised solid-electrolyte conductivity tenfold, and
+           found cathode drying profiles that raised fast-charge capacity by 17%.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= projects ==== -->
+<section id="projects">
+  <h2>Projects</h2>
+
+  <div class="container projects__grid">
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-spectrometer.jpg" alt="The miniaturized Mossbauer/XRF spectrometer prototype" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='photo of the spectrometer';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Instrumentation</div>
+        <h3 class="project__title">Miniaturized M&ouml;ssbauer / XRF spectrometer</h3>
+        <p>A <sup>57</sup>Fe spectrometer for planetary surfaces, small enough to fly.
+           Piezoelectric drive, closed-loop velocity control, and a geometry that keeps the source,
+           sample and detector aligned at reduced size.</p>
+        <div class="project__links">
+          <span class="chip chip--state">Paper in preparation</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-mcs.jpg" alt="The multichannel scaler board" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='MCS board / scope trace';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Firmware &amp; electronics</div>
+        <h3 class="project__title">Detector chain and multichannel scaler</h3>
+        <p>Teensy firmware that bins counts against the drive phase, plus the silicon drift
+           detector pulse processing in front of it.</p>
+        <div class="project__links">
+          <span class="chip chip--state">Not public</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-montecarlo.jpg" alt="Simulated photon paths through the spectrometer" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='simulated photon paths';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Simulation</div>
+        <h3 class="project__title">Monte Carlo geometry search</h3>
+        <p>A photon ray-tracer that grid-searches source&ndash;sample&ndash;detector geometries for the
+           backscatter instrument. Count rate and spectral fidelity pull against each other: the
+           angular spread that a wider aperture buys also smears the velocity axis, because a photon
+           leaving at an angle sees only the cosine of the drive velocity. The simulator measures
+           that smearing as a kernel, so a fit to real data can be corrected for the geometry it was
+           taken in.</p>
+        <div class="project__links">
+          <a href="monte-carlo.html"><svg><use href="#i-link"/></svg>Ray viewer</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-calorimetry.jpg" alt="A calorimetry sample platform" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='Cp curve / entropy split';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Thermodynamics</div>
+        <h3 class="project__title">The entropy of high-entropy alloys</h3>
+        <p>High-entropy alloys are named for their configurational entropy. We measured the total
+           entropy of Al-added transition-metal alloys and found ideal mixing does not predict the
+           trends &mdash; vibrational entropy and B2 ordering can overwhelm the configurational
+           gain, leaving bonding enthalpy to decide what forms.</p>
+        <div class="project__links">
+          <span class="chip chip--state">Acta Materialia &mdash; in revision</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-calibration.jpg" alt="A Mossbauer calibration spectrum" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='calibration spectrum';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Lab tooling</div>
+        <h3 class="project__title">M&ouml;ssbauer velocity calibration</h3>
+        <p>Automates the calibration a M&ouml;ssbauer run needs before its velocity axis means
+           anything. Fits the reference foil and returns mm/s per channel.</p>
+        <div class="project__links">
+          <a href="https://github.com/kyle-hunady/mossbauer-calibration" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>mossbauer-calibration</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-sca.jpg" alt="A gas-filled counter pulse-height distribution" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='pulse-height distribution';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Lab tooling</div>
+        <h3 class="project__title">SCA windows for gas-filled counters</h3>
+        <p>Reads a shaped pulse train off a Siglent oscilloscope and builds the pulse-height
+           distribution, so the single-channel analyzer window can be set where the counts
+           actually are. Picking the window from the measured distribution instead of by eye
+           improves counting efficiency a great deal.</p>
+        <div class="project__links">
+          <a href="https://github.com/kyle-hunady/pulse-height-distribution" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>pulse-height-distribution</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-inkscape.jpg" alt="The Inkscape layer panel" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='Inkscape layer panel';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Open source</div>
+        <h3 class="project__title">Inkscape extensions</h3>
+        <p>Two things Inkscape 1.x does not do. One exports each layer as its own file. The
+           other arranges objects on a fixed grid that overflows onto new layers, which keeps
+           the front and back of a sheet registered &mdash; enough to print a custom card deck
+           two-sided, cut it out and laminate it.</p>
+        <div class="project__links">
+          <a href="https://github.com/kyle-hunady/export-layers" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>export-layers</a>
+          <a href="https://github.com/kyle-hunady/multilayer-grid" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>multilayer-grid</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-latte.jpg" alt="Latte art" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='latte art grid';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Personal</div>
+        <h3 class="project__title">Latte art, catalogued</h3>
+        <p>Every cup I've poured, auto-cropped to the rim by a Hough-circle script so the grid
+           lines up.</p>
+        <div class="project__links">
+          <a href="latte.html"><svg><use href="#i-link"/></svg>Gallery</a>
+          <a href="coffee-cropper.html"><svg><use href="#i-link"/></svg>The cropper</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project__thumb">
+          <img src="assets/img/proj-subway.jpg" alt="An ESP32 subway arrival display" loading="lazy"
+               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='ESP32 arrival display';">
+        </div>
+      <div class="project__body">
+        <div class="project__tag">Personal</div>
+        <h3 class="project__title">Subway arrival display</h3>
+        <p>A desk clock for the MTA. Decodes the GTFS-realtime protobuf feed on an ESP32 rather than
+           a single-board computer &mdash; nanopb generates the parser, so the whole thing runs in a
+           microcontroller's memory and drives a small OLED.</p>
+        <div class="project__links">
+          <span class="chip chip--state">Not public</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ========================================================== contact ==== -->
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="container">
+    <p style="text-align:center; max-width:30rem; margin:0 auto 1.8rem;">
+      Email is the best way to reach me &mdash; click to copy the address. Happy to talk about
+      M&ouml;ssbauer instrumentation, alloy calorimetry, or planetary instruments.
+    </p>
+    <div class="contact__row">
+      <button type="button" class="btn btn-primary js-copy" data-copy="khunady@caltech.edu">khunady@caltech.edu</button>
+      <a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer" class="btn">GitHub</a>
+      <a href="assets/Kyle_Hunady_Resume.pdf" class="btn" download>Resume (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <small>Kyle Hunady &middot; Pasadena, CA</small>
 </footer>
 
-<script src="assets/js/main.js"></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>
