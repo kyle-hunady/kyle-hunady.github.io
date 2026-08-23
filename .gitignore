@@ -27,3 +27,8 @@ build/
 # Environment
 .env
 .env.local
+
+# The cropper working set: 742 MB of full-resolution source photos that were
+# being served publicly from GitHub Pages. Kept locally (rename_exports.py
+# regenerates assets/js/latte-dates.js), never published.
+coffee-cropper/

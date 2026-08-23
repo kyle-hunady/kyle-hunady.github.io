@@ -4,13 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kyle Hunady</title>
-<meta name="description" content="Materials science PhD candidate at Caltech. I study entropy in alloys and work on planetary instrumentation.">
+<meta name="description" content="Materials science PhD candidate at Caltech. I measure the entropy of alloys and build Mossbauer instrumentation for planetary surfaces.">
+<link rel="canonical" href="https://kyle-hunady.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/">
+<meta property="og:title" content="Kyle Hunady">
+<meta property="og:description" content="Materials science PhD candidate at Caltech. Alloy entropy and Mossbauer instrumentation.">
+<meta name="theme-color" content="#0B0C0B">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 
-<!-- Icon sprite. Kept inline so the page has zero third-party JS and works
-     offline; react-icons is what Jedi's site pulls this from. -->
+<!-- Icon sprite, inline so the page makes no third-party requests. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
@@ -24,9 +29,6 @@
 <!-- =========================================================== header ==== -->
 <header>
   <div class="container header__container">
-    <!-- The page's only photo. Circular and small on purpose: the source is a
-         head-and-shoulders crop, and at hero scale it competed with the text.
-         Other treatments live in ../photo/hero-options.html. -->
     <div class="me me--disc">
       <img src="assets/img/hero-disc.png" alt="Kyle Hunady">
     </div>
@@ -35,7 +37,8 @@
     <h1>Materials science PhD candidate</h1>
     <p class="header__role">Caltech &middot; Brent Fultz group</p>
     <p class="header__line">
-      I study entropy in alloys and work on planetary instrumentation.
+      I measure the entropy of alloys and build M&ouml;ssbauer instrumentation for
+      planetary surfaces.
     </p>
 
     <div class="cta">
@@ -46,7 +49,6 @@
     <div class="header__socials">
       <a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
       <button type="button" class="icon-btn js-copy" data-copy="khunady@caltech.edu" aria-label="Copy email address"><svg><use href="#i-mail"/></svg></button>
-      <!-- add LinkedIn / Google Scholar here once you want them public -->
     </div>
 
     <a href="#about" class="scroll__down">Scroll</a>
@@ -74,29 +76,17 @@
         <div class="about__fact"><div class="fact__value">Cp + DFT</div><small>Entropy measurements</small></div>
       </div>
 
-      <p>I'm a materials science PhD candidate at Caltech, in Brent Fultz's group.</p>
+      <p>I'm a materials science PhD candidate at Caltech, in Brent Fultz's group, expecting to
+         finish in 2027.</p>
 
-      <p>Most of my work is on entropy in alloys. A high-entropy alloy is named for the idea that
-         mixing many elements buys enough configurational entropy &mdash; <i>k</i><sub>B</sub>ln(N)
-         &mdash; to stabilize a solid solution. I measure the total entropy by precision calorimetry
-         from 2 to 400&nbsp;K across Al-added CoCrFeNi, CoCrFeMnNi and NbTa<sub>0.5</sub>TiZr, and
-         that picture does not predict the trends. Vibrational entropy dominates, and together with
-         B2 ordering it can overwhelm the configurational gain from adding a component.</p>
+      <p>My thesis has two halves. One measures the entropy of high-entropy alloys by precision
+         calorimetry. The other is instrumentation: with JPL, a miniaturized <sup>57</sup>Fe
+         M&ouml;ssbauer and XRF spectrometer for planetary surface analysis.</p>
 
-      <p>The caveat matters: those Al-rich ordered states still form. They are driven by
-         Al&ndash;transition-metal bonding enthalpy, which the entropy changes oppose rather than
-         determine &mdash; so measuring the entropy of the phase that forms does not by itself
-         settle phase stability.</p>
-
-      <p>The rest is instrumentation. With JPL I work on a miniaturized <sup>57</sup>Fe
-         M&ouml;ssbauer/XRF spectrometer for planetary surfaces. That covers the piezoelectric
-         drive and its feedback loop, the multichannel scaler firmware, and the detector pulse
-         processing.</p>
-
-      <p>Before Caltech I was at Georgia Tech, where I worked on battery processing in Gleb
-         Yushin's lab and taught in the makerspaces. Outside the lab I lead group hikes for the
-         Caltech Y and the Alpine Club, do a lot of 3D printing, and write small tools when I
-         need one.</p>
+      <p>Before Caltech I did my BS and MS at Georgia Tech. I'm president of the Graduate Student
+         Advisory Board for Caltech's engineering division and strategic communications chair of
+         the Graduate Student Council, and I lead group hikes for the Caltech Y and the Alpine
+         Club.</p>
     </div>
   </div>
 </section>
@@ -109,35 +99,46 @@
     <div class="exp__item">
       <div class="exp__when">2022 &ndash; ongoing</div>
       <div>
-        <div class="exp__role">Planetary Exploration Instrumentation</div>
+        <div class="exp__role">Planetary exploration instrumentation</div>
         <div class="exp__where">Fultz group &middot; Caltech and JPL</div>
-        <p>Miniaturization and flight qualification of a combined <sup>57</sup>Fe M&ouml;ssbauer/XRF
-           spectrometer. I built the drive and counting chain: closed-loop piezoelectric velocity
-           control, the multichannel scaler firmware, and the silicon drift detector pulse
-           processing. I also wrote the group's Python tools for fitting the spectra.</p>
+        <p>Miniaturization of a combined <sup>57</sup>Fe M&ouml;ssbauer and XRF spectrometer for
+           planetary surface analysis. I built the drive and counting chain, and the group's
+           Python tools for fitting the spectra.</p>
       </div>
     </div>
 
     <div class="exp__item">
       <div class="exp__when">2022 &ndash; ongoing</div>
       <div>
-        <div class="exp__role">High-Entropy Alloy Thermodynamics</div>
+        <div class="exp__role">High-entropy alloy thermodynamics</div>
         <div class="exp__where">Fultz group &middot; Caltech</div>
-        <p>Precision calorimetry from 2 to 400&nbsp;K on Al-added CoCrFeNi, CoCrFeMnNi and
-           NbTa<sub>0.5</sub>TiZr, alongside M&ouml;ssbauer spectroscopy, diffraction, electron
-           microscopy and spin-polarized DFT. Vibrational entropy dominates and, with B2 ordering,
-           can overwhelm the configurational gain from adding a component &mdash; so ideal mixing
-           does not predict the trends.</p>
+        <p>Precision calorimetry from 2 to 400&nbsp;K on aluminum-added CoCrFeNi, CoCrFeMnNi and
+           NbTa<sub>0.5</sub>TiZr, with M&ouml;ssbauer spectroscopy, diffraction, electron
+           microscopy and spin-polarized DFT.</p>
       </div>
     </div>
 
     <div class="exp__item">
       <div class="exp__when">2019 &ndash; 2022</div>
       <div>
-        <div class="exp__role">Li-Battery Processing Optimization</div>
+        <div class="exp__role">Li-battery processing</div>
         <div class="exp__where">Gleb Yushin Nanotech Lab &middot; Georgia Tech</div>
-        <p>Optimized a milling procedure that raised solid-electrolyte conductivity tenfold, and
-           found cathode drying profiles that raised fast-charge capacity by 17%.</p>
+        <p>Milling routes for solid electrolytes and drying profiles for cathodes, characterized
+           by impedance spectroscopy.</p>
+      </div>
+    </div>
+
+    <div class="exp__item">
+      <div class="exp__when">Publications</div>
+      <div>
+        <p><strong>The entropy of &ldquo;high-entropy&rdquo; alloys of transition metals with
+           aluminum.</strong> K. Hunady, I. Elmasri, B. Fultz. <i>Acta Materialia</i>, in
+           revision.</p>
+        <p><strong>Feedback control and geometry optimization of a miniaturized M&ouml;ssbauer
+           spectrometer with piezoelectric drive.</strong> R. Toda, K. Hunady, E. Labelson,
+           et al. In preparation.</p>
+        <p><strong>Entropy in multi-principal-element alloys.</strong> Talks, TMS Annual Meeting,
+           2025 and 2026.</p>
       </div>
     </div>
   </div>
@@ -147,166 +148,113 @@
 <section id="projects">
   <h2>Projects</h2>
 
-  <div class="container projects__grid">
+  <div class="container">
+    <div class="projects__grid">
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-spectrometer.jpg" alt="The miniaturized Mossbauer/XRF spectrometer prototype" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='photo of the spectrometer';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-spectrometer.jpg" alt="The miniaturized Mossbauer and XRF spectrometer prototype" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Instrumentation</div>
-        <h3 class="project__title">Miniaturized M&ouml;ssbauer / XRF spectrometer</h3>
-        <p>A <sup>57</sup>Fe spectrometer for planetary surfaces, small enough to fly.
-           Piezoelectric drive, closed-loop velocity control, and a geometry that keeps the source,
-           sample and detector aligned at reduced size.</p>
-        <div class="project__links">
-          <span class="chip chip--state">Paper in preparation</span>
+        <div class="project__body">
+          <div class="project__tag">Instrumentation</div>
+          <h3 class="project__title">Miniaturized M&ouml;ssbauer / XRF spectrometer</h3>
+          <p>The instrument itself: a backscatter geometry driven by a piezoelectric stack under
+             closed-loop velocity control.</p>
+          <div class="project__links">
+            <span class="chip chip--state">Paper in preparation</span>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-mcs.jpg" alt="The multichannel scaler board" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='MCS board / scope trace';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-mcs.jpg" alt="The multichannel scaler board" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Firmware &amp; electronics</div>
-        <h3 class="project__title">Detector chain and multichannel scaler</h3>
-        <p>Teensy firmware that bins counts against the drive phase, plus the silicon drift
-           detector pulse processing in front of it.</p>
-        <div class="project__links">
-          <span class="chip chip--state">Not public</span>
+        <div class="project__body">
+          <div class="project__tag">Firmware and electronics</div>
+          <h3 class="project__title">Detector chain and multichannel scaler</h3>
+          <p>Teensy firmware that bins counts against the drive phase, and the silicon drift
+             detector pulse processing in front of it.</p>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-montecarlo.jpg" alt="Simulated photon paths through the spectrometer" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='simulated photon paths';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-montecarlo.jpg" alt="Simulated photon paths through the spectrometer" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Simulation</div>
-        <h3 class="project__title">Monte Carlo geometry search</h3>
-        <p>A photon ray-tracer that grid-searches source&ndash;sample&ndash;detector geometries for the
-           backscatter instrument. Count rate and spectral fidelity pull against each other: the
-           angular spread that a wider aperture buys also smears the velocity axis, because a photon
-           leaving at an angle sees only the cosine of the drive velocity. The simulator measures
-           that smearing as a kernel, so a fit to real data can be corrected for the geometry it was
-           taken in.</p>
-        <div class="project__links">
-          <a href="monte-carlo.html"><svg><use href="#i-link"/></svg>Ray viewer</a>
+        <div class="project__body">
+          <div class="project__tag">Simulation</div>
+          <h3 class="project__title">Monte Carlo geometry search</h3>
+          <p>A photon ray-tracer that searches source, sample and detector geometries for the
+             backscatter instrument.</p>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-calorimetry.jpg" alt="A calorimetry sample platform" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='Cp curve / entropy split';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-calorimetry.jpg" alt="A calorimetry sample platform" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Thermodynamics</div>
-        <h3 class="project__title">The entropy of high-entropy alloys</h3>
-        <p>High-entropy alloys are named for their configurational entropy. We measured the total
-           entropy of Al-added transition-metal alloys and found ideal mixing does not predict the
-           trends &mdash; vibrational entropy and B2 ordering can overwhelm the configurational
-           gain, leaving bonding enthalpy to decide what forms.</p>
-        <div class="project__links">
-          <span class="chip chip--state">Acta Materialia &mdash; in revision</span>
+        <div class="project__body">
+          <div class="project__tag">Thermodynamics</div>
+          <h3 class="project__title">The entropy of high-entropy alloys</h3>
+          <p>Heat capacity measured down to 2&nbsp;K, integrated to give the total entropy of each
+             alloy.</p>
+          <div class="project__links">
+            <span class="chip chip--state">Acta Materialia &mdash; in revision</span>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-calibration.jpg" alt="A Mossbauer calibration spectrum" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='calibration spectrum';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-sca.jpg" alt="A gas-filled counter pulse-height distribution" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Lab tooling</div>
-        <h3 class="project__title">M&ouml;ssbauer velocity calibration</h3>
-        <p>Automates the calibration a M&ouml;ssbauer run needs before its velocity axis means
-           anything. Fits the reference foil and returns mm/s per channel.</p>
-        <div class="project__links">
-          <a href="https://github.com/kyle-hunady/mossbauer-calibration" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>mossbauer-calibration</a>
+        <div class="project__body">
+          <div class="project__tag">Lab tooling</div>
+          <h3 class="project__title">SCA windows for gas-filled counters</h3>
+          <p>Reads a pulse train off an oscilloscope and builds the pulse-height distribution, so
+             the single-channel analyzer window can be set where the counts are.</p>
+          <div class="project__links">
+            <a href="https://github.com/kyle-hunady/pulse-height-distribution" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>pulse-height-distribution</a>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-sca.jpg" alt="A gas-filled counter pulse-height distribution" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='pulse-height distribution';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-subway.jpg" alt="An ESP32 subway arrival display on a breadboard" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Lab tooling</div>
-        <h3 class="project__title">SCA windows for gas-filled counters</h3>
-        <p>Reads a shaped pulse train off a Siglent oscilloscope and builds the pulse-height
-           distribution, so the single-channel analyzer window can be set where the counts
-           actually are. Picking the window from the measured distribution instead of by eye
-           improves counting efficiency a great deal.</p>
-        <div class="project__links">
-          <a href="https://github.com/kyle-hunady/pulse-height-distribution" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>pulse-height-distribution</a>
+        <div class="project__body">
+          <div class="project__tag">Personal</div>
+          <h3 class="project__title">Subway arrival display</h3>
+          <p>A desk clock for the MTA. It decodes the GTFS-realtime feed on an ESP32 and drives a
+             small OLED.</p>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-inkscape.jpg" alt="The Inkscape layer panel" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='Inkscape layer panel';">
+      <article class="project">
+        <div class="project__thumb">
+          <img src="assets/img/proj-latte.jpg" alt="Latte art" loading="lazy">
         </div>
-      <div class="project__body">
-        <div class="project__tag">Open source</div>
-        <h3 class="project__title">Inkscape extensions</h3>
-        <p>Two things Inkscape 1.x does not do. One exports each layer as its own file. The
-           other arranges objects on a fixed grid that overflows onto new layers, which keeps
-           the front and back of a sheet registered &mdash; enough to print a custom card deck
-           two-sided, cut it out and laminate it.</p>
-        <div class="project__links">
-          <a href="https://github.com/kyle-hunady/export-layers" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>export-layers</a>
-          <a href="https://github.com/kyle-hunady/multilayer-grid" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>multilayer-grid</a>
+        <div class="project__body">
+          <div class="project__tag">Personal</div>
+          <h3 class="project__title">Latte art, catalogued</h3>
+          <p>Every cup I've poured, in one grid.</p>
+          <div class="project__links">
+            <a href="latte.html"><svg><use href="#i-link"/></svg>Gallery</a>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-latte.jpg" alt="Latte art" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='latte art grid';">
-        </div>
-      <div class="project__body">
-        <div class="project__tag">Personal</div>
-        <h3 class="project__title">Latte art, catalogued</h3>
-        <p>Every cup I've poured, auto-cropped to the rim by a Hough-circle script so the grid
-           lines up.</p>
-        <div class="project__links">
-          <a href="latte.html"><svg><use href="#i-link"/></svg>Gallery</a>
-          <a href="coffee-cropper.html"><svg><use href="#i-link"/></svg>The cropper</a>
-        </div>
-      </div>
-    </article>
+    </div>
 
-    <article class="project">
-      <div class="project__thumb">
-          <img src="assets/img/proj-subway.jpg" alt="An ESP32 subway arrival display" loading="lazy"
-               onerror="this.parentElement.className='project__thumb project__thumb--empty';this.parentElement.textContent='ESP32 arrival display';">
-        </div>
-      <div class="project__body">
-        <div class="project__tag">Personal</div>
-        <h3 class="project__title">Subway arrival display</h3>
-        <p>A desk clock for the MTA. Decodes the GTFS-realtime protobuf feed on an ESP32 rather than
-           a single-board computer &mdash; nanopb generates the parser, so the whole thing runs in a
-           microcontroller's memory and drives a small OLED.</p>
-        <div class="project__links">
-          <span class="chip chip--state">Not public</span>
-        </div>
-      </div>
-    </article>
-
+    <p class="projects__note">
+      Also on GitHub:
+      <a href="https://github.com/kyle-hunady/export-layers" target="_blank" rel="noreferrer">export-layers</a>
+      and
+      <a href="https://github.com/kyle-hunady/multilayer-grid" target="_blank" rel="noreferrer">multilayer-grid</a>,
+      two extensions for Inkscape 1.x.
+    </p>
   </div>
 </section>
 
@@ -314,10 +262,7 @@
 <section id="contact">
   <h2>Contact</h2>
   <div class="container">
-    <p style="text-align:center; max-width:30rem; margin:0 auto 1.8rem;">
-      Email is the best way to reach me &mdash; click to copy the address. Happy to talk about
-      M&ouml;ssbauer instrumentation, alloy calorimetry, or planetary instruments.
-    </p>
+    <p class="contact__line">Email is the best way to reach me. Click to copy the address.</p>
     <div class="contact__row">
       <button type="button" class="btn btn-primary js-copy" data-copy="khunady@caltech.edu">khunady@caltech.edu</button>
       <a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer" class="btn">GitHub</a>

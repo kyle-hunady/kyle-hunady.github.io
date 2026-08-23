@@ -177,44 +177,13 @@ header { padding-top: 6rem; overflow: hidden; }
   color: var(--faint);
 }
 
-/* ------------------------------------------------- hero portrait modes ----
-   Four treatments of the same source photo. Swap the class on .me to change
-   which one ships; the images are all built by photo/make_variants.py.
-   Jedi's site uses a full-body cutout in a 32rem arch. We do not have a
-   full-body photo, so every mode here is built to look deliberate at
-   head-and-shoulders scale rather than like a cropped stand-in.          */
-
+/* ------------------------------------------------------- hero portrait ----
+   Small and centred above the name. The source is a head-and-shoulders crop;
+   at hero scale it competed with the text. The page carries one photo.      */
 .me { position: relative; margin: 3.5rem auto 0; }
 .me img { width: 100%; }
-
-/* A -- narrow arch. Jedi's shape, sized down so a head-and-shoulders crop
-       fills it properly instead of floating in a 32rem opening. */
-.me--arch {
-  width: 19rem;
-  background: linear-gradient(var(--accent-dim), transparent 78%);
-  border-radius: 9.5rem 9.5rem 0 0;
-  padding: 1.4rem 1.1rem 0;
-}
-
-/* B -- vignette. No frame at all: the photo's own black dissolves into the
-       page. Reads as a hero image rather than a profile picture. */
-.me--vignette { width: 26rem; }
-.me--vignette img { margin-bottom: -3rem; }
-
-/* C -- duotone. Same dissolve, mapped onto the sage ramp so the portrait
-       reads as part of the palette instead of the only colour on the page. */
-.me--duotone { width: 26rem; }
-.me--duotone img { margin-bottom: -3rem; }
-
-/* D -- disc. THE SHIPPING ONE. Small and centred above the name. The source is
-       a head-and-shoulders crop; at hero scale it competed with the text, and a
-       second copy in About made it redundant, so the page carries one photo. */
 .me--disc { width: 13rem; margin: 0 auto 2rem; }
 .me--disc img { border-radius: 50%; border: 1px solid var(--rule); }
-
-/* E -- no portrait in the hero at all: the work is the hero image and the
-       headshot moves down into About. Nothing to style here beyond hiding. */
-.me--none { display: none; }
 
 /* -------------------------------------------------------------- about ---- */
 /* Single column: the About portrait was removed, the page has one photo. */
@@ -343,9 +312,7 @@ footer small { color: var(--faint); font-size: 0.72rem; }
   }
   .header__socials::before, .header__socials::after { display: none; }
   .exp__item { grid-template-columns: 1fr; gap: 0.4rem; }
-  .me--arch { width: 15rem; border-radius: 7.5rem 7.5rem 0 0; }
   .me--disc { width: 10rem; }
-  .me--vignette, .me--duotone { width: 100%; }
   nav { padding: 0.5rem 0.9rem; gap: 0.2rem; }
 }
 
@@ -425,4 +392,155 @@ button.btn { font-size: 0.8rem; }
   border-radius: 0.25rem;
   white-space: nowrap;
   pointer-events: none;
+}
+
+
+/* ------------------------------------------------- publications + note ----
+   Reuses .exp__item so the publication list sits in the same two-column grid
+   as the research entries; only the paragraph spacing is new.              */
+.exp__item p + p { margin-top: 0.7rem; }
+
+.projects__note {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+.contact__line {
+  text-align: center;
+  max-width: 30rem;
+  margin: 0 auto 1.8rem;
+}
+
+/* ==================================================== the latte gallery ====
+   latte.html used to ship its own 938-line stylesheet, its own nav and its
+   own webfont, so moving between the two pages read as two different sites.
+   It now runs on the tokens above; these are the only page-specific rules. */
+
+.page__head { padding-top: 5rem; }
+.page__head .header__container { text-align: center; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 0.85rem; height: 0.85rem; }
+
+.latte-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+.latte-badge {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.latte-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
+
+.latte-cell {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: zoom-in;
+  padding: 0;
+  transition: var(--transition);
+}
+.latte-cell:hover { border-color: var(--accent-deep); transform: translateY(-2px); }
+.latte-cell img { height: 100%; }
+
+.latte-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.1rem 0.4rem 0.35rem;
+  background: linear-gradient(transparent, rgba(11, 12, 11, 0.94));
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: var(--transition);
+}
+.latte-cell:hover .latte-caption,
+.latte-cell:focus-visible .latte-caption { opacity: 1; }
+
+/* ------------------------------------------------------------ lightbox ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(5, 6, 5, 0.92);
+  backdrop-filter: blur(8px);
+}
+.lightbox.open { display: grid; }
+
+.lightbox-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.7rem;
+  overflow: hidden;
+  max-width: min(34rem, 92vw);
+}
+/* the global `img { width: 100% }` would stretch a portrait shot */
+.lightbox-img {
+  width: auto;
+  max-width: 100%;
+  max-height: 68vh;
+  margin: 0 auto;
+  object-fit: contain;
+}
+.lightbox-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.85rem;
+  border-top: 1px solid var(--rule);
+}
+.lightbox-caption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--faint);
+}
+.lightbox-controls { display: flex; gap: 0.35rem; }
+.lightbox-btn {
+  background: none;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.3rem;
+  color: var(--muted);
+  transition: var(--transition);
+}
+.lightbox-btn:hover { border-color: var(--accent-deep); color: var(--white); background: var(--accent-dim); }
+
+@media screen and (max-width: 1024px) {
+  .latte-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media screen and (max-width: 640px) {
+  .latte-grid { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; }
+  .latte-top { justify-content: center; }
 }

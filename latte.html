@@ -1,106 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latte Log — Kyle Hunady</title>
-  <meta name="description" content="Kyle Hunady's latte art gallery. Every attempt, documented.">
-  <link rel="canonical" href="https://kyle-hunady.github.io/latte.html">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kyle-hunady.github.io/latte.html">
-  <meta property="og:title" content="Latte Log — Kyle Hunady">
-  <meta property="og:description" content="Every latte art attempt Kyle Hunady has made, documented. A growing archive of attempts from 2025 onward.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Latte Log — Kyle Hunady">
-  <meta name="twitter:description" content="Every latte art attempt Kyle Hunady has made, documented. A growing archive of attempts from 2025 onward.">
-  <meta name="theme-color" content="#0a0e13">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600&display=swap">
-  <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latte log &mdash; Kyle Hunady</title>
+<meta name="description" content="Every latte art attempt Kyle Hunady has poured, in one grid.">
+<link rel="canonical" href="https://kyle-hunady.github.io/latte.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/latte.html">
+<meta property="og:title" content="Latte log &mdash; Kyle Hunady">
+<meta property="og:description" content="Every latte art attempt Kyle Hunady has poured, in one grid.">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></symbol>
+</svg>
 
-<!-- ── NAV ── -->
-<nav class="nav" aria-label="Main">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">KH</a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="index.html#research">Research</a></li>
-        <li><a href="index.html#projects">Projects</a></li>
-        <li><a href="latte.html" aria-current="page">Latte Log</a></li>
-        <li><a href="index.html#about">About</a></li>
-      </ul>
-      <div class="nav-icons">
-        <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-          </svg>
-        </a>
-        <a href="mailto:khunady@caltech.edu" aria-label="Email">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2" y="4" width="20" height="16" rx="2"/>
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-          </svg>
-        </a>
-      </div>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M3 6h18M3 12h18M3 18h18"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+<!-- The same floating rail as the front page, so moving between the two does
+     not feel like leaving the site. No data-nav here: there are no sections to
+     spy on, and site.js sits out when it finds none. -->
+<nav>
+  <a href="index.html"          aria-label="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about"    aria-label="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects"><svg><use href="#i-folder"/></svg></a>
+  <a href="index.html#contact"  aria-label="Contact"><svg><use href="#i-mail"/></svg></a>
 </nav>
 
-<div class="nav-drawer" id="nav-drawer">
-  <a href="index.html#research">Research</a>
-  <a href="index.html#projects">Projects</a>
-  <a href="latte.html" aria-current="page">Latte Log</a>
-  <a href="index.html#about">About</a>
-  <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub ↗</a>
-  <a href="mailto:khunady@caltech.edu">khunady@caltech.edu</a>
-</div>
-
-<main id="main">
-  <div class="container">
-
-    <a href="index.html#projects" class="back-link">&larr; Home</a>
-
-    <!-- ── PAGE HEADER ── -->
-    <header class="page-header">
-      <div class="section-label">Latte Log</div>
-      <h1>Every attempt, documented</h1>
-      <p>
-        I started pouring latte art in August 2025 and photographed every attempt since,
-        including the bad ones. Newest first — hover or tap a cup for its date.
-      </p>
-    </header>
-
-    <!-- ── GALLERY ── -->
-    <section aria-label="Latte art gallery">
-
-      <div class="latte-top">
-        <p class="latte-badge" id="latte-badge"></p>
-        <div class="latte-actions">
-          <a class="btn-quiet" href="gumball.html">Dispense a random one &rarr;</a>
-          <button class="btn-quiet" id="latte-shuffle" type="button">&#8634; Shuffle</button>
-        </div>
-      </div>
-
-      <div class="latte-grid" id="latte-grid"></div>
-
-    </section>
-
+<header class="page__head">
+  <div class="container header__container">
+    <p class="header__eyebrow">Latte log</p>
+    <h1>Every attempt, documented</h1>
+    <p class="header__line">
+      I started pouring latte art in August 2025 and photographed every attempt since,
+      including the bad ones. Newest first.
+    </p>
   </div>
-</main>
+</header>
 
-<!-- ── LIGHTBOX ── -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Latte art enlarged view">
+<section id="gallery">
+  <div class="container">
+    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>Back to projects</a>
+
+    <div class="latte-top">
+      <p class="latte-badge" id="latte-badge"></p>
+      <button class="btn" id="latte-shuffle" type="button">Shuffle</button>
+    </div>
+
+    <div class="latte-grid" id="latte-grid"></div>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged view">
   <div class="lightbox-card">
     <img id="lightbox-img" src="" alt="" class="lightbox-img">
     <div class="lightbox-footer">
@@ -114,22 +73,11 @@
   </div>
 </div>
 
-<!-- ── FOOTER ── -->
-<footer class="footer">
-  <div class="footer-inner">
-    <span class="footer-copy">© 2026 Kyle Hunady</span>
-    <div class="footer-links">
-      <a href="index.html#research">Research</a>
-      <a href="index.html#projects">Projects</a>
-      <a href="latte.html">Latte Log</a>
-      <a href="index.html#about">About</a>
-      <a href="https://github.com/kyle-hunady" target="_blank" rel="noopener">GitHub</a>
-      <a href="mailto:khunady@caltech.edu">Email</a>
-    </div>
-  </div>
+<footer>
+  <small>Kyle Hunady &middot; Pasadena, CA</small>
 </footer>
 
-<script src="assets/js/main.js"></script>
+<script src="assets/js/site.js"></script>
 <script src="assets/js/latte-dates.js"></script>
 <script>
 (function () {
@@ -153,9 +101,9 @@
   if (!all.length) { badge.textContent = 'No photos yet'; return; }
 
   const pad = (n) => String(n).padStart(3, '0');
-  const label = (n) => dates[n] ? `#${pad(n)} \u00b7 ${dates[n]}` : `#${pad(n)}`;
+  const label = (n) => dates[n] ? `#${pad(n)} · ${dates[n]}` : `#${pad(n)}`;
 
-  badge.textContent = `${all.length} attempts \u00b7 ${dates[all[0]]} to ${dates[all[all.length - 1]]}`;
+  badge.textContent = `${all.length} attempts · ${dates[all[0]]} to ${dates[all[all.length - 1]]}`;
 
   let order = [...all].reverse();   // newest first
   let current = 0;                  // index into `order` while the lightbox is open
