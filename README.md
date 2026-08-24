@@ -4,7 +4,7 @@ Personal site. Static HTML, one stylesheet, one script, no build step and no dep
 Push to `main` and GitHub Pages serves it at <https://kyle-hunady.github.io>.
 
 ```
-index.html            the site — hero, about, research, projects, contact
+index.html            the site — hero, about, research, outreach, projects, contact
 latte.html            the latte gallery (grid + lightbox)
 about.html            \
 research.html          > noindex redirects into index.html, kept for old inbound links
@@ -75,12 +75,43 @@ it and re-clone rather than pulling.
 
 ## Conventions
 
-- **About is two sentences, one per thesis leg**, and stays that way. The long paragraph-form
-  version was cut 2026-08-23 as filler. Education, leadership and publications are labeled rows in
-  Research, where they read as credentials rather than prose — not biography in the About.
+## Information architecture
+
+Five sections, in the order a first-time visitor needs them: **about, research, outreach, projects,
+contact**. The rule is one home per fact.
+
+- **About** is who he is and where, in his own plain register. It carries both degrees and the
+  current position, so nothing else on the page repeats them — an Education row was removed
+  2026-08-23 for exactly that duplication.
+- **Research** is research: the three positions, then publications. Education and leadership used to
+  sit here too, under a heading that names neither.
+- **Outreach** is its own section rather than a row inside Research, because it is a real part of the
+  work and was invisible where it was.
+- **Projects** is a grid of eight cards, each a photo and one or two sentences. It is a map, not a
+  repository: there are no per-project detail pages, and the three that existed were deleted because
+  their copy oversold the work.
+- **Contact** is one line and three buttons.
+
+Before changing any copy, run the tone gate:
+
+```bash
+python ~/Documents/1Research/planning/ops/site_tone_check.py index.html latte.html
+```
+
+It measures the three things that actually go wrong here — AI vocabulary and cadences (the
+"not just X, but Y" reveal), punctuation density per 100 words, and rigid sentence structure
+(monotone lengths, most sentences opening with the same word). It reports measurements, not verdicts.
+
+## Conventions
+
+- **About is short and in Kyle's own voice**, and stays that way. The long paragraph-form
+  Long paragraph-form versions were cut 2026-08-23 as filler. Publications are labeled rows in
+  Research; leadership and teaching live in Outreach.
 - Say less. Every project is a photo and one or two sentences. A claim the published record does
-  not support does not go on the site — including in the playful register, where "small enough to
-  fly to another planet" quietly asserts a flight qualification that is still in progress.
+  not support does not go on the site — including in a playful register, where "small enough to fly
+  to another planet" quietly asserts a flight qualification that is still in progress.
+- **Plain declaratives, not quirk.** The tone brief is dry, or Kyle's own words. No superlatives, no
+  editorializing, no jokes written for effect.
 - **Gallery photos ship at 1000 px, q82.** They render in a 142 px cell and at most ~440 px in the
   lightbox, so the full-resolution crops (1.7 MB each, 195 MB total) were 16x of pure waste.
 - No `mailto:` anywhere — the email buttons copy the address and say so.

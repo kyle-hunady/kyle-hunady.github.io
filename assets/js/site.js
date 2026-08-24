@@ -22,6 +22,7 @@
     { id: 'top', el: document.querySelector('header') },
     { id: 'about', el: document.getElementById('about') },
     { id: 'research', el: document.getElementById('research') },
+    { id: 'outreach', el: document.getElementById('outreach') },
     { id: 'projects', el: document.getElementById('projects') },
     { id: 'contact', el: document.getElementById('contact') }
   ].filter(function (t) { return t.el; });
