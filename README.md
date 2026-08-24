@@ -75,6 +75,9 @@ it and re-clone rather than pulling.
 
 ## Conventions
 
+- **About is two sentences, one per thesis leg**, and stays that way. The long paragraph-form
+  version was cut 2026-08-23 as filler. Education, leadership and publications are labeled rows in
+  Research, where they read as credentials rather than prose — not biography in the About.
 - Say less. Every project is a photo and one or two sentences. A claim the published record does
   not support does not go on the site — including in the playful register, where "small enough to
   fly to another planet" quietly asserts a flight qualification that is still in progress.

@@ -38,24 +38,36 @@
     });
   }
 
-  function visibleHeight(el) {
-    var r = el.getBoundingClientRect();
-    var h = window.innerHeight || document.documentElement.clientHeight;
-    return Math.max(0, Math.min(r.bottom, h) - Math.max(r.top, 0));
-  }
-
+  /* Which section is the reader AT?
+   *
+   * This used to vote by visible pixel area, and that broke when the About
+   * section shrank to two sentences: at 217px it can never out-cover its 930px
+   * neighbour, so its pill could never light no matter where you scrolled.
+   *
+   * So instead: the reader is at the last section whose top edge has crossed an
+   * anchor line near the top of the viewport. Section height drops out of it
+   * entirely. `targets` is in document order, so a forward scan finds the last
+   * one crossed. Still measured fresh on every call, so there is no retained
+   * state to go stale -- which was the whole point of the original rewrite.
+   */
   function update() {
-    // Bottom of the page: the last section wins even if it is short enough
-    // that a taller neighbour still covers more pixels.
+    // Bottom of the page: the last section wins even if it is short enough that
+    // its top never crosses the line.
     var doc = document.documentElement;
-    if (window.scrollY + window.innerHeight >= doc.scrollHeight - 2) {
+    var anchor = window.innerHeight * 0.35;
+    var maxScroll = doc.scrollHeight - window.innerHeight;
+
+    // The last section can be too short to ever reach the anchor line: the page
+    // runs out of scroll first, so clicking Contact left the pill on Projects.
+    // Once we are within one anchor-length of the bottom, the last section is
+    // substantially on screen and is the answer.
+    if (window.scrollY >= maxScroll - anchor) {
       setActive(targets[targets.length - 1].id);
       return;
     }
-    var best = targets[0].id, bestPx = -1;
+    var best = targets[0].id;
     targets.forEach(function (t) {
-      var px = visibleHeight(t.el);
-      if (px > bestPx) { bestPx = px; best = t.id; }
+      if (t.el.getBoundingClientRect().top <= anchor) { best = t.id; }
     });
     setActive(best);
   }

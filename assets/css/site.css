@@ -187,25 +187,9 @@ header { padding-top: 6rem; overflow: hidden; }
 .me--disc img { border-radius: 50%; border: 1px solid var(--rule); }
 
 /* -------------------------------------------------------------- about ---- */
-/* Single column: the About portrait was removed, the page has one photo. */
-.about__container { display: block; }
+/* Two sentences, one per thesis leg. No portrait, no stat tiles: the long
+   paragraph-form About was cut 2026-08-23 as filler. */
 .about__content p + p { margin-top: 1rem; }
-
-.about__facts {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-  margin-bottom: 1.8rem;
-}
-.about__fact {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: 0.6rem;
-  padding: 1rem 0.8rem;
-  text-align: center;
-}
-.about__fact .fact__value { font-size: 1.05rem; font-weight: 500; color: var(--accent); }
-.about__fact small { font-size: 0.68rem; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; }
 
 /* --------------------------------------------------------- experience ---- */
 .exp__item {
@@ -291,18 +275,6 @@ footer small { color: var(--faint); font-size: 0.72rem; }
   .container { width: var(--w-sm); }
   h1 { font-size: 1.6rem; }
   .projects__grid { grid-template-columns: 1fr; }
-  /* Three tiles across a 375px screen leaves 98px each, which wrapped
-     "Fultz group, 2022-" onto four lines. One per row, label and value on
-     the same line. */
-  .about__facts { grid-template-columns: 1fr; gap: 0.5rem; }
-  .about__fact {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    text-align: left;
-    padding: 0.6rem 0.9rem;
-  }
   .scroll__down { display: none; }
   .header__socials {
     flex-direction: row;
