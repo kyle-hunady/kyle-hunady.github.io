@@ -64,14 +64,22 @@ is no number anywhere to update by hand. It renders newest first. If that file i
 says so instead of rendering broken images.
 
 `coffee-cropper/` is **gitignored**. It held 742 MB of full-resolution source photos that GitHub
-Pages was serving publicly; it was untracked 2026-08-23. The directory still exists locally, so the
-cropper and `rename_exports.py` work as before. Removing it from HEAD does not shrink a clone — the
-blobs are still in history. Purging them needs a rewrite plus a force-push, which is a separate call.
+Pages was serving publicly. Untracked *and* **purged from history** 2026-08-23 with
+`git filter-repo`, which took the repo from **742 MB to 12.6 MB**; the HEAD tree hash was identical
+before and after, so nothing published was lost. The directory still exists locally, so the cropper
+and `rename_exports.py` work as before.
+
+The same pass stripped every blob over 400 KB from history (the old ~1.7 MB gallery photos) and the
+files belonging to the deleted pages. **A clone before 2026-08-23 has incompatible history** — delete
+it and re-clone rather than pulling.
 
 ## Conventions
 
 - Say less. Every project is a photo and one or two sentences. A claim the published record does
-  not support does not go on the site.
+  not support does not go on the site — including in the playful register, where "small enough to
+  fly to another planet" quietly asserts a flight qualification that is still in progress.
+- **Gallery photos ship at 1000 px, q82.** They render in a 142 px cell and at most ~440 px in the
+  lightbox, so the full-resolution crops (1.7 MB each, 195 MB total) were 16x of pure waste.
 - No `mailto:` anywhere — the email buttons copy the address and say so.
 - Only link a repo that has code in it.
 - New interactive controls are real `<button>` or `<a>` elements so keyboard and touch work without
