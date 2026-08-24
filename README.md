@@ -75,6 +75,45 @@ it and re-clone rather than pulling.
 
 ## Conventions
 
+## Editing the words
+
+Three ways, cheapest first.
+
+**1. Edit the HTML.** Every paragraph is on one source line and there are no HTML entities left
+except two load-bearing `&nbsp;` in "2 K" and "400 K", so the sentence you see on the page is the
+sentence you can search for:
+
+```bash
+grep -n "smaller and more capable" index.html
+```
+
+That was not true before 2026-08-23: 21 of 24 paragraphs were wrapped mid-sentence across source
+lines, which meant you could not grep text you were looking at.
+
+**2. Edit one plain text file.** `tools/copy.py` walks the same elements in the same order every
+time and swaps the text inside them. No build step, no template engine, and the HTML stays the
+source of truth.
+
+```bash
+python tools/copy.py                     # list all 73 blocks with file:line
+python tools/copy.py --export copy.txt   # dump them to a text file
+python tools/copy.py --import copy.txt   # write your edits back
+python tools/copy.py --check             # prove a round trip changes nothing
+```
+
+`--check` is the guarantee: it exports, re-imports unchanged, and asserts both HTML files are
+byte-identical. If a key in your file matches nothing on the site, the import **writes nothing** and
+tells you which key — it will not half-apply. A few blocks carry inline `<sup>` or `<strong>`; the
+listing marks them `[has markup]` and those tags must stay.
+
+**3. Edit on github.com** for a one-line fix from anywhere, including a phone. Commits from the web
+editor deploy on their own:
+
+<https://github.com/kyle-hunady/kyle-hunady.github.io/edit/main/index.html>
+
+After any of the three, run the tone gate before pushing (see below), and remember Pages caches for
+ten minutes — hard-reload before deciding a change did not land.
+
 ## Information architecture
 
 Five sections, in the order a first-time visitor needs them: **about, research, outreach, projects,
