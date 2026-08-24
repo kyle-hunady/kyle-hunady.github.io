@@ -22,7 +22,8 @@
 }
 
 :root {
-  /* sampled from assets/img/headshot.jpg */
+  /* sampled from Kyle's headshot: page black from its background #050504,
+     sage from the shirt #4B5853. The source photo is not in the repo. */
   --bg: #0B0C0B;          /* photo background is #050504 -- close enough to dissolve into */
   --surface: #151714;
   --surface-2: #1E211D;
