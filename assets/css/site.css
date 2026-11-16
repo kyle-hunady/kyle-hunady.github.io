@@ -711,3 +711,7 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .org__badge--light { background: rgba(237,235,228,0.92); }
 .org__badge img { width: 78%; height: auto; object-fit: contain; }
 @media screen and (max-width: 640px) { .org--photo { grid-template-columns: 1fr; } }
+
+/* a card that covers two projects shows one photo of each, side by side */
+.project__thumb--split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.project__thumb--split img { height: 100%; }
