@@ -186,3 +186,5 @@ It measures the three things that actually go wrong here — AI vocabulary and c
 ## Shelved
 
 - **Molecular dynamics page** (removed 2026-11-16). Kyle: not good enough on its own; it comes back only if it shows something useful, such as a comparison with his own data. The engine is still in `assets/js/md.js`.
+
+Note: `tools/outreach_photos.py` rewrites a whole outreach row. The links on the photo and badges (to gsc.caltech.edu, alpine.caltech.edu, the Hive and the MILL) were added by hand on 2026-11-16, so re-add them after running it.
