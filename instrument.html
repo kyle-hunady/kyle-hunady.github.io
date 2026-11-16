@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Miniaturized Mössbauer spectrometer · Kyle Hunady</title>
-<meta name="description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive measurements, the counting chain and a detector-layout Monte Carlo.">
+<meta name="description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive velocity measurements, an audit of the counting electronics and a detector-layout Monte Carlo.">
 <link rel="canonical" href="https://kyle-hunady.github.io/instrument.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/instrument.html">
 <meta property="og:title" content="Miniaturized Mössbauer spectrometer · Kyle Hunady">
-<meta property="og:description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive measurements, the counting chain and a detector-layout Monte Carlo.">
+<meta property="og:description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive velocity measurements, an audit of the counting electronics and a detector-layout Monte Carlo.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
@@ -52,7 +52,7 @@
 <header class="page__head">
   <div class="container header__container">
     <p class="header__eyebrow">Planetary instrumentation · Caltech and JPL</p>
-    <h1>Shrinking a Mössbauer spectrometer</h1>
+    <h1>Miniaturized Mössbauer spectrometer</h1>
     <p class="header__line">A small backscatter spectrometer for iron mineralogy and elemental composition.</p>
   </div>
 </header>
@@ -66,7 +66,7 @@
       <div class="fact"><b>⁵⁷Fe</b><span>Mössbauer, backscatter geometry</span></div>
       <div class="fact"><b>+ XRF</b><span>elemental composition, same head</span></div>
       <div class="fact"><b>Piezo</b><span>drive, closed-loop velocity</span></div>
-      <div class="fact"><b>2022–</b><span>Caltech and JPL</span></div>
+      <div class="fact"><b>Since 2022</b><span>Caltech and JPL</span></div>
     </div>
 
     <h2>How it works</h2>
@@ -99,8 +99,8 @@
     </div>
 
     <h2>The velocity drive</h2>
-    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around those problems. A 1974 design locked the drive frequency, not the velocity, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
-    <p>This drive measures the source velocity and adjusts its command after every cycle to cancel the piezo's errors. The same 7 g actuator can run a different velocity range or waveform without new hardware, and the loop is designed to follow slow changes such as the head warming up.</p>
+    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around these problems: a 1974 design locked only the drive frequency, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
+    <p>This drive measures the source velocity and adjusts its command after every cycle to cancel the piezo's errors. The same 7 g actuator can run another velocity range or waveform without new hardware. The loop is designed to track slow changes such as the head warming up.</p>
 
     <h2>What I did</h2>
     <ul class="bullets">
@@ -112,8 +112,8 @@
 
     <h2>Hardware</h2>
 <div class="gallery">
-  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale.</figcaption></figure>
-  <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator in its flexure frame. It moves the source."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator in its flexure frame. It moves the source." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator in its flexure frame. It moves the source.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator that moves the source, in its flexure frame."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator that moves the source, in its flexure frame." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator that moves the source, in its flexure frame.</figcaption></figure>
   <figure><button type="button" data-full="assets/img/gallery/instrument/sample-on-gas-detector.jpg" data-caption="Reference measurement: a rock held against the window of a gas-filled detector."><img class="" src="assets/img/gallery/instrument/sample-on-gas-detector-t.jpg" alt="Reference measurement: a rock held against the window of a gas-filled detector." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>Reference measurement: a rock held against the window of a gas-filled detector.</figcaption></figure>
 </div>
 
@@ -127,7 +127,7 @@
         <label>ring radius <input class="fig-ring" type="range" min="2" max="10" step="0.1" value="7"></label>
         <label>stand-off <input class="fig-height" type="range" min="3" max="12" step="0.5" value="6"></label>
       </div>
-      <p class="cap"><span class="tag-model">toy model</span><b>Move the detectors and watch the efficiency change.</b> Green paths reach a detector; amber ones escape and miss. The source housing blocks the middle, so detectors cannot sit right next to the beam. The bottom plot repeats the run at every radius. This is a 2-D sketch with made-up attenuation lengths; the real search runs in 3-D on the instrument's CAD model.</p>
+      <p class="cap"><span class="tag-model">toy model</span><b>Detection efficiency versus detector position.</b> Green paths reach a detector; amber paths miss. The source housing blocks the middle, so detectors cannot sit next to the beam. The bottom plot repeats the run at every radius. This is a 2-D sketch with made-up attenuation lengths; the real search runs in 3-D on the instrument's CAD model.</p>
     </div>
 <div class="gallery">
   <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-single-detector.jpg" data-caption="Simulated photons leave the source, scatter in the rock and reach one tilted detector."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-single-detector-t.jpg" alt="Simulated photons leave the source, scatter in the rock and reach one tilted detector." width="623" height="448" loading="lazy" decoding="async"></button><figcaption>Simulated photons leave the source, scatter in the rock and reach one tilted detector.</figcaption></figure>
