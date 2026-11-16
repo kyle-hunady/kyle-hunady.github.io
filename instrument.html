@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Miniaturized Mössbauer spectrometer · Kyle Hunady</title>
-<meta name="description" content="A miniaturized Mössbauer and XRF spectrometer for planetary surfaces: piezo drive, counting electronics and a Monte Carlo geometry search.">
+<meta name="description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive measurements, the counting chain and a detector-layout Monte Carlo.">
 <link rel="canonical" href="https://kyle-hunady.github.io/instrument.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/instrument.html">
 <meta property="og:title" content="Miniaturized Mössbauer spectrometer · Kyle Hunady">
-<meta property="og:description" content="A miniaturized Mössbauer and XRF spectrometer for planetary surfaces: piezo drive, counting electronics and a Monte Carlo geometry search.">
+<meta property="og:description" content="A lab prototype of a small Mössbauer and XRF spectrometer for planetary surfaces. My part: drive measurements, the counting chain and a detector-layout Monte Carlo.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
@@ -53,7 +53,7 @@
   <div class="container header__container">
     <p class="header__eyebrow">Planetary instrumentation · Caltech and JPL</p>
     <h1>Shrinking a Mössbauer spectrometer</h1>
-    <p class="header__line">Drive, electronics and geometry for a small backscatter instrument that reads iron mineralogy and elemental composition.</p>
+    <p class="header__line">A small backscatter spectrometer for iron mineralogy and elemental composition.</p>
   </div>
 </header>
 
@@ -61,7 +61,7 @@
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
 
-    <p class="lede">A Mössbauer spectrometer tells you which iron minerals are in a rock and what oxidation state the iron is in. This project is shrinking one toward a size a lander could carry, and adds X-ray fluorescence so the same head also reads elemental composition. It is a lab prototype.</p>
+    <p class="lede">A Mössbauer spectrometer shows which iron minerals are in a rock and the oxidation state of the iron. This project shrinks one toward a size a lander could carry and adds X-ray fluorescence, so the same head also reads elemental composition. It is a lab prototype.</p>
     <div class="facts">
       <div class="fact"><b>⁵⁷Fe</b><span>Mössbauer, backscatter geometry</span></div>
       <div class="fact"><b>+ XRF</b><span>elemental composition, same head</span></div>
@@ -70,7 +70,7 @@
     </div>
 
     <h2>How it works</h2>
-    <p>The source moves back and forth a few millimeters per second. That tiny Doppler shift tunes the gamma-ray energy across the nuclear levels of iron in the sample. When the energy matches, the iron absorbs and re-emits, and the detector sees more counts. Sorting counts by source velocity gives the spectrum.</p>
+    <p>The source moves back and forth at a few millimeters per second. The Doppler shift this causes tunes the gamma-ray energy across the nuclear levels of iron in the sample. When the energy matches, the iron absorbs and re-emits and the detector sees more counts. Sorting counts by source velocity gives the spectrum.</p>
     <div class="fig"><svg class="schem" viewBox="0 0 640 230" role="img" aria-label="Schematic of a backscatter Mossbauer spectrometer">
   <rect x="20" y="40" width="110" height="46" rx="6" fill="none" stroke="#4B5853"/>
   <text x="75" y="60" text-anchor="middle" class="lbl">piezo drive</text><text x="75" y="76" text-anchor="middle">moves the source</text>
@@ -95,12 +95,12 @@
         <button class="btn fig-play" type="button">Pause</button>
         <button class="btn fig-reset" type="button">Restart</button>
       </div>
-      <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, linewidth and peak height are illustrative, not instrument numbers.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, linewidth and peak height are illustrative and do not come from the instrument.</p>
     </div>
 
     <h2>A drive that corrects itself</h2>
-    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around that rather than fixing it. A 1974 design locked the drive frequency, not the velocity, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
-    <p>This drive measures the source velocity and corrects its command from one cycle to the next, so the piezo's own errors get trained out. That makes it adaptable: the same 7 g actuator can be asked for a different velocity range or waveform without redesigning the hardware, and slow changes such as the head warming up are what the loop is built to follow.</p>
+    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around those problems. A 1974 design locked the drive frequency, not the velocity, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
+    <p>This drive measures the source velocity and corrects its command after every cycle, so the piezo's own errors are trained out. The same 7 g actuator can be asked for a different velocity range or waveform without redesigning the hardware, and the loop is built to follow slow changes such as the head warming up.</p>
 
     <h2>What I did</h2>
     <ul class="bullets">
@@ -118,7 +118,7 @@
 </div>
 
     <h2 id="geometry">Geometry search</h2>
-    <p>Where you put the detector decides how long you wait for a spectrum. The ray tracer fires photons into the sample, follows each one through absorption and re-emission, and counts the ones that land on the detector. A sweep over the layout finds the best spot.</p>
+    <p>Where you put the detector decides how long you wait for a spectrum. The ray tracer fires photons into the sample, follows each one through absorption and re-emission, and counts the ones that land on the detector. A sweep over detector positions finds the one that collects the most.</p>
     <div class="fig" data-fig="rays">
       <canvas class="fig-rays plot--scene" aria-label="Photon paths from source into sample and back to the detectors"></canvas>
       <canvas class="fig-eff plot--short" aria-label="Detected fraction versus detector ring radius"></canvas>
