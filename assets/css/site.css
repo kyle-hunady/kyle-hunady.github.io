@@ -728,3 +728,15 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .org__badge { padding: 0; }
 .org__badge--wide { width: auto; padding: 0; }
 .org__badge--wide img { width: auto; height: 2.6rem; }
+
+/* B.C. (before Claude): the old hand-written repos, as a quiet list under the grid */
+.bc { margin-top: 2.2rem; border-top: 1px dashed var(--rule); padding-top: 1.4rem; }
+.bc__title { font-size: 0.95rem; color: var(--white); }
+.bc__title span { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-left: 0.4rem; }
+p.bc__lede { font-size: 0.8rem; margin: 0.3rem 0 0.8rem; }
+.bc__list li { display: grid; grid-template-columns: 3rem 11rem 1fr; gap: 0.8rem; align-items: baseline; padding: 0.45rem 0; border-top: 1px solid var(--rule); font-size: 0.78rem; list-style: none; }
+.bc__year { color: var(--faint); font-size: 0.72rem; }
+.bc__list a { display: inline-flex; align-items: center; gap: 0.35rem; }
+.bc__list a svg { width: 0.85rem; height: 0.85rem; }
+.bc__what { font-family: var(--sans); color: var(--muted); }
+@media screen and (max-width: 640px) { .bc__list li { grid-template-columns: 2.6rem 1fr; } .bc__what { grid-column: 2; } }
