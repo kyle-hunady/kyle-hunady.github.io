@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=202611160645">
+<link rel="stylesheet" href="assets/css/site.css?v=202611160658">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -53,7 +53,7 @@
   <div class="container header__container">
     <p class="header__eyebrow">Research tooling</p>
     <h1>Research automation, measured</h1>
-    <p class="header__line">How I run AI agents on a PhD without drowning in cost or wrong answers.</p>
+    <p class="header__line">How I use AI agents in my PhD, and what they cost.</p>
   </div>
 </header>
 
@@ -61,7 +61,7 @@
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
 
-    <p class="lede">My research runs alongside a set of AI agents (Claude Code) that fetch papers, keep notes, stage calculations and check their own work. Most of my effort went into the plumbing that keeps them cheap and keeps their answers checkable.</p>
+    <p class="lede">My research runs alongside a set of AI agents (Claude Code) that fetch papers, keep notes, stage calculations and check their own work. Most of my effort went into keeping them cheap and their answers checkable.</p>
     <div class="facts">
       <div class="fact"><b>609</b><span>agent sessions measured</span></div>
       <div class="fact"><b>117k</b><span>turns in those sessions</span></div>
@@ -88,7 +88,7 @@
   <text x="540" y="118" text-anchor="middle" class="lbl" style="fill:#8FA095;font-size:15px">1,855 synopses</text>
 </svg>
       <p class="cap"><b>Counts as of November 2026.</b> Synopses: 918 for my thesis planning, 778 for the alloy DFT work, 159 for a collaboration. 70 papers have notes in more than one project.</p></div>
-    <div class="fig"><svg class="schem" viewBox="0 0 620 234" role="img">
+    <div class="fig"><svg class="schem" viewBox="0 0 620 234" role="img" aria-label="PDFs found by route in one batch">
 <text x="210" y="24.96" text-anchor="end">Publisher text-mining APIs</text>
 <rect x="220" y="10" width="153.9" height="22" rx="3" fill="#8FA095"/>
 <text x="381.9" y="24.96" class="lbl">145</text>
@@ -111,7 +111,7 @@
 <rect x="220" y="202" width="330.0" height="22" rx="3" fill="#4B5853"/>
 <text x="558.0" y="216.96" class="lbl">311</text>
 </svg>
-      <p class="cap"><b>Where the PDFs came from</b> in one batch of 577 requests (266 found on the first pass). Open-access routes are tried before anything that needs a license. The misses go to interlibrary loan by hand.</p></div>
+      <p class="cap"><b>Where the PDFs came from</b> in one batch of 577 requests (266 found on the first pass, which still counts failures from before a bug fix). Open-access routes are tried before anything that needs a license. The misses go to interlibrary loan by hand.</p></div>
 
     <h2>2 · Finding where the cost goes</h2>
     <p>An agent re-reads the whole conversation on every turn. So the bill grows with how long a session has run, more than with how much it does. I wrote a script that reads every session transcript and splits the spend by what was carried.</p>
@@ -129,10 +129,10 @@
   <polyline points="60,20 276,61.9 384,94.2 492,115.3 600,129.8" fill="none" stroke="#8FA095" stroke-width="2.2"/>
   <circle cx="276" cy="61.9" r="4" fill="#8FA095"/><circle cx="384" cy="94.2" r="4" fill="#8FA095"/><circle cx="492" cy="115.3" r="4" fill="#8FA095"/><circle cx="600" cy="129.8" r="4" fill="#8FA095"/>
   <text x="284" y="56" class="lbl">70% of spend</text><text x="392" y="89" class="lbl">47%</text><text x="500" y="110" class="lbl">32%</text><text x="560" y="148" class="lbl">22%</text>
-  <line x1="137" y1="20" x2="137" y2="160" stroke="#D9B26F" stroke-dasharray="4 4"/><text x="142" y="150" style="fill:#D9B26F">fresh session ≈ 72k</text>
+  <line x1="137" y1="20" x2="137" y2="160" stroke="#D9B26F" stroke-dasharray="4 4"/><text x="142" y="150" style="fill:#D9B26F">fresh session ≈ 72k (Aug–Nov)</text>
 </svg>
       <p class="cap"><b>Most of the bill lands on long sessions.</b> 70% of spend was on turns that started with more than 200k tokens in the window. A fresh session starts near 72k. The fix was to end sessions at topic boundaries with a short restart note, and to make the notes cheap to load.</p></div>
-    <div class="fig"><svg class="schem" viewBox="0 0 620 170" role="img">
+    <div class="fig"><svg class="schem" viewBox="0 0 620 170" role="img" aria-label="File sizes read at session start versus the summary script">
 <text x="210" y="24.96" text-anchor="end">INDEX.md (paper index)</text>
 <rect x="220" y="10" width="330.0" height="22" rx="3" fill="#8FA095"/>
 <text x="558.0" y="24.96" class="lbl">1,060 KB</text>
@@ -153,7 +153,7 @@
 
     <h2>3 · Estimates that grade themselves</h2>
     <p>Before a DFT job goes to the cluster, the agent writes down how long it expects it to take. A ledger matches each estimate to the real run time afterwards.</p>
-    <div class="fig"><svg class="schem" viewBox="0 0 620 74" role="img">
+    <div class="fig"><svg class="schem" viewBox="0 0 620 74" role="img" aria-label="Graded compute estimates before and after automatic matching">
 <text x="210" y="24.96" text-anchor="end">before automatic matching</text>
 <rect x="220" y="10" width="13.2" height="22" rx="3" fill="#8FA095"/>
 <text x="241.2" y="24.96" class="lbl">32</text>
@@ -161,7 +161,7 @@
 <rect x="220" y="42" width="330.0" height="22" rx="3" fill="#8FA095"/>
 <text x="558.0" y="56.96" class="lbl">797</text>
 </svg>
-      <p class="cap"><b>From 32 graded estimates to 797</b> once the ledger joined estimates to outcomes automatically. The median job took 0.46 of its estimate. Estimates that cited a similar past job were closer (median 0.58) and timed out less (5% vs 11%).</p></div>
+      <p class="cap"><b>From 32 graded estimates to 797</b> once the ledger joined estimates to outcomes automatically. The median job took 0.46 of its estimate. Estimates that cited a similar past job were closer (median 0.58) and timed out less (5% vs 11%). About 1,800 estimates are not yet matched to an outcome, so the graded set is not a random sample.</p></div>
 
     <h2>What carries over</h2>
     <ul class="bullets">
@@ -187,6 +187,6 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=202611160645"></script>
+<script src="assets/js/site.js?v=202611160658"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@
       }
       shape.push(s);
     }
+    var MEAN = shape.reduce(function (a, b) { return a + b; }, 0) / NCH;
     var t = 0, running = !reduced, visible = true, raf = null;
     function clear() { counts = shape.map(function () { return 0; }); t = 0; }
     clear();
@@ -59,7 +60,7 @@
     }
     function draw() {
       var total = counts.reduce(function (a, b) { return a + b; }, 0);
-      var base = total / NCH / (1 + EFFECT * 0.4) || 1;
+      var base = total / NCH / MEAN || 1;
       var model = shape.map(function (s) { return s * base; });
       var lo = Math.max(0, base * (1 - 4 / Math.sqrt(base + 1)) - 2),
           hi = base * (1 + EFFECT * 1.25) + 4 * Math.sqrt(base + 1) + 2;
@@ -142,11 +143,12 @@
            yticks: [0, +ymax.toFixed(2)], xlabel: 'temperature (K)', ylabel: 'Cp / T  (J/mol·K²)',
            marks: [{ x: T, label: T + ' K', color: GOLD }] });
       var cfg = R * Math.log(5);
+      var smax = Math.max(45, Math.ceil(c.S[c.S.length - 1] * 1.1 / 5) * 5);
       linePlot(cvB, [
         { x: c.T, y: c.S, color: SAGE },
         { x: [0, TMAX], y: [cfg, cfg], color: BLUE, dash: [5, 4], width: 1.3 }
-      ], { xmin: 0, xmax: TMAX, ymin: 0, ymax: 45, xticks: [0, 100, 200, 300, 400],
-           yticks: [0, 15, 30, 45], xlabel: 'temperature (K)', ylabel: 'S  (J/mol·K)',
+      ], { xmin: 0, xmax: TMAX, ymin: 0, ymax: smax, xticks: [0, 100, 200, 300, 400],
+           yticks: [0, 15, 30, 45].filter(function (v) { return v <= smax; }), xlabel: 'temperature (K)', ylabel: 'S  (J/mol·K)',
            marks: [{ x: T, color: GOLD }, { y: cfg, label: 'R ln 5', color: BLUE }] });
       var Sv = c.S[idx];
       out.textContent = 'At ' + T + ' K: vibrational ' + Sv.toFixed(1) + ' J/mol·K  ·  ideal mixing ' +
@@ -260,7 +262,7 @@
   function mdPage(root) {
     var cv = $(root, 'canvas.fig-md'), cvT = $(root, 'canvas.fig-md-t'),
         temp = $(root, '.fig-temp'), mode = $(root, '.fig-mode'), play = $(root, '.fig-play'),
-        quench = $(root, '.fig-quench'), out = $(root, '.fig-out'), legend = $(root, '.fig-legend');
+        quench = $(root, '.fig-quench'), out = $(root, '.fig-out'), legend = $(root, '.legend');
     var n = 0;
     var sim = new MDSim(cv, {
       cols: 30, rows: 14, T: +temp.value, stepsPerFrame: 5,

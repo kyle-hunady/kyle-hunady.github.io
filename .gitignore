@@ -32,3 +32,5 @@ build/
 # being served publicly from GitHub Pages. Kept locally (rename_exports.py
 # regenerates assets/js/latte-dates.js), never published.
 coffee-cropper/
+
+__pycache__/

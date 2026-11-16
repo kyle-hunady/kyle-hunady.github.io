@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=202611160645">
+<link rel="stylesheet" href="assets/css/site.css?v=202611160658">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -84,12 +84,12 @@
   <rect x="470" y="40" width="130" height="40" rx="6" fill="none" stroke="#7FA7C9"/>
   <text x="535" y="58" text-anchor="middle" class="lbl">detector</text><text x="535" y="73" text-anchor="middle">counts what comes back</text>
   <text x="320" y="110" text-anchor="start">resonant re-emission + X-ray fluorescence</text>
-  <text x="20" y="160">velocity sweeps ±10 mm/s;</text><text x="20" y="176">each velocity is one spectrum channel</text>
+  <text x="20" y="160">velocity sweeps a few mm/s each way;</text><text x="20" y="176">each velocity is one spectrum channel</text>
 </svg></div>
 
     <div class="fig" data-fig="mossbauer">
       <canvas class="fig-spec plot" aria-label="Simulated Mossbauer spectrum accumulating counts"></canvas>
-      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-out"></div>
       <div class="fig-controls">
         <label>count rate <input class="fig-rate" type="range" min="2" max="4.3" step="0.05" value="3"></label>
         <button class="btn fig-play" type="button">Pause</button>
@@ -98,20 +98,22 @@
       <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, linewidth and peak height are illustrative, not instrument numbers.</p>
     </div>
 
+    <h2>A drive that corrects itself</h2>
+    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around that rather than fixing it. A 1974 design locked the drive frequency, not the velocity, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
+    <p>This drive measures the source velocity and corrects its command from one cycle to the next, so the piezo's own errors get trained out. That makes it adaptable: the same 7 g actuator can be asked for a different velocity range or waveform without redesigning the hardware, and slow changes such as the head warming up are what the loop is built to follow.</p>
+
     <h2>What I did</h2>
-    <p>The drive and its feedback loop were designed by the team. My part:</p>
     <ul class="bullets">
       <li>Measured the piezo drive's velocity with a laser vibrometer and compared candidate feedback sensors.</li>
       <li>Audited and debugged the counting chain, a Teensy-based multichannel scaler that bins each detector pulse by drive phase.</li>
       <li>Wrote a photon-transport Monte Carlo that scores source, sample and detector layouts (below).</li>
     </ul>
-    <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>PyQt</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>LabVIEW</span></div>
+    <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>LabVIEW</span></div>
 
     <h2>Hardware</h2>
 <div class="gallery">
   <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale.</figcaption></figure>
   <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator in its flexure frame. It moves the source."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator in its flexure frame. It moves the source." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator in its flexure frame. It moves the source.</figcaption></figure>
-  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-thermal-test.jpg" data-caption="Heated-drive test: the head on a hot stage to check that the velocity holds as it warms."><img class="" src="assets/img/gallery/instrument/drive-thermal-test-t.jpg" alt="Heated-drive test: the head on a hot stage to check that the velocity holds as it warms." width="720" height="671" loading="lazy" decoding="async"></button><figcaption>Heated-drive test: the head on a hot stage to check that the velocity holds as it warms.</figcaption></figure>
   <figure><button type="button" data-full="assets/img/gallery/instrument/sample-on-gas-detector.jpg" data-caption="Reference measurement: a rock held against the window of a gas-filled detector."><img class="" src="assets/img/gallery/instrument/sample-on-gas-detector-t.jpg" alt="Reference measurement: a rock held against the window of a gas-filled detector." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>Reference measurement: a rock held against the window of a gas-filled detector.</figcaption></figure>
 </div>
 
@@ -155,8 +157,8 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=202611160645"></script>
-<script src="assets/js/md.js?v=202611160645"></script>
-<script src="assets/js/figs.js?v=202611160645"></script>
+<script src="assets/js/site.js?v=202611160658"></script>
+<script src="assets/js/md.js?v=202611160658"></script>
+<script src="assets/js/figs.js?v=202611160658"></script>
 </body>
 </html>
