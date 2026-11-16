@@ -34,3 +34,7 @@ build/
 coffee-cropper/
 
 __pycache__/
+
+# Original outreach photos (full size, with metadata). Only the cleaned
+# 1400 px copies in assets/img/outreach/ are published.
+assets/img/outreach/src/
