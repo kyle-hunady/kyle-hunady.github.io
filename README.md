@@ -4,15 +4,22 @@ Personal site. Static HTML, one stylesheet, one script, no build step and no dep
 Push to `main` and GitHub Pages serves it at <https://kyle-hunady.github.io>.
 
 ```
-index.html            the site — hero, about, research, outreach, projects, contact
-latte.html            the latte gallery (grid + lightbox)
-about.html            \
-research.html          > noindex redirects into index.html, kept for old inbound links
-projects.html         /
-assets/css/site.css   every style, both pages
-assets/js/site.js     nav highlighting + copy-to-clipboard
+index.html            home: hero, about, research (two image-led blocks), projects, outreach, contact
+instrument.html       project page: the Mössbauer spectrometer (schematic, spectrum + ray figures, gallery)
+entropy.html          project page: alloy entropy (Debye entropy figure, gallery)
+md.html               project page: live 2-D molecular dynamics toy
+automation.html       project page: research automation, figures drawn from measured numbers
+latte.html            the café: latte gallery, linked only from the footer cup
+404.html              not-found page (GitHub Pages serves it automatically)
+about|research|projects.html   noindex redirects into index.html, kept for old inbound links
+assets/css/site.css   every style, all pages
+assets/js/site.js     nav highlighting, copy-to-clipboard, gallery lightbox
+assets/js/md.js       MDSim (the MD engine) + linePlot (tiny canvas plotter)
+assets/js/figs.js     the interactive figures; a page opts in with data-fig="..."
 assets/js/latte-dates.js   generated: photo number -> date
-assets/img/latte/     001.jpg … the gallery, 1 = oldest
+assets/img/gallery/<page>/  gallery photos: name.jpg (1600 px) + name-t.jpg (720 px thumb)
+assets/img/logos/     outreach logos (Kyle's redesigns for GSC, GSAB, Alpine Club)
+assets/img/latte/     001.jpg … the latte gallery, 1 = oldest
 coffee-cropper/       LOCAL ONLY, gitignored: the Python cropper and its photo working set
 ```
 
@@ -73,7 +80,22 @@ The same pass stripped every blob over 400 KB from history (the old ~1.7 MB gall
 files belonging to the deleted pages. **A clone before 2026-08-23 has incompatible history** — delete
 it and re-clone rather than pulling.
 
-## Conventions
+## Gallery images that are held back
+
+The photo survey of 2026-11-16 staged more instrument images than were published. Held until Kyle
+clears them with the JPL collaborators: interior photos of the open head, the instrument CAD, the
+measured spectra and drive-calibration plots (paper in preparation), and the alloy SEM, heat-capacity
+and entropy figures (manuscript in revision). To publish one, add it to `assets/img/gallery/<page>/`
+and a `<figure>` in that page's gallery block.
+
+## Cache busting
+
+GitHub Pages caches for ten minutes and browsers longer. Every page loads its CSS and JS with a
+`?v=<number>` query; bump it in all pages when a stylesheet or script changes:
+
+```bash
+V=$(date +%Y%m%d%H%M); sed -i -E "s/\?v=[0-9a-z]+\"/?v=$V\"/g" *.html
+```
 
 ## Editing the words
 
@@ -126,15 +148,19 @@ contact**. The rule is one home per fact.
   sit here too, under a heading that names neither.
 - **Outreach** is its own section rather than a row inside Research, because it is a real part of the
   work and was invisible where it was.
-- **Projects** is a grid of eight cards, each a photo and one or two sentences. It is a map, not a
-  repository: there are no per-project detail pages, and the three that existed were deleted because
-  their copy oversold the work.
+- **Research** is two image-led blocks, one per thesis leg, each linking to its project page.
+  This replaced text-only rows plus separate cards that said the same thing twice (2026-11-16
+  reading-fatigue review: the first image used to sit 3.3 screens down).
+- **Projects** is a grid of cards; a card links to its page or repo, or is a plain card when there
+  is nothing to link. Every page figure is a labelled teaching model ("simulated", "toy model"),
+  never unpublished data.
+- **Outreach** rows carry the organization's logo and public links (sites, calendars).
 - **Contact** is one line and three buttons.
 
 Before changing any copy, run the tone gate:
 
 ```bash
-python ~/Documents/1Research/planning/ops/site_tone_check.py index.html latte.html
+python ~/Documents/1Research/planning/ops/site_tone_check.py *.html
 ```
 
 It measures the three things that actually go wrong here — AI vocabulary and cadences (the

@@ -22,8 +22,8 @@
     { id: 'top', el: document.querySelector('header') },
     { id: 'about', el: document.getElementById('about') },
     { id: 'research', el: document.getElementById('research') },
-    { id: 'outreach', el: document.getElementById('outreach') },
     { id: 'projects', el: document.getElementById('projects') },
+    { id: 'outreach', el: document.getElementById('outreach') },
     { id: 'contact', el: document.getElementById('contact') }
   ].filter(function (t) { return t.el; });
 
@@ -167,5 +167,40 @@
         manual(btn);
       }
     });
+  });
+})();
+
+/* Lightbox for project-page galleries. Any <button data-full=...> inside a
+ * .gallery opens #lightbox; arrows step within that gallery, Esc or the
+ * backdrop closes, focus goes back to the thumbnail. latte.html has its own. */
+(function () {
+  var lb = document.getElementById('lightbox');
+  var thumbs = document.querySelectorAll('.gallery button[data-full]');
+  if (!lb || !thumbs.length) return;
+  var img = document.getElementById('lightbox-img'), cap = document.getElementById('lightbox-caption');
+  var set = [], i = 0, last = null;
+  function show(k) {
+    i = (k + set.length) % set.length;
+    img.src = set[i].dataset.full; img.alt = set[i].dataset.caption || '';
+    cap.textContent = set[i].dataset.caption || '';
+  }
+  function close() { lb.classList.remove('open'); document.body.style.overflow = ''; img.src = ''; if (last) last.focus(); }
+  thumbs.forEach(function (b) {
+    b.addEventListener('click', function () {
+      set = Array.prototype.slice.call(b.closest('.gallery').querySelectorAll('button[data-full]'));
+      last = b; show(set.indexOf(b));
+      lb.classList.add('open'); document.body.style.overflow = 'hidden';
+      document.getElementById('lightbox-close').focus();
+    });
+  });
+  document.getElementById('lightbox-close').addEventListener('click', close);
+  document.getElementById('lightbox-prev').addEventListener('click', function () { show(i - 1); });
+  document.getElementById('lightbox-next').addEventListener('click', function () { show(i + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(i - 1);
+    if (e.key === 'ArrowRight') show(i + 1);
   });
 })();

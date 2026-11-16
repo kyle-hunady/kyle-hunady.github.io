@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miniaturized Mössbauer spectrometer · Kyle Hunady</title>
+<meta name="description" content="A miniaturized Mössbauer and XRF spectrometer for planetary surfaces: piezo drive, counting electronics and a Monte Carlo geometry search.">
+<link rel="canonical" href="https://kyle-hunady.github.io/instrument.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/instrument.html">
+<meta property="og:title" content="Miniaturized Mössbauer spectrometer · Kyle Hunady">
+<meta property="og:description" content="A miniaturized Mössbauer and XRF spectrometer for planetary surfaces: piezo drive, counting electronics and a Monte Carlo geometry search.">
+<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v=202611160645">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8"/><path d="M16.5 5.3a3.4 3.4 0 0 1 0 6.4"/><path d="M18 14.6c2.2.6 3.5 2.4 3.5 5.4"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3.2 9.3h3.6V21H3.2zM10 9.3h3.45v1.6h.05c.48-.9 1.72-1.85 3.55-1.85 3.8 0 4.5 2.45 4.5 5.65V21h-3.6v-5.5c0-1.3-.02-3-1.85-3-1.85 0-2.13 1.42-2.13 2.9V21H10z"/></symbol>
+  <symbol id="i-scholar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 8.6 12 13.7l10.2-5.1z"/><path d="M5.9 10.8v4.4c0 1.9 2.7 3.3 6.1 3.3s6.1-1.4 6.1-3.3v-4.4"/><path d="M21.6 9v5"/></symbol>
+  <symbol id="i-orcid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M8.4 10.2v6.1"/><circle cx="8.4" cy="7.6" r="0.9" fill="currentColor" stroke="none"/><path d="M12.3 16.3v-6.1h2.1a3.05 3.05 0 0 1 0 6.1z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.29-1.71-1.29-1.71-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+<nav aria-label="Sections">
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
+</nav>
+
+<header class="page__head">
+  <div class="container header__container">
+    <p class="header__eyebrow">Planetary instrumentation · Caltech and JPL</p>
+    <h1>Shrinking a Mössbauer spectrometer</h1>
+    <p class="header__line">Drive, electronics and geometry for a small backscatter instrument that reads iron mineralogy and elemental composition.</p>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="container">
+    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
+
+    <p class="lede">A Mössbauer spectrometer tells you which iron minerals are in a rock and what oxidation state the iron is in. This project is shrinking one toward a size a lander could carry, and adds X-ray fluorescence so the same head also reads elemental composition. It is a lab prototype.</p>
+    <div class="facts">
+      <div class="fact"><b>⁵⁷Fe</b><span>Mössbauer, backscatter geometry</span></div>
+      <div class="fact"><b>+ XRF</b><span>elemental composition, same head</span></div>
+      <div class="fact"><b>Piezo</b><span>drive, closed-loop velocity</span></div>
+      <div class="fact"><b>2022–</b><span>Caltech and JPL</span></div>
+    </div>
+
+    <h2>How it works</h2>
+    <p>The source moves back and forth a few millimeters per second. That tiny Doppler shift tunes the gamma-ray energy across the nuclear levels of iron in the sample. When the energy matches, the iron absorbs and re-emits, and the detector sees more counts. Sorting counts by source velocity gives the spectrum.</p>
+    <div class="fig"><svg class="schem" viewBox="0 0 640 230" role="img" aria-label="Schematic of a backscatter Mossbauer spectrometer">
+  <rect x="20" y="40" width="110" height="46" rx="6" fill="none" stroke="#4B5853"/>
+  <text x="75" y="60" text-anchor="middle" class="lbl">piezo drive</text><text x="75" y="76" text-anchor="middle">moves the source</text>
+  <path d="M130 63h40" stroke="#4B5853"/><path d="M150 52l8 11-8 11" fill="none" stroke="#4B5853"/><path d="M168 52l-8 11 8 11" fill="none" stroke="#4B5853"/>
+  <circle cx="200" cy="63" r="16" fill="#D9B26F" opacity="0.9"/>
+  <text x="200" y="104" text-anchor="middle" class="lbl">57Co source</text><text x="200" y="120" text-anchor="middle">14.4 keV gamma rays</text>
+  <rect x="300" y="160" width="300" height="46" fill="rgba(201,138,127,0.18)" stroke="rgba(201,138,127,0.6)"/>
+  <text x="450" y="188" text-anchor="middle" class="lbl">sample (rock or soil, no preparation)</text>
+  <path d="M214 74 L420 160" stroke="#F2F3F0" stroke-opacity="0.45" stroke-dasharray="4 4"/>
+  <path d="M440 160 L500 80" stroke="#8FA095" stroke-width="2"/><path d="M460 160 L560 90" stroke="#8FA095" stroke-width="2"/>
+  <rect x="470" y="40" width="130" height="40" rx="6" fill="none" stroke="#7FA7C9"/>
+  <text x="535" y="58" text-anchor="middle" class="lbl">detector</text><text x="535" y="73" text-anchor="middle">counts what comes back</text>
+  <text x="320" y="110" text-anchor="start">resonant re-emission + X-ray fluorescence</text>
+  <text x="20" y="160">velocity sweeps ±10 mm/s;</text><text x="20" y="176">each velocity is one spectrum channel</text>
+</svg></div>
+
+    <div class="fig" data-fig="mossbauer">
+      <canvas class="fig-spec plot" aria-label="Simulated Mossbauer spectrum accumulating counts"></canvas>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>count rate <input class="fig-rate" type="range" min="2" max="4.3" step="0.05" value="3"></label>
+        <button class="btn fig-play" type="button">Pause</button>
+        <button class="btn fig-reset" type="button">Restart</button>
+      </div>
+      <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, linewidth and peak height are illustrative, not instrument numbers.</p>
+    </div>
+
+    <h2>What I did</h2>
+    <p>The drive and its feedback loop were designed by the team. My part:</p>
+    <ul class="bullets">
+      <li>Measured the piezo drive's velocity with a laser vibrometer and compared candidate feedback sensors.</li>
+      <li>Audited and debugged the counting chain, a Teensy-based multichannel scaler that bins each detector pulse by drive phase.</li>
+      <li>Wrote a photon-transport Monte Carlo that scores source, sample and detector layouts (below).</li>
+    </ul>
+    <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>PyQt</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>LabVIEW</span></div>
+
+    <h2>Hardware</h2>
+<div class="gallery">
+  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>The drive shrank from a 4.5 kg lab transducer to the 50 g MIMOS II drive to a 7 g amplified piezo, drawn to scale.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator in its flexure frame. It moves the source."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator in its flexure frame. It moves the source." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator in its flexure frame. It moves the source.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-thermal-test.jpg" data-caption="Heated-drive test: the head on a hot stage to check that the velocity holds as it warms."><img class="" src="assets/img/gallery/instrument/drive-thermal-test-t.jpg" alt="Heated-drive test: the head on a hot stage to check that the velocity holds as it warms." width="720" height="671" loading="lazy" decoding="async"></button><figcaption>Heated-drive test: the head on a hot stage to check that the velocity holds as it warms.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/sample-on-gas-detector.jpg" data-caption="Reference measurement: a rock held against the window of a gas-filled detector."><img class="" src="assets/img/gallery/instrument/sample-on-gas-detector-t.jpg" alt="Reference measurement: a rock held against the window of a gas-filled detector." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>Reference measurement: a rock held against the window of a gas-filled detector.</figcaption></figure>
+</div>
+
+    <h2 id="geometry">Geometry search</h2>
+    <p>Where you put the detector decides how long you wait for a spectrum. The ray tracer fires photons into the sample, follows each one through absorption and re-emission, and counts the ones that land on the detector. A sweep over the layout finds the best spot.</p>
+    <div class="fig" data-fig="rays">
+      <canvas class="fig-rays plot--scene" aria-label="Photon paths from source into sample and back to the detectors"></canvas>
+      <canvas class="fig-eff plot--short" aria-label="Detected fraction versus detector ring radius"></canvas>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>ring radius <input class="fig-ring" type="range" min="2" max="10" step="0.1" value="7"></label>
+        <label>stand-off <input class="fig-height" type="range" min="3" max="12" step="0.5" value="6"></label>
+      </div>
+      <p class="cap"><span class="tag-model">toy model</span><b>Move the detectors and watch the efficiency change.</b> Green paths reach a detector; amber ones escape and miss. The source housing blocks the middle, so detectors cannot sit right next to the beam. The bottom plot repeats the run at every radius. This is a 2-D sketch with made-up attenuation lengths; the real search runs in 3-D on the instrument's CAD model.</p>
+    </div>
+<div class="gallery">
+  <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-single-detector.jpg" data-caption="Simulated photons leave the source, scatter in the rock and reach one tilted detector."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-single-detector-t.jpg" alt="Simulated photons leave the source, scatter in the rock and reach one tilted detector." width="623" height="448" loading="lazy" decoding="async"></button><figcaption>Simulated photons leave the source, scatter in the rock and reach one tilted detector.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors.jpg" data-caption="The same simulation for the MIMOS II layout: one beam, four flat detectors around it."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors-t.jpg" alt="The same simulation for the MIMOS II layout: one beam, four flat detectors around it." width="623" height="401" loading="lazy" decoding="async"></button><figcaption>The same simulation for the MIMOS II layout: one beam, four flat detectors around it.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-2d-side-view.jpg" data-caption="Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray)."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-2d-side-view-t.jpg" alt="Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray)." width="720" height="556" loading="lazy" decoding="async"></button><figcaption>Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray).</figcaption></figure>
+</div>
+
+    <h2 id="electronics">Detector chain</h2>
+    <p>Each detector pulse is shaped, sorted by height so only the 14.4 keV and fluorescence lines are kept, and dropped into a channel set by where the drive is in its cycle. Counts from many cycles add up into one spectrum.</p>
+
+
+    <h2>Status</h2>
+    <p>A paper on the feedback control and geometry is in preparation with collaborators at JPL. Code for this instrument is not public.</p>
+
+    <div class="next-links"><a class="btn" href="entropy.html">Next: the entropy of alloys</a><a class="btn" href="index.html#projects">All projects</a></div>
+
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image"><div class="lightbox-card lightbox-card--wide"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous image">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next image">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close">&#10005;</button></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-links"><a href="index.html">Home</a><a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer">GitHub</a><a href="latte.html" class="cup" title="The latte log"><svg><use href="#i-cup"/></svg>Latte log</a></div>
+  <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
+</footer>
+
+<script src="assets/js/site.js?v=202611160645"></script>
+<script src="assets/js/md.js?v=202611160645"></script>
+<script src="assets/js/figs.js?v=202611160645"></script>
+</body>
+</html>

@@ -20,7 +20,7 @@ import os
 import re
 import sys
 
-PAGES = ['index.html', 'latte.html']
+PAGES = ['index.html', 'latte.html', 'instrument.html', 'entropy.html', 'md.html', 'automation.html']
 
 # Elements that hold copy, in one alternation so a single pass yields document
 # order. Anything not listed here is structure and is never touched.
