@@ -740,3 +740,31 @@ p.bc__lede { font-size: 0.8rem; margin: 0.3rem 0 0.8rem; }
 .bc__list a svg { width: 0.85rem; height: 0.85rem; }
 .bc__what { font-family: var(--sans); color: var(--muted); }
 @media screen and (max-width: 640px) { .bc__list li { grid-template-columns: 2.6rem 1fr; } .bc__what { grid-column: 2; } }
+
+/* ------------------------------------------- automation: terminal + papers */
+.term { background: #070807; border: 1px solid var(--rule); border-radius: 0.7rem; overflow: hidden; }
+.term__bar { display: flex; align-items: center; gap: 0.35rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); }
+.term__bar i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--surface-2); }
+.term__bar span { margin-left: 0.5rem; font-size: 0.68rem; color: var(--faint); }
+.term pre { margin: 0; padding: 0.9rem 1rem; font-family: var(--mono); font-size: 0.74rem; line-height: 1.6; color: var(--muted);
+            white-space: pre-wrap; word-break: break-word; max-height: 30rem; overflow: auto; }
+.term .t-cmd { color: var(--white); }
+.term .t-ok { color: var(--accent); }
+.term .t-miss { color: #C98A7F; }
+.papers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.paper { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.9rem; background: var(--surface); border: 1px solid var(--rule);
+         border-radius: 0.7rem; padding: 0.8rem; }
+.paper__thumb img { border-radius: 0.3rem; border: 1px solid var(--rule); background: #fff; }
+.paper__nopdf { aspect-ratio: 26 / 34; border: 1px dashed var(--rule); border-radius: 0.3rem; display: grid; place-items: center;
+                text-align: center; font-size: 0.6rem; color: var(--faint); }
+.paper__meta { font-size: 0.62rem; letter-spacing: 0.06em; color: var(--faint); }
+.paper__title { font-size: 0.82rem; line-height: 1.35; margin: 0.25rem 0; }
+.paper__title a { color: var(--white); }
+.paper__title a:hover { color: var(--accent); }
+.page p.paper__who { font-size: 0.7rem; color: var(--faint); }
+.page p.paper__sum { font-size: 0.78rem; line-height: 1.55; margin-top: 0.4rem; }
+.route { border-radius: 0.25rem; padding: 0 0.3rem; }
+.route.r-oa { color: var(--accent); border: 1px solid var(--accent-deep); }
+.route.r-lib { color: #7FA7C9; border: 1px solid rgba(127,167,201,0.45); }
+.route.r-miss { color: #C98A7F; border: 1px solid rgba(201,138,127,0.45); }
+@media screen and (max-width: 760px) { .papers { grid-template-columns: 1fr; } }
