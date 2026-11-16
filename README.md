@@ -7,14 +7,13 @@ Push to `main` and GitHub Pages serves it at <https://kyle-hunady.github.io>.
 index.html            home: hero, about, research (two image-led blocks), projects, outreach, contact
 instrument.html       project page: the Mössbauer spectrometer (schematic, spectrum + ray figures, gallery)
 entropy.html          project page: alloy entropy (Debye entropy figure, gallery)
-md.html               project page: live 2-D molecular dynamics toy
 automation.html       project page: research automation, figures drawn from measured numbers
 latte.html            the café: latte gallery, linked only from the footer cup
 404.html              not-found page (GitHub Pages serves it automatically)
 about|research|projects.html   noindex redirects into index.html, kept for old inbound links
 assets/css/site.css   every style, all pages
 assets/js/site.js     nav highlighting, copy-to-clipboard, gallery lightbox
-assets/js/md.js       MDSim (the MD engine) + linePlot (tiny canvas plotter)
+assets/js/md.js       linePlot (tiny canvas plotter) + MDSim, an MD engine with no page yet (shelved 2026-11-16)
 assets/js/figs.js     the interactive figures; a page opts in with data-fig="..."
 assets/js/latte-dates.js   generated: photo number -> date
 assets/img/gallery/<page>/  gallery photos: name.jpg (1600 px) + name-t.jpg (720 px thumb)
@@ -183,3 +182,7 @@ It measures the three things that actually go wrong here — AI vocabulary and c
 - Only link a repo that has code in it.
 - New interactive controls are real `<button>` or `<a>` elements so keyboard and touch work without
   extra code.
+
+## Shelved
+
+- **Molecular dynamics page** (removed 2026-11-16). Kyle: not good enough on its own; it comes back only if it shows something useful, such as a comparison with his own data. The engine is still in `assets/js/md.js`.

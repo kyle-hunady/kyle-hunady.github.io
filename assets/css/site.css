@@ -715,3 +715,9 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 /* a card that covers two projects shows one photo of each, side by side */
 .project__thumb--split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 .project__thumb--split img { height: 100%; }
+
+.org__badges { position: absolute; left: 0.45rem; bottom: 0.45rem; display: flex; gap: 0.35rem; }
+.org__badges .org__badge { position: static; }
+.org__badge--wide { width: auto; padding: 0 0.5rem; }
+.org__badge--wide img { width: 4.2rem; }
+.org__badge--text { width: auto; padding: 0 0.6rem; color: var(--white); font-family: var(--mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; }

@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=202611160755">
+<link rel="stylesheet" href="assets/css/site.css?v=202611160802">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Kyle Hunady","url":"https://kyle-hunady.github.io/",
  "jobTitle":"PhD candidate, Materials Science","affiliation":{"@type":"CollegeOrUniversity","name":"California Institute of Technology"},
@@ -122,13 +122,6 @@
           <p>AI agents that fetch papers through legal routes, keep notes and grade their own estimates, and the measurements that keep them cheap.</p>
           <span class="project__more">Project page →</span></div>
       </a>
-      <a class="project" href="md.html">
-        <div class="project__thumb"><canvas class="md-thumb" aria-label="Animated molecular dynamics: a crystal melting and refreezing"></canvas></div>
-        <div class="project__body"><div class="project__tag">Simulation · for fun</div>
-          <h3 class="project__title">Melt a crystal</h3>
-          <p>A live molecular dynamics toy. Drag the temperature, melt the lattice, quench it, mix five atom sizes.</p>
-          <span class="project__more">Play with it →</span></div>
-      </a>
       <a class="project" href="https://github.com/kyle-hunady/pulse-height-distribution" target="_blank" rel="noreferrer">
         <div class="project__thumb"><img src="assets/img/proj-sca.jpg" alt="Detector pulses on an oscilloscope screen" width="900" height="562" loading="lazy"></div>
         <div class="project__body"><div class="project__tag">Lab tooling · open source</div>
@@ -172,9 +165,9 @@
       <div><div class="org__role">Secretary and website maintainer, Caltech Alpine Club</div><div class="org__where">Caltech Alpine Club and Caltech Y · 2025–</div>
         <p>I rebuilt the club's website so its events come straight from the club's Google Calendar, and officers update a calendar instead of web pages. I also plan and lead group hikes for people who would not otherwise go.</p>
         <div class="project__links"><a href="https://alpine.caltech.edu" target="_blank" rel="noreferrer"><svg><use href="#i-link"/></svg>alpine.caltech.edu</a><a href="https://calendar.google.com/calendar/render?cid=e13b4ff623b227d4b2445fe2aadc6cb2cd18080f81f9c2edfcc51f3f9a58f673%40group.calendar.google.com" target="_blank" rel="noreferrer"><svg><use href="#i-cal"/></svg>Trip calendar</a></div></div></div>
-    <div class="org org--photo"><div class="org__photo"><img src="assets/img/outreach/maker.jpg" alt="Drilling a part on a drill press in a Georgia Tech makerspace" width="1400" height="1054" loading="lazy"></div>
+    <div class="org org--photo"><div class="org__photo"><img src="assets/img/outreach/maker.jpg" alt="Drilling a part on a drill press in a Georgia Tech makerspace" width="1400" height="1054" loading="lazy"><span class="org__badges"><span class="org__badge org__badge--light org__badge--wide"><img src="assets/img/logos/hive.svg" alt="The Hive makerspace logo" width="113" height="40"></span><span class="org__badge org__badge--text" title="Materials Innovation and Learning Laboratory">MILL</span></span></div>
       <div><div class="org__role">Master instructor, makerspaces</div><div class="org__where">Georgia Tech · 2019–2022</div>
-        <p>Taught Arduino, soldering, laser cutting, 3D printing and woodwork in the Interdisciplinary Design Commons and the Materials Innovation Lab.</p></div></div>
+        <p>Taught Arduino, soldering, laser cutting, 3D printing and woodwork at the Hive (Georgia Tech's Interdisciplinary Design Commons) and the MILL (the Materials Innovation and Learning Laboratory).</p></div></div>
   </div>
 </section>
 
@@ -191,14 +184,6 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=202611160755"></script>
-<script src="assets/js/md.js?v=202611160755"></script>
-<script>
-  // The projects-card thumbnail: a crystal that melts and refreezes on a loop.
-  (function () {
-    var c = document.querySelector('.md-thumb');
-    if (c && window.MDSim) new MDSim(c, { cols: 19, rows: 14, auto: true, stepsPerFrame: 4, T: 0.1 });
-  })();
-</script>
+<script src="assets/js/site.js?v=202611160802"></script>
 </body>
 </html>
