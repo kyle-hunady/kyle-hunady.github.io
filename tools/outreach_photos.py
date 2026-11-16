@@ -30,7 +30,7 @@ for org in ALT:
     clean.save(os.path.join(OUT, org + '.jpg'), quality=82, optimize=True)
     done[org] = clean.size
 
-MAKER_BADGES = ('<span class="org__badges"><span class="org__badge org__badge--light org__badge--wide"><img src="assets/img/logos/hive.svg" alt="The Hive makerspace logo" width="113" height="40"></span><span class="org__badge org__badge--text" title="Materials Innovation and Learning Laboratory">MILL</span></span>')
+MAKER_BADGES = ('<span class="org__badges"><span class="org__badge org__badge--light org__badge--wide"><img src="assets/img/logos/hive.png" alt="The Hive makerspace logo" width="230" height="96"></span><span class="org__badge org__badge--light"><img src="assets/img/logos/mill.png" alt="The MILL logo" width="256" height="256"></span></span>')
 ROW = r'<div class="org(?: org--photo)?">(?:<div class="org__photo">.*?</div>)?'
 s = open(os.path.join(SITE, 'index.html'), encoding='utf-8').read()
 for org, (w, h) in done.items():

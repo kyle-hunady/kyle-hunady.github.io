@@ -721,3 +721,10 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .org__badge--wide { width: auto; padding: 0 0.5rem; }
 .org__badge--wide img { width: 4.2rem; }
 .org__badge--text { width: auto; padding: 0 0.6rem; color: var(--white); font-family: var(--mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; }
+
+/* Logo PNGs carry their own uniform margin (content trimmed, then padded to
+   76% of a square), so every tile and badge shows them edge to edge. */
+.org__logo img, .org__logo--wide img, .org__badge img { width: 100%; height: 100%; object-fit: contain; }
+.org__badge { padding: 0; }
+.org__badge--wide { width: auto; padding: 0; }
+.org__badge--wide img { width: auto; height: 2.6rem; }
