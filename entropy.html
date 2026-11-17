@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261117010000">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117022000">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -195,8 +195,61 @@
     </div>
     <p>The −0.62 k<sub>B</sub> in Al<sub>1.25</sub>CoCrFeMnNi is about the mixing entropy you would lose by cutting a six-element alloy down to three elements (k<sub>B</sub> ln 2 = 0.69).</p>
 
-    <h3>Simulating the heat capacity</h3>
-    <p>If vibrations carry most of the entropy, a phonon calculation should get most of the curve. I computed phonons with MACE, a machine-learned force field, on supercells with the alloy's elements placed at random. For the refractory alloy I also ran molecular dynamics at 50, 150 and 300 K to see whether the vibrations change with temperature.</p>
+    <h3>Simulating the vibrations</h3>
+    <p>Vibrations carry most of the entropy, so a calculation of them should reproduce most of the measured curve. Any such calculation needs the force on every atom for any arrangement of its neighbors. DFT, the quantum-mechanical route, gives those forces but takes minutes for each arrangement. I used MACE, a machine-learned force field trained on DFT results, which returns them for 160 atoms in about 40 milliseconds. With the forces in hand there are two ways to get the vibrations. I used both, on the same cells.</p>
+
+    <h3>Watching the atoms move: molecular dynamics</h3>
+    <p>Molecular dynamics is the direct route. Put 160 atoms of Al<sub>0.3</sub>NbTa<sub>0.5</sub>TiZr on a BCC lattice in a box that repeats in every direction, with the elements placed at random. Give each atom a random velocity. Then step Newton's law forward: compute every force, move every atom for 2 femtoseconds, compute the forces again. Twenty thousand steps cover 40 picoseconds.</p>
+    <p>At this scale, temperature measures how hard the atoms shake. Each atom's average kinetic energy is (3/2) k<sub>B</sub>T, so at twice the temperature the shaking carries twice the energy. A thermostat holds that average at the target by adjusting the velocities slightly each step. Below is a real stretch of my run at three temperatures, side by side.</p>
+    <div class="fig" data-hea="md" data-src="assets/data/hea-md.json">
+      <div class="kinds kinds--3">
+        <figure><canvas class="hea-md" aria-label="The 160-atom cell at 50 K, atoms moving"></canvas><figcaption class="hea-mdcap"><b>50 K</b></figcaption></figure>
+        <figure><canvas class="hea-md" aria-label="The 160-atom cell at 150 K, atoms moving"></canvas><figcaption class="hea-mdcap"><b>150 K</b></figcaption></figure>
+        <figure><canvas class="hea-md" aria-label="The 160-atom cell at 300 K, atoms moving"></canvas><figcaption class="hea-mdcap"><b>300 K</b></figcaption></figure>
+      </div>
+      <div class="kinds kinds--3 kinds--paths">
+        <canvas class="hea-path" aria-label="Path of one niobium atom at 50 K, true scale"></canvas>
+        <canvas class="hea-path" aria-label="Path of one niobium atom at 150 K, true scale"></canvas>
+        <canvas class="hea-path" aria-label="Path of one niobium atom at 300 K, true scale"></canvas>
+      </div>
+      <div class="legend"><span><i style="background:#D9B26F"></i>Al</span><span><i style="background:#7FA7C9"></i>Nb</span><span><i style="background:#A99BC9"></i>Ta</span><span><i style="background:#8FA095"></i>Ti</span><span><i style="background:#C98A7F"></i>Zr</span></div>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>motion drawn <select class="hea-ex"><option value="1">true size</option><option value="4" selected>4× true size</option><option value="10">10× true size</option></select></label>
+        <button class="btn hea-play" type="button">pause</button>
+      </div>
+      <p class="cap"><span class="tag-model">simulation</span><b>Heat makes the atoms swing wider. It does not move them off their sites.</b> Top: the whole cell, from my MACE run (drag a cell to turn it). Bottom: the path one niobium atom traced over the same 3 picoseconds, magnified but at the same scale in all three. The typical swing grows as the square root of temperature, from 0.07 Å at 50 K to 0.16 Å at 300 K. Neighbors sit 2.9 Å apart. The more ways the atoms can swing, the more vibrational entropy.</p>
+    </div>
+
+    <h3>Vibrations from springs: phonopy</h3>
+    <p>Phonopy takes the shortcut. It never runs the clock. Instead it measures how stiff the bonds are: push one atom by 0.01 Å, read the force that appears on every other atom, and repeat for each atom in the cell. Those forces act like springs. A crystal of balls on springs can ring in a fixed set of patterns, one frequency each, and phonopy solves for all of them. Each pattern is a phonon. Soft springs and heavy atoms give low frequencies, and low frequencies carry the most entropy.</p>
+    <div class="fig" data-hea="phon" data-src="assets/data/hea-md.json">
+      <div class="kinds">
+        <figure><canvas class="hea-ph" aria-label="A patch of crystal with every atom on its site"></canvas><figcaption><b>1. The still crystal</b>Atoms on their sites, elements at random.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="One atom pushed to the right; arrows show forces on its neighbors"></canvas><figcaption><b>2. Push one atom</b>Its neighbors feel forces (gold arrows). The push is drawn 30× larger.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="The same patch drawn with springs between neighbors"></canvas><figcaption><b>3. Forces become springs</b>Doing this for every atom gives every spring constant.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="Two vibration patterns of a row of atoms, slow and fast"></canvas><figcaption><b>4. Springs set the notes</b>Long waves ring slowly, short waves quickly.</figcaption></figure>
+      </div>
+      <canvas class="hea-phdos plot plot--short" aria-label="Histogram of the 477 vibration frequencies of the 160-atom cell, bars lit by entropy per vibration"></canvas>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>temperature <input class="hea-pht" type="range" min="10" max="400" step="5" value="300"></label>
+      </div>
+      <p class="cap"><span class="tag-model">model + simulation</span><b>Soft springs make low notes, and low notes carry the entropy.</b> Top: the four steps, drawn on a toy patch. Bottom: the 477 frequencies phonopy found for the same 160-atom cell. Slide the temperature down. At 20 K only the lowest notes light up, which is why heat capacity starts from zero. Aluminum's stiff bonds push notes higher, and that is how it lowers the vibrational entropy.</p>
+    </div>
+
+    <div class="versus">
+      <div class="versus__head"></div><div class="versus__head">phonopy</div><div class="versus__head">molecular dynamics</div>
+      <div class="versus__row">atoms move</div><div>one at a time, by 0.01 Å</div><div>all at once, up to 0.5 Å</div>
+      <div class="versus__row">temperature</div><div>applied afterward, when the notes are counted</div><div>set during the run by the thermostat</div>
+      <div class="versus__row">assumes</div><div>the springs are the same at every temperature</div><div>nothing about the springs</div>
+      <div class="versus__row">misses</div><div>springs that soften or stiffen as swings grow</div><div>quantum effects at low temperature (atoms move classically)</div>
+      <div class="versus__row">cost</div><div>960 force calls (160 atoms, 3 directions, pushed both ways)</div><div>22,000 force calls per temperature</div>
+    </div>
+    <p class="cap-under"><b>If the springs changed with temperature, the two methods would disagree.</b> So I fitted a fresh set of springs to the forces in each MD run and compared them with phonopy's. Across five random cells, the average frequency at 300 K moved by −0.4 % to +0.9 %. Closing the gap to the measurement described below would take about +8 %.</p>
+
+    <h3>Simulation against measurement</h3>
+    <p>Phonopy's frequencies give the vibrational heat capacity at every temperature, and its entropy, directly. Here they are against the calorimetry, for every alloy I computed.</p>
     <div class="fig" data-hea="sim" data-sim="assets/data/hea-sim.json">
       <div class="fig-row">
         <canvas class="hea-sim plot" aria-label="Measured Cp/T as dots with the MACE phonon calculation as a line"></canvas>
@@ -207,7 +260,7 @@
       <div class="fig-controls">
         <label>alloy <select class="hea-pick"></select></label>
       </div>
-      <p class="cap"><span class="tag-model">simulation</span><b>Phonons alone come within 0.25 k<sub>B</sub> of the refractory alloys and miss CoCrFeNi and CoCrFeMnNi by about half a k<sub>B</sub>.</b> The force field has no magnetism and no electrons, and those two terms make up most of the gap in the magnetic alloys. At 50 K it runs 9–18 % high for the refractory alloys, so its phonons are a little too soft. The molecular dynamics shifted the vibrational frequencies by under 0.4 % at 300 K, so the error is in the force field, not in anharmonicity.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>Phonons alone come within 0.25 k<sub>B</sub> of the refractory alloys and miss CoCrFeNi and CoCrFeMnNi by about half a k<sub>B</sub>.</b> The force field has no magnetism and no electrons, and those two terms make up most of the gap in the magnetic alloys. At 50 K it runs 9–18 % high for the refractory alloys, so its phonons are a little too soft. The molecular dynamics found the springs nearly constant with temperature, so the error is in the force field itself.</p>
     </div>
 
     <h2>What I did</h2>
@@ -241,6 +294,6 @@
 
 <script src="assets/js/site.js?v=20261116082828"></script>
 <script src="assets/js/md.js?v=20261116081401"></script>
-<script src="assets/js/hea.js?v=20261117010000"></script>
+<script src="assets/js/hea.js?v=20261117022000"></script>
 </body>
 </html>

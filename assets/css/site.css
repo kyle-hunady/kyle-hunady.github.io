@@ -823,3 +823,21 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .org__photo--flip .org__photolink:hover img { transform: scaleX(-1) scale(1.03); }
 a.org__badge { transition: var(--transition); }
 a.org__badge:hover { transform: translateY(-2px); box-shadow: 0 0 0 2px var(--accent); }
+
+/* entropy.html: MD cells side by side, phonopy steps, method comparison */
+.kinds.kinds--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.kinds canvas.hea-md { height: 15rem; }
+.kinds--paths { margin-top: 0.7rem; }
+.kinds--paths canvas { height: 8rem; }
+.versus { display: grid; grid-template-columns: minmax(5.5rem, 0.6fr) 1fr 1fr; margin: 1.4rem 0 0; border: 1px solid var(--rule); border-radius: 0.6rem; overflow: hidden; background: var(--surface); }
+.versus > div { padding: 0.5rem 0.8rem; border-top: 1px solid var(--rule); font-family: var(--sans); font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+.versus > .versus__head { border-top: 0; color: var(--accent); font-family: var(--mono); font-size: 0.78rem; }
+.versus > .versus__row { color: var(--white); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.04em; }
+@media (max-width: 760px) {
+  .kinds:not(.kinds--3) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kinds.kinds--3:not(.kinds--paths) { grid-template-columns: 1fr; }
+  .kinds canvas.hea-md { height: 15rem; }
+  .kinds--paths canvas { height: 6rem; }
+  .kinds--3 figcaption { font-size: 0.66rem; }
+  .versus > div { padding: 0.45rem 0.5rem; font-size: 0.72rem; }
+}

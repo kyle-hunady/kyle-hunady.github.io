@@ -442,7 +442,231 @@
     onResize(draw); shuffle(); draw(); if (!reduced) requestAnimationFrame(frame);
   }
 
-  var FIGS = { count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell };
+  /* ------------------------------------------------ molecular dynamics ---
+   * hea-md.json (tools/md_assets.py): the real MACE MD of a 160-atom Al0.3NbTa0.5TiZr supercell
+   * at 50, 150 and 300 K, 150 saved frames 20 fs apart, as displacements from each atom's mean
+   * position. Played forwards then backwards: Newton's equations run either way, so the
+   * reversed half is also a valid trajectory and the loop has no jump. Drag to turn the cells.
+   * Under each cell: the path one niobium atom traces, at true scale. */
+  var MDCOL = { Al: GOLD, Nb: BLUE, Ta: LILAC, Ti: SAGE, Zr: ROSE };
+  function md(root) {
+    var cvs = root.querySelectorAll('canvas.hea-md'), paths = root.querySelectorAll('canvas.hea-path'),
+        caps = root.querySelectorAll('.hea-mdcap'), ex = $(root, '.hea-ex'), play = $(root, '.hea-play'),
+        out = $(root, '.fig-out');
+    fetch(root.dataset.src).then(function (r) { return r.json(); }).then(function (J) {
+      var N = J.symbols.length, F = 0, yaw = 0.2, pitch = 0.24, tick = 0, running = !reduced, visible = true;
+      var D = J.temps.map(function (t) {
+        var b = atob(t.disp), a = new Int8Array(b.length);
+        for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i) << 24 >> 24;
+        return a;
+      });
+      var NF = D[0].length / (N * 3), ctr = J.cell.map(function (v) { return v / 2; });
+      // the niobium atom nearest the middle of the cell
+      var pick = 0, best = 1e9;
+      J.ref.forEach(function (p, i) {
+        if (J.symbols[i] !== 'Nb') return;
+        var d = Math.pow(p[0] - ctr[0], 2) + Math.pow(p[1] - ctr[1], 2) + Math.pow(p[2] - ctr[2], 2);
+        if (d < best) { best = d; pick = i; }
+      });
+      J.temps.forEach(function (t, k) {
+        caps[k].innerHTML = '<b>' + t.T + ' K</b>run averaged ' + t.T_mean + ' K · atoms swing ' + t.rms_A.toFixed(2) +
+          ' Å rms · a niobium atom moves at ' + t.v_rms_Nb + ' m/s';
+      });
+      function frameIndex() { var p = F % (2 * NF - 2); return p < NF ? p : 2 * NF - 2 - p; }
+      function drawCell(k, f) {
+        var g = ctx2d(cvs[k]), c = g.c, s = +ex.value, d = D[k], cy = Math.cos(yaw), sy = Math.sin(yaw),
+            cp = Math.cos(pitch), sp = Math.sin(pitch);
+        var proj = function (x, y, z) {
+          x -= ctr[0]; y -= ctr[1]; z -= ctr[2];
+          var x1 = x * cy - y * sy, y1 = x * sy + y * cy;
+          return [x1, -z * cp - y1 * sp, y1 * cp - z * sp];
+        };
+        var sc = Math.min(g.w / 21, g.h / 21), ox = g.w / 2, oy = g.h / 2;
+        // cell box
+        var L = J.cell, E = [[0, 0, 0], [L[0], 0, 0], [L[0], L[1], 0], [0, L[1], 0], [0, 0, L[2]], [L[0], 0, L[2]], [L[0], L[1], L[2]], [0, L[1], L[2]]];
+        var P = E.map(function (e) { return proj(e[0], e[1], e[2]); });
+        c.strokeStyle = 'rgba(242,243,240,0.13)';
+        [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]].forEach(function (e) {
+          c.beginPath(); c.moveTo(ox + P[e[0]][0] * sc, oy + P[e[0]][1] * sc); c.lineTo(ox + P[e[1]][0] * sc, oy + P[e[1]][1] * sc); c.stroke();
+        });
+        var pts = [];
+        for (var i = 0; i < N; i++) {
+          var o = (f * N + i) * 3, r = J.ref[i];
+          var q = proj(r[0] + d[o] * J.q * s, r[1] + d[o + 1] * J.q * s, r[2] + d[o + 2] * J.q * s);
+          pts.push([q[0], q[1], q[2], i]);
+        }
+        pts.sort(function (a, b) { return b[2] - a[2]; });
+        pts.forEach(function (p) {
+          var x = ox + p[0] * sc, y = oy + p[1] * sc, rad = sc * (J.symbols[p[3]] === 'Zr' ? 0.5 : 0.44);
+          var shade = 0.55 + 0.45 * Math.max(0, Math.min(1, 0.5 - p[2] / 22));
+          c.globalAlpha = shade; c.fillStyle = MDCOL[J.symbols[p[3]]];
+          c.beginPath(); c.arc(x, y, rad, 0, 6.2832); c.fill();
+          if (p[3] === pick) { c.globalAlpha = 1; c.strokeStyle = WHITE; c.lineWidth = 1.6; c.stroke(); c.lineWidth = 1; }
+        });
+        c.globalAlpha = 1;
+      }
+      function drawPath(k, f) {
+        var g = ctx2d(paths[k]), c = g.c, d = D[k], span = 0.3, sc = Math.min(g.w, g.h) / (2 * span) * 0.9,
+            ox = g.w / 2, oy = g.h / 2, t = J.temps[k];
+        c.strokeStyle = RULE; c.setLineDash([3, 3]);
+        c.beginPath(); c.arc(ox, oy, t.rms_A * sc, 0, 6.2832); c.stroke(); c.setLineDash([]);
+        var xy = function (j) { var o = (j * N + pick) * 3; return [ox + d[o] * J.q * sc, oy - d[o + 2] * J.q * sc]; };
+        c.strokeStyle = 'rgba(127,167,201,0.35)'; c.beginPath();
+        for (var j = 0; j < NF; j++) { var p = xy(j); if (j) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }
+        c.stroke();
+        var cur = xy(f); c.fillStyle = BLUE; c.beginPath(); c.arc(cur[0], cur[1], 4, 0, 6.2832); c.fill();
+        c.fillStyle = WHITE; c.beginPath(); c.arc(ox, oy, 1.6, 0, 6.2832); c.fill();
+        // scale bar: 0.1 angstrom
+        var bx = 10, by = g.h - 10; c.strokeStyle = INK; c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + 0.1 * sc, by); c.stroke();
+        c.fillStyle = INK; c.textAlign = 'left'; c.fillText('0.1 Å', bx, by - 5);
+        c.textAlign = 'right'; c.fillText('same scale in all three', g.w - 8, 14);
+        c.textAlign = 'left'; c.fillText('rms ' + t.rms_A.toFixed(2) + ' Å', ox + t.rms_A * sc * 0.72 + 4, oy - t.rms_A * sc * 0.72 - 2);
+      }
+      function draw() {
+        var f = frameIndex();
+        for (var k = 0; k < 3; k++) { drawCell(k, f); drawPath(k, f); }
+        out.textContent = 't = ' + (f * J.frame_fs / 1000).toFixed(2) + ' ps of a ' + ((NF - 1) * J.frame_fs / 1000).toFixed(1) +
+          ' ps stretch  ·  motion in the cells drawn ' + ex.value + '× true size  ·  ringed atom = the niobium traced below';
+      }
+      function frame() {
+        if (running && visible && ++tick % 2 === 0) { F++; draw(); }
+        requestAnimationFrame(frame);
+      }
+      var drag = null;
+      cvs.forEach(function (cv) {
+        cv.style.touchAction = 'pan-y'; cv.style.cursor = 'grab';
+        cv.addEventListener('pointerdown', function (e) { drag = [e.clientX, e.clientY, yaw, pitch]; cv.setPointerCapture(e.pointerId); });
+        cv.addEventListener('pointermove', function (e) {
+          if (!drag) return;
+          yaw = drag[2] + (e.clientX - drag[0]) * 0.01;
+          pitch = Math.max(-1.2, Math.min(1.2, drag[3] + (e.clientY - drag[1]) * 0.006));
+          draw();
+        });
+        cv.addEventListener('pointerup', function () { drag = null; });
+      });
+      ex.addEventListener('change', draw);
+      play.addEventListener('click', function () { running = !running; play.textContent = running ? 'pause' : 'play'; });
+      play.textContent = running ? 'pause' : 'play';
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(root);
+      onResize(draw); draw(); requestAnimationFrame(frame);
+    });
+  }
+
+  /* ------------------------------------------------------------- phonopy ---
+   * How a harmonic phonon calculation works, drawn on a 2-D patch: still crystal -> nudge one
+   * atom -> read the forces on its neighbours (toy springs, Al bonds stiffer) -> the springs set
+   * the vibrations (a 1-D chain: long wave slow, short wave fast, omega ~ sin(ka/2)).
+   * Below: the 477 real harmonic frequencies of the 160-atom MD cell, each bar lit by the
+   * entropy one vibration of that frequency carries at the slider temperature,
+   * s(x) = x/(e^x - 1) - ln(1 - e^-x), x = h nu / kB T. */
+  function phon(root) {
+    var cvs = root.querySelectorAll('canvas.hea-ph'), dos = $(root, 'canvas.hea-phdos'), tt = $(root, '.hea-pht'),
+        out = $(root, '.fig-out');
+    var NX = 5, NY = 4, el = [], t = 0, visible = true;
+    var seed = 7; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    var PAL = [BLUE, LILAC, SAGE, ROSE, GOLD];             // Nb Ta Ti Zr Al
+    for (var i = 0; i < NX * NY; i++) { var u = rnd(); el.push(u < 0.26 ? 0 : u < 0.4 ? 1 : u < 0.66 ? 2 : u < 0.92 ? 3 : 4); }
+    el[2 * NX + 3] = 4;                                    // one Al right next to the nudged atom
+    var CI = 2 * NX + 2;                                   // the atom that gets nudged
+    function lat(g) {
+      var s = Math.min(g.w / (NX + 0.6), (g.h - 18) / (NY + 0.4));
+      return { s: s, ox: (g.w - s * (NX - 1)) / 2, oy: (g.h - 14 - s * (NY - 1)) / 2 };
+    }
+    function arrow(c, x0, y0, x1, y1, col, w) {
+      var a = Math.atan2(y1 - y0, x1 - x0), h = 5;
+      c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w || 1.5;
+      c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+      c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - h * Math.cos(a - 0.45), y1 - h * Math.sin(a - 0.45));
+      c.lineTo(x1 - h * Math.cos(a + 0.45), y1 - h * Math.sin(a + 0.45)); c.closePath(); c.fill(); c.lineWidth = 1;
+    }
+    function stiff(a, b) { return (el[a] === 4 || el[b] === 4) ? 1.8 : 1; }
+    function label(g, txt) { g.c.fillStyle = INK; g.c.textAlign = 'center'; g.c.fillText(txt, g.w / 2, g.h - 5); }
+    function atoms(g, L, du) {
+      for (var y = 0; y < NY; y++) for (var x = 0; x < NX; x++) {
+        var i = y * NX + x, d = du ? du(i) : [0, 0];
+        g.c.fillStyle = PAL[el[i]]; g.c.beginPath(); g.c.arc(L.ox + x * L.s + d[0], L.oy + y * L.s + d[1], L.s * 0.26, 0, 6.2832); g.c.fill();
+      }
+    }
+    function still() { var g = ctx2d(cvs[0]), L = lat(g); atoms(g, L); label(g, 'every atom on its site'); }
+    function nudge() {
+      var g = ctx2d(cvs[1]), c = g.c, L = lat(g), cx = CI % NX, cy = Math.floor(CI / NX), u = L.s * 0.32;
+      c.strokeStyle = 'rgba(242,243,240,0.4)'; c.setLineDash([2, 2]);
+      c.beginPath(); c.arc(L.ox + cx * L.s, L.oy + cy * L.s, L.s * 0.26, 0, 6.2832); c.stroke(); c.setLineDash([]);
+      atoms(g, L, function (i) { return i === CI ? [u, 0] : [0, 0]; });
+      arrow(c, L.ox + cx * L.s, L.oy + cy * L.s, L.ox + cx * L.s + u, L.oy + cy * L.s, WHITE, 1.3);
+      // force on each neighbour: spring along the bond, stretched by the projection of u on it
+      [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(function (v) {
+        var nx = cx + v[0], ny = cy + v[1]; if (nx < 0 || ny < 0 || nx >= NX || ny >= NY) return;
+        var j = ny * NX + nx, n = Math.hypot(v[0], v[1]), rx = v[0] / n, ry = v[1] / n;
+        var k = stiff(CI, j) * (n > 1 ? 0.45 : 1), proj = -rx;          // u is along +x; compression pushes away
+        var f = k * proj * L.s * 0.6;
+        var x0 = L.ox + nx * L.s, y0 = L.oy + ny * L.s;
+        if (Math.abs(f) > 1) arrow(c, x0, y0, x0 - f * rx, y0 - f * ry, GOLD, 2.2);
+      });
+      label(g, 'push one atom, read the forces');
+    }
+    function springs() {
+      var g = ctx2d(cvs[2]), c = g.c, L = lat(g);
+      for (var y = 0; y < NY; y++) for (var x = 0; x < NX; x++) {
+        [[1, 0], [0, 1]].forEach(function (v) {
+          var nx = x + v[0], ny = y + v[1]; if (nx >= NX || ny >= NY) return;
+          var a = y * NX + x, b = ny * NX + nx, k = stiff(a, b);
+          var x0 = L.ox + x * L.s, y0 = L.oy + y * L.s, x1 = L.ox + nx * L.s, y1 = L.oy + ny * L.s;
+          c.strokeStyle = k > 1 ? GOLD : 'rgba(242,243,240,0.45)'; c.lineWidth = k > 1 ? 2.2 : 1;
+          c.beginPath(); c.moveTo(x0, y0);
+          for (var z = 1; z < 8; z++) {
+            var tt = z / 8, px = x0 + (x1 - x0) * tt, py = y0 + (y1 - y0) * tt, o = (z % 2 ? 1 : -1) * L.s * 0.08;
+            c.lineTo(px - (y1 - y0) / L.s * o, py + (x1 - x0) / L.s * o);
+          }
+          c.lineTo(x1, y1); c.stroke(); c.lineWidth = 1;
+        });
+      }
+      atoms(g, L, null);
+      label(g, 'bonds to Al (gold) are stiffer');
+    }
+    function modes() {
+      var g = ctx2d(cvs[3]), c = g.c, n = 9, s = (g.w - 24) / (n - 1), A = Math.min(10, g.h * 0.08);
+      [[0.25, 0.38, 'long wave · low frequency'], [1, 1, 'short wave · high frequency']].forEach(function (m, r) {
+        var y0 = g.h * (r ? 0.66 : 0.24), k = m[0] * Math.PI, w = m[1] * 2.2;
+        c.strokeStyle = RULE; c.beginPath(); c.moveTo(12, y0); c.lineTo(g.w - 12, y0); c.stroke();
+        for (var i = 0; i < n; i++) {
+          var dy = A * Math.cos(k * i) * Math.cos(w * t * 2.4);
+          c.fillStyle = SAGE; c.beginPath(); c.arc(12 + i * s, y0 + dy, Math.min(5.5, s * 0.3), 0, 6.2832); c.fill();
+        }
+        c.fillStyle = INK; c.textAlign = 'center'; c.fillText(m[2], g.w / 2, y0 + A + 18);
+      });
+    }
+    var F = null;
+    function drawDos() {
+      if (!F) return;
+      var g = ctx2d(dos), c = g.c, T = +tt.value, L = 40, R = 10, Tp = 10, B = 28, nb = 36, fmax = 9.5, H = [];
+      for (var b = 0; b < nb; b++) H.push(0);
+      var hk = 0.04799 * 1000;                               // h/kB in K per THz = 47.99
+      var S = 0, sm = function (nu) { var x = hk * nu / T; return x > 50 ? 0 : x / (Math.exp(x) - 1) - Math.log(1 - Math.exp(-x)); };
+      F.forEach(function (nu) { H[Math.min(nb - 1, Math.floor(nu / fmax * nb))]++; S += sm(nu); });
+      var hmax = Math.max.apply(null, H), bw = (g.w - L - R) / nb;
+      c.strokeStyle = RULE; c.beginPath(); c.moveTo(L, g.h - B); c.lineTo(g.w - R, g.h - B); c.stroke();
+      for (var j = 0; j < nb; j++) {
+        var nu = (j + 0.5) * fmax / nb, lit = Math.min(1, sm(nu) / 3.2), h = H[j] / hmax * (g.h - Tp - B);
+        c.fillStyle = 'rgba(217,178,111,' + (0.12 + 0.88 * lit).toFixed(3) + ')';
+        c.fillRect(L + j * bw + 1, g.h - B - h, bw - 2, h);
+      }
+      c.fillStyle = INK; c.textAlign = 'center';
+      [0, 2, 4, 6, 8].forEach(function (v) { c.fillText(v, L + v / fmax * (g.w - L - R), g.h - B + 13); });
+      c.fillText('vibration frequency (THz, trillions of swings per second)', (L + g.w - R) / 2, g.h - 2);
+      c.save(); c.translate(12, (Tp + g.h - B) / 2); c.rotate(-Math.PI / 2); c.fillText('how many', 0, 0); c.restore();
+      out.textContent = T + ' K  ·  these ' + F.length + ' vibrations of the 160-atom cell carry S_vib = ' + (S / 160).toFixed(2) +
+        ' kB per atom  ·  brighter bar = more entropy per vibration';
+    }
+    function draw() { still(); nudge(); springs(); modes(); }
+    function frame() { if (visible) { t += 1 / 60; modes(); } requestAnimationFrame(frame); }
+    fetch(root.dataset.src).then(function (r) { return r.json(); }).then(function (J) { F = J.f_harm_THz; drawDos(); });
+    tt.addEventListener('input', drawDos);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(root);
+    onResize(function () { draw(); drawDos(); }); draw(); if (!reduced) requestAnimationFrame(frame);
+  }
+
+  var FIGS = { count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell, md: md, phon: phon };
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-hea]').forEach(function (el) {
       var f = FIGS[el.dataset.hea]; if (f) f(el);
