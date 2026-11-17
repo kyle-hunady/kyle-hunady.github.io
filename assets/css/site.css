@@ -566,6 +566,29 @@ button.btn { font-size: 0.8rem; }
 .legend i { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: -1px; }
 .legend[data-mode=pure] .lg-alloy, .legend[data-mode=alloy] .lg-pure { display: none; }
 
+/* ---- entropy page ---- */
+.fig .plot--tall { height: 21rem; }
+.fig-row--wide { grid-template-columns: 1.6fr 1fr; }
+.fig-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+.fig-row--3 .plot { height: 13rem; }
+.fig canvas + .legend + canvas { margin-top: 1.2rem; }
+.tag-data { display: inline-block; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--bg); background: var(--accent); border-radius: 0.25rem; padding: 0.05rem 0.4rem; margin-right: 0.5rem; vertical-align: 1px; }
+.swaps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.swap { border: 1px solid var(--rule); border-radius: 0.55rem; padding: 0.7rem 0.8rem; background: var(--surface-2); }
+.swap b { display: block; font-weight: 500; color: var(--white); font-size: 0.85rem; letter-spacing: 0.04em; }
+.swap b em { font-style: normal; color: #C98A7F; }
+.swap span { font-size: 0.7rem; color: #C98A7F; }
+.swap--ok { border-color: var(--accent-deep); }
+.swap--ok span { color: var(--accent); }
+.gallery--sem img { aspect-ratio: auto; }
+.cap-under { font-size: 0.8rem; margin-top: 0.6rem; }
+.cap-under b { color: var(--white); font-weight: 500; }
+@media (max-width: 760px) {
+  .fig-row--wide, .fig-row--3 { grid-template-columns: 1fr; }
+  .swaps { grid-template-columns: 1fr 1fr; }
+}
+
 /* ---- galleries ---- */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
 .gallery--2 { grid-template-columns: repeat(2, 1fr); }
