@@ -30,9 +30,9 @@ nav, .project__links, .cta, .contact__row { list-style: none; }
   --bg: #0B0C0B;          /* photo background is #050504 -- close enough to dissolve into */
   --surface: #151714;
   --surface-2: #1E211D;
-  --accent: #8FA095;      /* shirt, lifted */
-  --accent-deep: #4B5853; /* shirt, as sampled */
-  --accent-dim: rgba(143, 160, 149, 0.16);
+  --accent: #D9B26F;      /* café gold (latte.html), site-wide since 2026-11-17 */
+  --accent-deep: #8A6A3E;
+  --accent-dim: rgba(217, 178, 111, 0.16);
   --white: #F2F3F0;
   --muted: rgba(242, 243, 240, 0.58);
   --faint: rgba(242, 243, 240, 0.50);   /* 4.90:1 on --bg -- AA for the 10-12px text
