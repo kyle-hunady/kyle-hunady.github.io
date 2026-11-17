@@ -75,7 +75,8 @@
       // Poisson noise of the background under it
       var snr = base * EFFECT / Math.sqrt(base);
       var hrs = t / 3600;
-      out.textContent = (hrs < 1 ? Math.round(t / 60) + ' min' : hrs.toFixed(1) + ' h') +
+      out.textContent = Math.round(cps()).toLocaleString() + ' counts/s  ·  ' +
+        (hrs < 1 ? Math.round(t / 60) + ' min' : hrs.toFixed(1) + ' h') +
         ' of counting  ·  ' + Math.round(total).toLocaleString() + ' counts  ·  outer-line S/N ' + snr.toFixed(1);
     }
     // The loop keeps ticking while running and only does work when the figure

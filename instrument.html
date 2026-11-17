@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261116204832">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117065748">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -59,9 +59,9 @@
 
 <main id="main" class="page">
   <div class="container">
-    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
+    <a href="index.html#research" class="back-link"><svg><use href="#i-arrow-left"/></svg>All research</a>
 
-    <p class="lede">A Mössbauer spectrometer shows which iron minerals are in a rock and the oxidation state of the iron. This project shrinks one toward a size a lander could carry and adds X-ray fluorescence, so the same head also reads elemental composition. It is a lab prototype.</p>
+    <p class="lede">A Mössbauer spectrometer shows which iron minerals are in a rock and the oxidation state of the iron. On Mars, the MIMOS II Mössbauer spectrometers on the Spirit and Opportunity rovers found iron minerals that form in water, such as jarosite at Meridiani Planum [<a href="https://doi.org/10.1126/science.1104653">Klingelhöfer et al. 2004</a>]. This project shrinks one toward a size a lander could carry and adds X-ray fluorescence, so the same head also reads elemental composition. It is a lab prototype. My part was measuring the drive's velocity, auditing the counting electronics and writing a Monte Carlo of detector layouts.</p>
     <div class="facts">
       <div class="fact"><b>⁵⁷Fe</b><span>Mössbauer, backscatter geometry</span></div>
       <div class="fact"><b>+ XRF</b><span>elemental composition, same head</span></div>
@@ -76,7 +76,7 @@
   <text x="75" y="60" text-anchor="middle" class="lbl">piezo drive</text><text x="75" y="76" text-anchor="middle">moves the source</text>
   <path d="M130 63h40" stroke="#8A6A3E"/><path d="M150 52l8 11-8 11" fill="none" stroke="#8A6A3E"/><path d="M168 52l-8 11 8 11" fill="none" stroke="#8A6A3E"/>
   <circle cx="200" cy="63" r="16" fill="#D9B26F" opacity="0.9"/>
-  <text x="200" y="104" text-anchor="middle" class="lbl">57Co source</text><text x="200" y="120" text-anchor="middle">14.4 keV gamma rays</text>
+  <text x="200" y="104" text-anchor="middle" class="lbl">⁵⁷Co source</text><text x="200" y="120" text-anchor="middle">14.4 keV gamma rays</text>
   <rect x="300" y="160" width="300" height="46" fill="rgba(201,138,127,0.18)" stroke="rgba(201,138,127,0.6)"/>
   <text x="450" y="188" text-anchor="middle" class="lbl">sample (rock or soil, no preparation)</text>
   <path d="M214 74 L420 160" stroke="#F2F3F0" stroke-opacity="0.45" stroke-dasharray="4 4"/>
@@ -85,36 +85,40 @@
   <text x="535" y="58" text-anchor="middle" class="lbl">detector</text><text x="535" y="73" text-anchor="middle">counts what comes back</text>
   <text x="320" y="110" text-anchor="start">resonant re-emission + X-ray fluorescence</text>
   <text x="20" y="160">velocity sweeps a few mm/s each way;</text><text x="20" y="176">each velocity is one spectrum channel</text>
-</svg></div>
+</svg>
+      <p class="cap"><span class="tag-model">schematic</span><b>Backscatter geometry.</b> The source and the detector sit on the same side of the sample, so the head can rest on a rock or soil as it is and count what comes back. A lab spectrometer usually works in transmission instead, with a thin prepared sample between source and detector. Not to scale.</p></div>
 
     <div class="fig" data-fig="mossbauer">
       <canvas class="fig-spec plot" aria-label="Simulated Mossbauer spectrum accumulating counts"></canvas>
       <div class="fig-out"></div>
       <div class="fig-controls">
-        <label>count rate <input class="fig-rate" type="range" min="2" max="4.3" step="0.05" value="3"></label>
+        <label>count rate (log scale) <input class="fig-rate" type="range" min="2" max="4.3" step="0.05" value="3"></label>
         <button class="btn fig-play" type="button">Pause</button>
         <button class="btn fig-reset" type="button">Restart</button>
       </div>
-      <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, linewidth and peak height are illustrative and do not come from the instrument.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>A spectrum builds up.</b> Dots are counts per velocity channel for metallic iron (six lines, from the textbook α-Fe positions). The dashed line is the model it converges to. Raise the count rate and the six peaks clear the noise sooner. Count rate, line width and peak height are illustrative and do not come from the instrument.</p>
     </div>
 
     <h2>The velocity drive</h2>
-    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around these problems: a 1974 design locked only the drive frequency, and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands.</p>
+    <p>A piezo stack is small and light, but on its own it is a poor velocity drive. It has hysteresis, it drifts with temperature, and it rings near its resonances. Earlier piezo Mössbauer drives worked around these problems without controlling velocity. A 1974 design locked only the drive frequency [<a href="https://doi.org/10.1016/0029-554x(74)90048-2">Schmidt et al. 1974</a>], and a 2002 miniature instrument drove its stack open loop with a sine wave and got distorted spectra outside a few frequency bands [<a href="https://doi.org/10.1023/a:1021270407263">Casas et al. 2002</a>].</p>
     <p>This drive measures the source velocity and adjusts its command after every cycle to cancel the piezo's errors. The same 7 g actuator can run another velocity range or waveform without new hardware. The loop is designed to track slow changes such as the head warming up.</p>
+
+    <h2 id="electronics">Detector chain</h2>
+    <p>Each detector pulse is shaped, sorted by height so only the 14.4 keV and fluorescence lines are kept, and dropped into a channel set by where the drive is in its cycle (a multichannel scaler does this sorting). Counts from many cycles add up into one spectrum.</p>
 
     <h2>What I did</h2>
     <ul class="bullets">
       <li>Measured the piezo drive's velocity with a laser vibrometer and compared candidate feedback sensors.</li>
-      <li>Audited and debugged the counting chain, a Teensy-based multichannel scaler that bins each detector pulse by drive phase.</li>
-      <li>Wrote a photon-transport Monte Carlo that scores source, sample and detector layouts (below).</li>
+      <li>Audited and debugged the counting chain, the multichannel scaler that sorts each detector pulse by drive phase (above).</li>
+      <li>Wrote a photon-transport Monte Carlo that scores source, sample and detector layouts (<a href="#geometry">below</a>; full write-up on <a href="montecarlo.html">the Monte Carlo page</a>).</li>
       <li>Measured the as-built head from photographs and tested the Monte Carlo against its backscatter spectra.</li>
     </ul>
     <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>LabVIEW</span></div>
 
     <h2>Hardware</h2>
 <div class="gallery">
-  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and a 7 g amplified piezo.</figcaption></figure>
-  <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator that moves the source, in its flexure frame."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator that moves the source, in its flexure frame." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator that moves the source, in its flexure frame.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g drive flown in MIMOS II, and the 7 g piezo used here."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g drive flown in MIMOS II, and the 7 g piezo used here." width="720" height="581" loading="lazy" decoding="async"></button><figcaption>Drives drawn to scale: a 4.5 kg lab transducer, the 50 g drive flown in MIMOS II [<a href="https://doi.org/10.1007/978-94-011-4548-0_39">Klingelhöfer et al. 1999</a>], and the 7 g piezo used here.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/instrument/piezo-flexure-drive.jpg" data-caption="The amplified piezo actuator that moves the source. The flexure frame around the stack bends to enlarge its small stroke."><img class="" src="assets/img/gallery/instrument/piezo-flexure-drive-t.jpg" alt="The amplified piezo actuator that moves the source, in its flexure frame." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The amplified piezo actuator that moves the source. The flexure frame around the stack bends to enlarge its small stroke.</figcaption></figure>
   <figure><button type="button" data-full="assets/img/gallery/instrument/sample-on-gas-detector.jpg" data-caption="Reference measurement: a rock held against the window of a gas-filled detector."><img class="" src="assets/img/gallery/instrument/sample-on-gas-detector-t.jpg" alt="Reference measurement: a rock held against the window of a gas-filled detector." width="720" height="405" loading="lazy" decoding="async"></button><figcaption>Reference measurement: a rock held against the window of a gas-filled detector.</figcaption></figure>
 </div>
 
@@ -125,26 +129,22 @@
       <canvas class="fig-eff plot--short" aria-label="Detected fraction versus detector ring radius"></canvas>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>ring radius <input class="fig-ring" type="range" min="2" max="10" step="0.1" value="7"></label>
-        <label>stand-off <input class="fig-height" type="range" min="3" max="12" step="0.5" value="6"></label>
+        <label>ring radius (mm) <input class="fig-ring" type="range" min="2" max="10" step="0.1" value="7"></label>
+        <label>stand-off (mm) <input class="fig-height" type="range" min="3" max="12" step="0.5" value="6"></label>
       </div>
       <p class="cap"><span class="tag-model">toy model</span><b>Detection efficiency versus detector position.</b> Green paths reach a detector; amber paths miss. The source housing blocks the middle, so detectors cannot sit next to the beam. The bottom plot repeats the run at every radius. This is a 2-D sketch with made-up attenuation lengths; the real search runs in 3-D on the measured head (<a href="montecarlo.html">the Monte Carlo page</a>).</p>
     </div>
 <div class="gallery">
   <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-single-detector.jpg" data-caption="Simulated photons leave the source, scatter in the rock and reach one tilted detector."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-single-detector-t.jpg" alt="Simulated photons leave the source, scatter in the rock and reach one tilted detector." width="623" height="448" loading="lazy" decoding="async"></button><figcaption>Simulated photons leave the source, scatter in the rock and reach one tilted detector.</figcaption></figure>
-  <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors.jpg" data-caption="The same simulation for the MIMOS II layout: one beam, four flat detectors around it."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors-t.jpg" alt="The same simulation for the MIMOS II layout: one beam, four flat detectors around it." width="623" height="401" loading="lazy" decoding="async"></button><figcaption>The same simulation for the MIMOS II layout: one beam, four flat detectors around it.</figcaption></figure>
+  <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors.jpg" data-caption="The same simulation for the MIMOS II flight layout: one beam, four flat detectors around it."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-3d-four-detectors-t.jpg" alt="The same simulation for the MIMOS II flight layout: one beam, four flat detectors around it." width="623" height="401" loading="lazy" decoding="async"></button><figcaption>The same simulation for the MIMOS II flight layout: one beam, four flat detectors around it.</figcaption></figure>
   <figure><button type="button" data-full="assets/img/gallery/montecarlo/mc-rays-2d-side-view.jpg" data-caption="Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray)."><img class="fit-contain" src="assets/img/gallery/montecarlo/mc-rays-2d-side-view-t.jpg" alt="Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray)." width="720" height="556" loading="lazy" decoding="async"></button><figcaption>Side view of one layout: source rays through an aperture (orange), scattered rays to the detector (gray).</figcaption></figure>
 </div>
 
-    <h2 id="electronics">Detector chain</h2>
-    <p>Each detector pulse is shaped, sorted by height so only the 14.4 keV and fluorescence lines are kept, and dropped into a channel set by where the drive is in its cycle. Counts from many cycles add up into one spectrum.</p>
-
-
     <h2>Status</h2>
-    <p>The three-year NASA PICASSO task has its final review in November 2026. The head is assembled. It has recorded backscatter Mössbauer spectra of iron minerals, including a five-mineral Mars soil simulant, and XRF spectra of trace elements in a glass standard with the same detector. A Monte Carlo of the head's measured geometry accounts for most of the extra line width that backscatter adds. The drive has also run heated to 60 °C.</p>
+    <p>The three-year task under NASA's PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations) ended with its close-out review in November 2026. The head is assembled. It has recorded backscatter Mössbauer spectra of iron minerals, including a five-mineral Mars soil simulant, and XRF spectra of trace elements in a glass standard with the same detector. A Monte Carlo of the head's measured geometry accounts for most of the extra line width that backscatter adds (gamma rays that leave the source at an angle to its motion see only part of its velocity; see <a href="montecarlo.html">the Monte Carlo page</a>). The drive has also run heated to 60 °C.</p>
     <p>A paper on the combined Mössbauer and XRF results is in preparation with collaborators at JPL. Code for this instrument is not public.</p>
 
-    <div class="next-links"><a class="btn" href="entropy.html">Next: the entropy of alloys</a><a class="btn" href="index.html#projects">All projects</a></div>
+    <div class="next-links"><a class="btn" href="entropy.html">Next: the entropy of alloys</a><a class="btn" href="montecarlo.html">The Monte Carlo</a><a class="btn" href="index.html#research">All research</a></div>
 
   </div>
 </main>
@@ -159,8 +159,8 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=20261116082828"></script>
+<script src="assets/js/site.js?v=20261117065748"></script>
 <script src="assets/js/md.js?v=20261116081401"></script>
-<script src="assets/js/figs.js?v=20261116081401"></script>
+<script src="assets/js/figs.js?v=20261117065748"></script>
 </body>
 </html>

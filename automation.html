@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reading the literature with Claude Code · Kyle Hunady</title>
-<meta name="description" content="One run of my literature workflow: one request, ten papers found, fetched through legal routes and summarized.">
+<title>A literature workflow with Claude Code · Kyle Hunady</title>
+<meta name="description" content="How I use Claude Code to find papers, get legal copies, pull out the text on my own computer and write a short note on each one. Worked example: ten papers on piezo velocity control.">
 <link rel="canonical" href="https://kyle-hunady.github.io/automation.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/automation.html">
-<meta property="og:title" content="Reading the literature with Claude Code">
-<meta property="og:description" content="One request, ten papers found, fetched and summarized.">
+<meta property="og:title" content="A literature workflow with Claude Code">
+<meta property="og:description" content="Find papers, get legal copies, keep the text local and write a note on each. Worked example: piezo velocity control.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/proj-literature.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261116082828">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117065748">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -50,8 +50,8 @@
 <header class="page__head">
   <div class="container header__container">
     <p class="header__eyebrow">Research tooling</p>
-    <h1>Reading the literature with Claude Code</h1>
-    <p class="header__line">I type one request. Claude finds the papers, gets legal copies and curates each one for the project that asked. Below is one run, trimmed.</p>
+    <h1>A literature workflow with Claude Code</h1>
+    <p class="header__line">I ask for papers in one line. Claude finds them, gets legal copies and writes a short note on what each one means for my project.</p>
   </div>
 </header>
 
@@ -59,8 +59,134 @@
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
 
-    <h2>The request</h2>
-    <div class="term" role="region" aria-label="Terminal transcript of the request">
+    <p>Claude Code is Anthropic's coding agent, and it runs on my computer. I set up the workflow it follows here: a /lit-fetch skill, scripts that fetch and check each paper, and one library that my projects share.</p>
+    <p>The example on this page came from the <a href="instrument.html">spectrometer</a> work. A Mössbauer source has to move at a precisely controlled velocity, and the Fultz group's spectrometer drives it with a piezo stack (Guzman et al. 2023, below). So I asked what the piezo-control literature, much of it from atomic force microscopy, already knows.</p>
+
+    <h2>How it works</h2>
+    <div class="fig"><svg class="schem" viewBox="0 0 340 300" style="max-width:22rem;margin:0 auto;display:block" role="img" aria-label="Five steps from request to notes: search, check library, fetch, read, write a note. Papers that cannot be fetched go back to me as DOIs.">
+  <g text-anchor="middle">
+  <rect x="4" y="4" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="21">1 · search</text><text x="130" y="36">OpenAlex</text>
+  <rect x="4" y="56" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="73">2 · check library</text><text x="130" y="88">what I already have</text>
+  <rect x="4" y="108" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="125">3 · fetch</text><text x="130" y="140">open access first</text>
+  <rect x="4" y="160" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="177">4 · read</text><text x="130" y="192">text pulled out locally</text>
+  <rect x="4" y="212" width="252" height="40" rx="7" style="fill:var(--accent-dim);stroke:var(--accent-deep)"/><text class="lbl" x="130" y="229">5 · write a note</text><text x="130" y="244">a note for my project</text>
+  <path d="M130 45v10M126 51l4 4 4-4M130 97v10M126 103l4 4 4-4M130 149v10M126 155l4 4 4-4M130 201v10M126 207l4 4 4-4" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/>
+  <path d="M257 128h40v136M293 260l4 4 4-4" fill="none" style="stroke:#C98A7F" stroke-width="1.5"/>
+  <text x="170" y="286" style="fill:#C98A7F">2 not fetched by script: the DOIs come back to me</text>
+  </g></svg>
+      <p class="cap">Steps 1 to 5 run without me. The rust line marks papers the script could not fetch, which come back to me as DOIs to get by hand.</p></div>
+    <ol>
+      <li>Search. Claude runs several searches on OpenAlex, an open index of scholarly papers, and ranks the results by citations, favoring ones with an open-access copy.</li>
+      <li>Check the library. A paper I already have is not fetched again, so one copy serves every project.</li>
+      <li>Fetch. Claude looks for a legal open-access copy first (through Unpaywall, arXiv and OpenAlex), then a publisher's text-mining service where I have a license.</li>
+      <li>Read. The text is pulled out of the PDF on my computer, and the PDFs stay in my library there.</li>
+      <li>Write a note. For each new paper Claude writes a one-page note on what it means for my project.</li>
+    </ol>
+    <p>Each download is checked for terms the paper should contain, which catches a wrong file. Each note ties its numbers to a page, table or figure, and a script then checks the new notes. Results that come only from a simulation or only from an abstract are labeled, as in the Feng et al. 2022, Wilcox &amp; Devasia and Delibas &amp; Koc cards below.</p>
+
+    <h2>The ten papers</h2>
+    <p>The search returned 160 candidates and Claude picked ten: 4 already in my library, 4 fetched new and 2 that the script could not fetch (one closed, one that needs a browser click), whose DOIs came back to me. For each paper I keep a one-page note with how reliable the source is, what it means for my project, the key numbers with page and figure, and which parts were read. The titles link to the publisher.</p>
+    <div class="papers">
+      <article class="paper">
+        <div class="paper__thumb"><div class="paper__nopdf">no page image</div></div>
+        <div class="paper__body">
+          <div class="paper__meta">2006 · Mechatronics · <span class="route r-lib">already in library</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.mechatronics.2005.11.006" target="_blank" rel="noreferrer">Design of hysteresis-compensating iterative learning control for piezo-positioners: Application to atomic force microscopes</a></h3>
+          <p class="paper__who">Leang &amp; Devasia</p>
+          <p class="paper__sum">Shows that iterative learning control can push a piezo&#x27;s hysteresis error down to the sensor noise. They drove at 1 Hz or below, far under the 445 Hz resonance, to keep dynamics out of the hysteresis model, while a Mössbauer drive runs much closer to resonance.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/02.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2008 · Ultramicroscopy · <span class="route r-lib">already in library</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.ultramic.2008.05.004" target="_blank" rel="noreferrer">Charge drives for scanning probe microscope positioning stages</a></h3>
+          <p class="paper__who">Fleming &amp; Leang</p>
+          <p class="paper__sum">Driving the piezo with charge instead of voltage cut open-loop hysteresis error on a 1 Hz triangle scan to under 1%, with no position sensor. A slow sensor loop then only has to correct drift, which relaxes what the sensor needs to do.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/03.jpg" alt="First page of the paper (thumbnail)" width="260" height="337" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2013 · Review of Scientific Instruments · <span class="route r-oa">open access</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1063/1.4803449" target="_blank" rel="noreferrer">Wide-area scanner for high-speed atomic force microscopy</a></h3>
+          <p class="paper__who">Watanabe et al.</p>
+          <p class="paper__sum">Drives a lever-amplified piezo scanner open loop with a triangle wave up to about 1 kHz. They keep only the harmonics the scanner can follow, filter the drive through the inverse of the measured frequency response and pre-distort it with a fitted hysteresis polynomial, and each step carries over to shaping a piezo velocity waveform.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><div class="paper__nopdf">closed access<br>library request</div></div>
+        <div class="paper__body">
+          <div class="paper__meta">2014 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">fetch by hand</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2014.2326396" target="_blank" rel="noreferrer">Stability of Velocity Control for a Piezoelectric Stepper</a></h3>
+          <p class="paper__who">Wilcox &amp; Devasia</p>
+          <p class="paper__sum">Not yet read: it is closed access, so the DOI came back to me for a library request. Per the abstract, it is the only paper here on piezo velocity control itself. It analyzes stability under Coulomb friction and uses model inversion to pick the piezo input for a target velocity.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/05.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2016 · IEEE Transactions on Industrial Electronics · <span class="route r-oa">open access</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1109/tie.2016.2569060" target="_blank" rel="noreferrer">Robust Antiwindup Compensation for High-Precision Tracking of a Piezoelectric Nanostage</a></h3>
+          <p class="paper__who">Liu et al.</p>
+          <p class="paper__sum">Tests a periodic (internal-model) tracking controller on a piezo stage while the amplifier saturates. Unprotected, the controller winds up and loses the trajectory, which is how a repeating drive waveform that clips at the turnaround would fail too. Their antiwindup compensator recovers it and holds error under 0.23% at about 250 Hz bandwidth.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><div class="paper__nopdf">open access<br>needs a browser</div></div>
+        <div class="paper__body">
+          <div class="paper__meta">2020 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">fetch by hand</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2020.2984367" target="_blank" rel="noreferrer">A Method to Realize Low Velocity Movability and Eliminate Friction Induced Noise in Piezoelectric Ultrasonic Motors</a></h3>
+          <p class="paper__who">Delibas &amp; Koc</p>
+          <p class="paper__sum">Not yet read: it is open access, but the publisher&#x27;s PDF link refuses a script, so it needs one browser click. Per the abstract, it drives a resonant piezo motor at two frequencies for smooth, quiet motion at very low speed, with positioning error under 10 nm from 1 down to 0.001 mm/s.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/07.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2022 · Scientific Reports · <span class="route r-oa">open access</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-022-14332-5" target="_blank" rel="noreferrer">High precision robust control design of piezoelectric nanopositioning platform</a></h3>
+          <p class="paper__who">Feng et al.</p>
+          <p class="paper__sum">Compares three standard feedback designs (positive position feedback, integral resonant control and H-infinity) tracking a 100 µm triangle at 5 to 20 Hz, with mass loads that pull the resonance from 205 to 139 Hz. H-infinity tracks best in every case, but the comparison is a simulation on identified models, so only the ranking carries over.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/08.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2023 · Review of Scientific Instruments · <span class="route r-lib">already in library</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1063/5.0157651" target="_blank" rel="noreferrer">A miniaturized piezoelectric Mössbauer spectrometer with feedback control</a></h3>
+          <p class="paper__who">Guzman et al.</p>
+          <p class="paper__sum">Describes our group&#x27;s piezo Mössbauer drive. With strain-gauge feedback it matched a conventional electromagnetic drive in linewidth and stayed linear within 3.5%. The authors suspect the remaining distortion comes from sensing strain on the stack instead of motion at the source, and the next version has to test that.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/09.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2023 · Scientific Reports · <span class="route r-lib">already in library</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-023-46846-x" target="_blank" rel="noreferrer">Development of an advanced velocity modulator for a portable Mössbauer spectrometer</a></h3>
+          <p class="paper__who">Yoon et al.</p>
+          <p class="paper__sum">The only Mössbauer drive this search found that uses iterative learning control: a voice-coil modulator with proportional feedback plus a learned feedforward term, running a jerk-limited triangle at 25 Hz. Velocity linearity reached R² = 0.996. The actuator is a voice coil, so only the control scheme is a precedent for a piezo drive.</p>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="paper__thumb"><img src="assets/img/litdemo/10.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
+        <div class="paper__body">
+          <div class="paper__meta">2026 · Scientific Reports · <span class="route r-oa">open access</span></div>
+          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-026-55176-7" target="_blank" rel="noreferrer">Feedforward compensation of piezo nonlinearity for high-precision high-speed atomic force microscopy</a></h3>
+          <p class="paper__who">Umeda &amp; Kodera</p>
+          <p class="paper__sum">Ranks four sources of open-loop piezo error: offset dependence (up to 30%), amplitude dependence (up to about 25%), hysteresis (5 to 10%) and frequency (1 to 2%). A software feedforward for all four improved positioning about tenfold with no added hardware. For a drive that changes velocity range, this ranking gives the order to calibrate in.</p>
+        </div>
+      </article>
+    </div>
+
+    <h2>The library</h2>
+    <p>Each run adds to one library of more than 2,000 papers (November 2026), shared by three of my projects.</p>
+    <div class="fig"><img src="assets/img/proj-literature.jpg" alt="First pages of 128 papers from the library" width="1252" height="772" loading="lazy" style="border-radius:.4rem">
+      <p class="cap">First pages of 128 of the papers in the library, November 2026.</p></div>
+
+    <details class="details">
+      <summary>The full run, as Claude printed it (trimmed)</summary>
+    <div class="term" role="region" aria-label="Terminal transcript of the run">
       <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
       <pre><span class="t-cmd">&gt; /lit-fetch 10 papers in the past 20 years that discuss velocity control with a piezo</span>
 
@@ -76,10 +202,10 @@
     … 9 more piezo/drive synopses
 
 ● Searching OpenAlex, 2006–2026, eight queries.
-  └ &quot;piezoelectric actuator velocity control&quot;              34,552 hits
-    &quot;iterative learning control piezoelectric actuator&quot;      4,197 hits
-    &quot;repetitive control piezoelectric nanopositioning&quot;         403 hits
-    &quot;Mossbauer spectrometer drive velocity control&quot;            534 hits
+  └ &quot;piezoelectric actuator velocity control&quot;
+    &quot;iterative learning control piezoelectric actuator&quot;
+    &quot;repetitive control piezoelectric nanopositioning&quot;
+    &quot;Mossbauer spectrometer drive velocity control&quot;
     … 4 more; 160 unique DOIs after dedupe, ranked by citations, biased to open access
 
 ● Pool check before any download.
@@ -91,10 +217,10 @@
     MISS  9 others  (not in the pool, fetch it)
 
 ● Acquire + tier-1 extract, nine candidates.
-  └ 10.1063/1.4803449           ok   Unpaywall (green, university repository)  pdfminer  50,447 chars
-    10.1109/tie.2016.2569060    ok   Unpaywall (green, university repository)  pdfminer  53,419 chars  tables flagged
-    10.1038/s41598-022-14332-5  ok   Unpaywall (gold, CC-BY)                   pdfminer  45,220 chars  tables flagged
-    10.1038/s41598-026-55176-7  ok   Unpaywall (gold, accepted manuscript)     pdfminer  83,591 chars
+  └ 10.1063/1.4803449           ok   Unpaywall (green, university repository)  pdfminer
+    10.1109/tie.2016.2569060    ok   Unpaywall (green, university repository)  pdfminer
+    10.1038/s41598-022-14332-5  ok   Unpaywall (gold, CC-BY)                   pdfminer
+    10.1038/s41598-026-55176-7  ok   Unpaywall (gold, accepted manuscript)     pdfminer
     10.1109/tmech.2014.2326396  --   closed, no OA copy, no text-mining route for IEEE
     10.1109/tmech.2020.2984367  --   OA, but the PDF link refuses a script → needs a browser
     10.1109/tie.2019.2946554    --   OA copy is a landing page, not a PDF   (dropped from the 10)
@@ -118,7 +244,7 @@
 
 ● Write-back.
   └ INDEX.md          +4 rows
-    BACKLOG.md        +2 rows under ⬇ Needs Kyle (D13, D14)
+    BACKLOG.md        +2 rows under ⬇ Needs Kyle
 
 ● Done. 10 papers: 4 already in the library, 4 fetched and curated, 2 handed back.
 
@@ -127,129 +253,7 @@
   Delibas &amp; Koc 2020 is open access but needs a browser click:
     10.1109/tmech.2020.2984367</pre>
     </div>
-
-    <h2>Pipeline</h2>
-    <div class="fig"><svg class="schem" viewBox="0 0 640 150" role="img" aria-label="How one request turns into summaries">
-  <g font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">
-  <rect x="4" y="40" width="112" height="64" rx="8" fill="rgba(143,160,149,0.10)" stroke="#4B5853"/><text x="60" y="66" fill="#F2F3F0">1 · search</text><text x="60" y="84" fill="rgba(242,243,240,0.6)">OpenAlex, Crossref</text>
-  <rect x="134" y="40" width="112" height="64" rx="8" fill="rgba(143,160,149,0.10)" stroke="#4B5853"/><text x="190" y="66" fill="#F2F3F0">2 · check library</text><text x="190" y="84" fill="rgba(242,243,240,0.6)">4 already there</text>
-  <rect x="264" y="40" width="112" height="64" rx="8" fill="rgba(143,160,149,0.10)" stroke="#4B5853"/><text x="320" y="66" fill="#F2F3F0">3 · fetch</text><text x="320" y="84" fill="rgba(242,243,240,0.6)">open access first</text>
-  <rect x="394" y="40" width="112" height="64" rx="8" fill="rgba(143,160,149,0.10)" stroke="#4B5853"/><text x="450" y="66" fill="#F2F3F0">4 · read</text><text x="450" y="84" fill="rgba(242,243,240,0.6)">text pulled locally</text>
-  <rect x="524" y="40" width="112" height="64" rx="8" fill="rgba(217,178,111,0.12)" stroke="#8A6A3E"/><text x="580" y="66" fill="#F2F3F0">5 · curate</text><text x="580" y="84" fill="rgba(242,243,240,0.6)">graded for the project</text>
-  <path d="M117 72h15M247 72h15M377 72h15M507 72h15" stroke="#8FA095" stroke-width="2"/>
-  <text x="320" y="128" fill="#C98A7F">2 with no legal copy: the DOI comes back to me for the library</text>
-  </g></svg>
-      <p class="cap">Claude tries the free routes (Unpaywall, arXiv, OpenAlex) before the publishers' licensed text-mining services. Paper text stays on my computer.</p></div>
-
-    <h2>Results</h2>
-    <p>The search returned 160 candidates and Claude picked 10: 4 already in my library, 4 fetched new and 2 with no legal copy, whose DOIs came back to me. The run took about 12 minutes. Behind each card is a curation note with the source's reliability, its relevance to the project, the key numbers with page and figure, and which parts were read.</p>
-    <div class="papers">
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">full text<br>as XML</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2006 · Mechatronics · <span class="route r-lib">already in library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.mechatronics.2005.11.006" target="_blank" rel="noreferrer">Design of hysteresis-compensating iterative learning control for piezo-positioners: Application to atomic force microscopes</a></h3>
-          <p class="paper__who">Leang &amp; Devasia</p>
-          <p class="paper__sum">The standard reference showing that iterative learning control can push a piezo&#x27;s hysteresis error down to the sensor noise. They drove at 1 Hz or below, against a 445 Hz resonance, to keep dynamics out of the hysteresis model. A Mössbauer drive runs much closer to resonance.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/02.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2008 · Ultramicroscopy · <span class="route r-lib">already in library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.ultramic.2008.05.004" target="_blank" rel="noreferrer">Charge drives for scanning probe microscope positioning stages</a></h3>
-          <p class="paper__who">Fleming &amp; Leang</p>
-          <p class="paper__sum">Driving the piezo with charge instead of voltage cut open-loop hysteresis error on a 1 Hz triangle scan to under 1% with no position sensor. A slow sensor loop corrects only drift, which relaxes the sensor requirement.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/03.jpg" alt="First page of the paper (thumbnail)" width="260" height="337" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2013 · Review of Scientific Instruments · <span class="route r-oa">Unpaywall</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1063/1.4803449" target="_blank" rel="noreferrer">Wide-area scanner for high-speed atomic force microscopy</a></h3>
-          <p class="paper__who">Watanabe et al.</p>
-          <p class="paper__sum">Drives a lever-amplified piezo scanner open loop with a triangle wave up to about 1 kHz. They keep only the harmonics the scanner can follow, filter the drive through the inverse of the measured frequency response and pre-distort it with a fitted hysteresis polynomial. All three steps apply to shaping a piezo velocity waveform.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">no legal copy<br>DOI handed back</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2014 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">handed back</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2014.2326396" target="_blank" rel="noreferrer">Stability of Velocity Control for a Piezoelectric Stepper</a></h3>
-          <p class="paper__who">Wilcox &amp; Devasia</p>
-          <p class="paper__sum">Not yet read: closed access, so the DOI went back for a library request. Per the abstract, it is the only paper here on piezo velocity control itself, with a stability analysis under Coulomb friction and model inversion to pick the piezo input for a target velocity.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/05.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2016 · IEEE Transactions on Industrial Electronics · <span class="route r-oa">Unpaywall</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tie.2016.2569060" target="_blank" rel="noreferrer">Robust Antiwindup Compensation for High-Precision Tracking of a Piezoelectric Nanostage</a></h3>
-          <p class="paper__who">Liu et al.</p>
-          <p class="paper__sum">Tests a periodic (internal-model) tracking controller on a piezo stage while the amplifier saturates. Unprotected, the controller winds up and loses the trajectory. Their antiwindup compensator recovers it and holds error under 0.23% at about 250 Hz bandwidth. A repeating drive waveform that clips at the turnaround fails the same way.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">no legal copy<br>DOI handed back</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2020 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">handed back</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2020.2984367" target="_blank" rel="noreferrer">A Method to Realize Low Velocity Movability and Eliminate Friction Induced Noise in Piezoelectric Ultrasonic Motors</a></h3>
-          <p class="paper__who">Delibas &amp; Koc</p>
-          <p class="paper__sum">Not yet read: open access, but the publisher&#x27;s PDF link refuses a script, so it needs one browser click. Per the abstract, it drives a resonant piezo motor at two frequencies for smooth, quiet motion at very low speed, with positioning error under 10 nm from 1 down to 0.001 mm/s.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/07.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2022 · Scientific Reports · <span class="route r-oa">Unpaywall</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-022-14332-5" target="_blank" rel="noreferrer">High precision robust control design of piezoelectric nanopositioning platform</a></h3>
-          <p class="paper__who">Feng et al.</p>
-          <p class="paper__sum">Compares three standard feedback designs (PPF, IRC and H-infinity) tracking a 100 µm triangle at 5 to 20 Hz, with mass loads that pull the resonance from 205 to 139 Hz. H-infinity tracks best in every case. The comparison is a simulation on identified models, so only the ranking carries over.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/08.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2023 · Review of Scientific Instruments · <span class="route r-lib">already in library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1063/5.0157651" target="_blank" rel="noreferrer">A miniaturized piezoelectric Mössbauer spectrometer with feedback control</a></h3>
-          <p class="paper__who">Guzman et al.</p>
-          <p class="paper__sum">Our group&#x27;s piezo Mössbauer drive. With strain-gauge feedback it matched a conventional electromagnetic drive in linewidth and stayed linear within 3.5%. The authors suspect the remaining distortion comes from sensing strain on the stack instead of motion at the source. The next version has to answer that.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/09.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2023 · Scientific Reports · <span class="route r-lib">already in library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-023-46846-x" target="_blank" rel="noreferrer">Development of an advanced velocity modulator for a portable Mössbauer spectrometer</a></h3>
-          <p class="paper__who">Yoon et al.</p>
-          <p class="paper__sum">The only Mössbauer drive found that uses iterative learning control: a voice-coil modulator with proportional feedback plus a learned feedforward term, running a jerk-limited triangle at 25 Hz. Velocity linearity reached R² = 0.996. The actuator is a voice coil, so only the control scheme is a precedent for a piezo drive.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/10.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2026 · Scientific Reports · <span class="route r-oa">Unpaywall</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-026-55176-7" target="_blank" rel="noreferrer">Feedforward compensation of piezo nonlinearity for high-precision high-speed atomic force microscopy</a></h3>
-          <p class="paper__who">Umeda &amp; Kodera</p>
-          <p class="paper__sum">Ranks four sources of open-loop piezo error: offset dependence (up to 30%), amplitude dependence (up to about 25%), hysteresis (5 to 10%) and frequency (1 to 2%). A software feedforward for all four improved positioning about tenfold with no added hardware. For a drive that changes velocity range, the ranking sets the calibration order.</p>
-        </div>
-      </article>
-    </div>
-
-    <h2>Other requests</h2>
-    <p>Each request names a topic, a paper count and a date range.</p>
-    <div class="term" role="region" aria-label="Example lit-fetch requests">
-      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
-      <pre><span class="t-cmd">&gt; /lit-fetch 10 papers from the past 15 years that measure or compute vibrational entropy in high-entropy alloys</span>
-<span class="t-cmd">&gt; /lit-fetch 10 papers from the past 15 years on the entropy change across the magnetostructural transition in Ni-Mn Heusler alloys</span>
-<span class="t-cmd">&gt; /lit-fetch 10 papers from the past 30 years on miniaturized backscatter Mössbauer spectrometers for planetary or field use</span>
-<span class="t-cmd">&gt; /lit-fetch 10 papers on iron mineralogy measured on Mars by Mössbauer spectroscopy</span>
-<span class="t-cmd">&gt; /lit-fetch 10 papers from the past 20 years comparing iterative learning and repetitive control for piezo actuators</span></pre>
-    </div>
-
-    <h2>The library</h2>
-    <p>Each run adds to one library of about 2,100 papers, shared by three of my projects.</p>
-    <div class="fig"><img src="assets/img/proj-literature.jpg" alt="First pages of 128 papers from the library" width="1252" height="772" loading="lazy" style="border-radius:.4rem"></div>
+    </details>
 
     <div class="next-links"><a class="btn" href="instrument.html">The spectrometer</a><a class="btn" href="index.html#projects">All projects</a></div>
   </div>
@@ -260,6 +264,6 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=20261116082828"></script>
+<script src="assets/js/site.js?v=20261117065748"></script>
 </body>
 </html>

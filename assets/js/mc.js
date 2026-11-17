@@ -102,7 +102,7 @@
     var z = K.map(function (r) { return r.map(function (x) { return x > 0 ? Math.sqrt(x) : null; }); });
     Plotly.newPlot(el, [
       { type: "heatmap", x: v, y: v, z: z, colorscale: [[0, "#fff4e6"], [0.35, "#f59f00"], [1, "#7a2e00"]],
-        zmin: 0, zmax: 0.55, showscale: true, colorbar: { title: { text: "√K", side: "right" }, thickness: 10, len: 0.8 },
+        zmin: 0, zmax: 0.55, showscale: true, colorbar: { title: { text: "√weight", side: "right" }, thickness: 10, len: 0.8 },
         name: "smearing kernel (Monte Carlo)", hovertemplate: "recorded at %{y:.1f} mm/s ← true line at %{x:.2f} mm/s<extra></extra>" },
       { type: "scatter", mode: "lines", x: [-11, 11], y: [-11, 11], line: { color: "#1f78b4", dash: "dot", width: 1.5 },
         name: "no smear (θ = 0)", hoverinfo: "skip" }

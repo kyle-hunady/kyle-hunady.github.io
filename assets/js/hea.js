@@ -114,7 +114,9 @@
     { a: 'CoCrFeMnNi → Al1.25CoCrFeMnNi', cfgI: 0.18, meas: -0.44, cfgE: -0.18 },
     { a: 'NbTa0.5TiZr → Al0.3NbTa0.5TiZr', cfgI: 0.16, meas: -0.34, cfgE: 0.17 }
   ];
-  function sub(s) { return s.replace(/(\d+(\.\d+)?)/g, function (m) { return m; }); }
+  // Unicode subscript digits for alloy formulas drawn on canvas (Al1.25 -> Al₁.₂₅)
+  var SUBD = '₀₁₂₃₄₅₆₇₈₉';
+  function sub(s) { return s.replace(/\d/g, function (d) { return SUBD[+d]; }); }
   function budget(root) {
     var cv = $(root, 'canvas.hea-budget');
     function draw() {
@@ -161,7 +163,7 @@
         c.fillStyle = WHITE; c.textAlign = 'center';
         var parts = d.a.split(' → ');
         c.fillText('+ Al', x0 + gw / 2, g.h - B + 16);
-        c.fillStyle = INK; c.fillText(parts[0], x0 + gw / 2, g.h - B + 30);
+        c.fillStyle = INK; c.fillText(sub(parts[0]), x0 + gw / 2, g.h - B + 30);
       });
       c.fillStyle = INK; c.textAlign = 'left'; c.fillText('change on adding Al  (kB / atom)', L, 12);
     }
@@ -169,12 +171,13 @@
   }
 
   /* ---------------------------------------------------------- measured Cp ---
-   * hea-cp.json: measured points (dots). Three panels share the temperature axis;
+   * hea-cp.json: measured points (dots). Cp/T and S share the temperature axis (a plain Cp
+   * panel is drawn only if the page has a canvas.hea-cp);
    * the slider marks a temperature and reads S(T) for each alloy in the family. */
   var FAM = {
-    cantor: { title: 'Al_xCoCrFeNi', cols: [BLUE, SAGE, GOLD] },
-    cantor5: { title: 'Al_yCoCrFeMnNi', cols: [BLUE, GOLD] },
-    refractory: { title: 'Al_zNbTa0.5TiZr', cols: [BLUE, SAGE, GOLD] }
+    cantor: { title: 'CoCrFeNi + Al', cols: [BLUE, SAGE, GOLD] },
+    cantor5: { title: 'CoCrFeMnNi + Al', cols: [BLUE, GOLD] },
+    refractory: { title: 'NbTa0.5TiZr + Al', cols: [BLUE, SAGE, GOLD] }
   };
   var CP = null, cpWaiters = [];
   function withCp(f) {
@@ -204,7 +207,7 @@
             return { x: s.T, y: y, color: cols[i], dots: true, r: 1.8 };
           });
         };
-        linePlot(cA, dots('Cp'), { xmin: 0, xmax: 400, ymin: 0, ymax: 3.6, xticks: [0, 100, 200, 300, 400],
+        if (cA) linePlot(cA, dots('Cp'), { xmin: 0, xmax: 400, ymin: 0, ymax: 3.6, xticks: [0, 100, 200, 300, 400],
           yticks: [0, 1, 2, 3], xlabel: 'temperature (K)', ylabel: 'Cp  (kB/atom)', marks: mk.concat([{ y: 3, label: '3 kB', color: 'rgba(242,243,240,0.3)' }]) });
         linePlot(cB, dots('CpT'), { xmin: 0, xmax: 400, ymin: 0, ymax: f === 'refractory' ? 32 : 24,
           xticks: [0, 100, 200, 300, 400], yticks: [0, 10, 20, 30].filter(function (v) { return v <= (f === 'refractory' ? 32 : 24); }),
@@ -216,7 +219,7 @@
           return '<span><i style="background:' + cols[i] + '"></i>' + s.label.replace(/(\d+(\.\d+)?)/g, '<sub>$1</sub>') + '</span>';
         }).join('');
         out.textContent = 'S(' + T + ' K):  ' + rows.map(function (s) {
-          return s.label + ' ' + interp(s.T, s.S, T).toFixed(2);
+          return sub(s.label) + ' ' + interp(s.T, s.S, T).toFixed(2);
         }).join('  ·  ') + '  kB/atom';
       }
       fam.addEventListener('change', draw); tt.addEventListener('input', draw);
@@ -225,14 +228,15 @@
   }
 
   /* ---------------------------------------------------- simulated Cp ---
-   * hea-sim.json (written by tools/hea_phonons.py): harmonic phonon Cv(T) from a
-   * MACE-MP-0 force field on special quasirandom supercells, against the measured dots. */
+   * hea-sim.json (written by tools/hea_phonons.py): phonon S(T) from the MACE medium-omat-0
+   * force field (the model name recorded in hea-sim.json) with phonopy, drawn as a line against
+   * the measured entropy as dots. A Cp/T panel is drawn only if the page has a canvas.hea-sim. */
   function sim(root) {
     var cv = $(root, 'canvas.hea-sim'), pick = $(root, '.hea-pick'), out = $(root, '.fig-out'),
         cvD = $(root, 'canvas.hea-dos');
     withCp(function (J) {
       fetch(root.dataset.sim).then(function (r) { return r.json(); }).then(function (S) {
-        pick.innerHTML = S.alloys.map(function (a, i) { return '<option value="' + i + '">' + a.label + '</option>'; }).join('');
+        pick.innerHTML = S.alloys.map(function (a, i) { return '<option value="' + i + '">' + sub(a.label) + '</option>'; }).join('');
         function draw() {
           var a0 = S.alloys[+pick.value], m = J.samples.filter(function (s) { return s.id === a0.id; })[0];
           var keep = a0.T.map(function (t) { return t <= 400; });
@@ -242,13 +246,13 @@
           var mt = m.Cp.map(function (v, k) { return 1000 * v / m.T[k]; });
           var ser = [{ x: a.T, y: cvt, color: GOLD, width: 1.8 },
                      { x: m.T, y: mt, color: SAGE, dots: true, r: 1.9 }];
-          linePlot(cv, ser, { xmin: 0, xmax: 400, ymin: 0, ymax: 30, xticks: [0, 100, 200, 300, 400],
+          if (cv) linePlot(cv, ser, { xmin: 0, xmax: 400, ymin: 0, ymax: 30, xticks: [0, 100, 200, 300, 400],
             yticks: [0, 10, 20, 30], xlabel: 'temperature (K)', ylabel: 'Cp/T  (10⁻³ kB/atom/K)' });
           if (cvD) linePlot(cvD, [{ x: a.T, y: a.S, color: GOLD, width: 1.8 }, { x: m.T, y: m.S, color: SAGE, dots: true, r: 1.9 }],
             { xmin: 0, xmax: 400, ymin: 0, ymax: 6, xticks: [0, 100, 200, 300, 400], yticks: [0, 2, 4, 6],
               xlabel: 'temperature (K)', ylabel: 'S  (kB/atom)' });
           var Ssim = interp(a.T, a.S, 385), Smeas = interp(m.T, m.S, 385);
-          out.textContent = a.label + ' at 385 K:  measured S ' + Smeas.toFixed(2) + '  ·  MACE ' + (a.kind === 'qha' ? 'quasi-harmonic' : 'harmonic') + ' phonons ' +
+          out.textContent = sub(a.label) + ' at 385 K:  measured S ' + Smeas.toFixed(2) + '  ·  MACE ' + (a.kind === 'qha' ? 'quasi-harmonic' : 'harmonic') + ' phonons ' +
             Ssim.toFixed(2) + '  ·  difference ' + (Smeas - Ssim >= 0 ? '+' : '') + (Smeas - Ssim).toFixed(2) + ' kB/atom';
         }
         pick.addEventListener('change', draw); onResize(draw); draw();
@@ -268,7 +272,7 @@
         var ids = GROUP[fam.value], P = J.patterns.filter(function (p) { return ids.indexOf(p.id) >= 0; });
         var ser = P.map(function (p, i) {
           var off = (P.length - 1 - i) * 1.05, col = p.structure === 'B2' ? GOLD : (p.structure === 'BCC' ? SAGE : BLUE);
-          return { x: p.tt, y: p.I.map(function (v) { return v + off; }), color: col, width: 1.1 };
+          return { x: p.tt, y: p.I.map(function (v) { return v + off; }), color: col, dots: true, r: 0.9 };
         });
         var b2 = 2 * Math.asin(1.5418 / (2 * 2.88)) * 180 / Math.PI;
         var ax = linePlot(cv, ser, { xmin: 20, xmax: 90, ymin: 0, ymax: P.length * 1.05 + 0.1,
@@ -277,7 +281,7 @@
         var c = cv.getContext('2d'); c.font = '10px "IBM Plex Mono", monospace'; c.textAlign = 'right';
         P.forEach(function (p, i) {
           var off = (P.length - 1 - i) * 1.05;
-          c.fillStyle = ser[i].color; c.fillText(p.label + '  ' + p.structure, ax.X(75.5), ax.Y(off + 0.62));
+          c.fillStyle = ser[i].color; c.fillText(sub(p.label) + '  ' + p.structure, ax.X(75.5), ax.Y(off + 0.62));
         });
       }
       fam.addEventListener('change', draw); onResize(draw); draw();
@@ -361,13 +365,17 @@
   /* --------------------------------------------------------------- B2 cell ---
    * A 2x2x2 block of BCC cells in oblique projection. Two sublattices: corners (alpha)
    * and body centers (beta). Order parameter eta mixes each sublattice from the random
-   * equiatomic AlCoCrFeNi (0.2 each) toward full order (alpha: Al, Ni; beta: Co, Cr, Fe).
+   * equiatomic AlCoCrFeNi (0.2 each) toward the most ordered B2 state that keeps the
+   * composition: alpha = Al 0.4, Ni 0.4, Co 0.2; beta = Co 0.2, Cr 0.4, Fe 0.4. Al and Ni are
+   * only 40 % of the atoms, so they cannot fill the corners alone. S_cfg at full order is
+   * 1.055 kB, the floor for any B2 arrangement of this alloy (no sublattice can hold more
+   * than 0.4 of one element). The linear mix keeps the composition at every eta.
    * S_cfg = mean over sublattices of -sum c ln c. The {100} superlattice intensity scales
    * as (f_alpha - f_beta)^2 with f ~ Z, normalized to its fully ordered value. */
   function cell(root) {
     var cv = $(root, 'canvas.hea-cell'), cvP = $(root, 'canvas.hea-peak'), eta = $(root, '.hea-eta'), out = $(root, '.fig-out');
     var EL = ['Al', 'Ni', 'Co', 'Cr', 'Fe'], Z = [13, 28, 27, 24, 26], COL = [GOLD, BLUE, SAGE, ROSE, LILAC];
-    var ALPHA = [0.5, 0.5, 0, 0, 0], BETA = [0, 0, 1 / 3, 1 / 3, 1 / 3];
+    var ALPHA = [0.4, 0.4, 0.2, 0, 0], BETA = [0, 0, 0.2, 0.4, 0.4];
     var sites = [];
     for (var x = 0; x <= 2; x++) for (var y = 0; y <= 2; y++) for (var z = 0; z <= 2; z++) sites.push({ p: [x, y, z], sub: 0, u: Math.random() });
     for (var a = 0; a < 2; a++) for (var b = 0; b < 2; b++) for (var d = 0; d < 2; d++) sites.push({ p: [a + 0.5, b + 0.5, d + 0.5], sub: 1, u: Math.random() });
@@ -403,7 +411,7 @@
       var Es = [], Ss = []; for (var k = 0; k <= 50; k++) { Es.push(k / 50); Ss.push(scfg(k / 50)); }
       var I = Math.pow(fdiff(e) / F1, 2);
       linePlot(cvP, [{ x: Es, y: Ss, color: GOLD, width: 1.8 }, { x: [e], y: [scfg(e)], color: WHITE, dots: true, r: 4 }],
-        { xmin: 0, xmax: 1, ymin: 0.8, ymax: 1.7, xticks: [0, 0.5, 1], yticks: [0.9, 1.31, 1.61],
+        { xmin: 0, xmax: 1, ymin: 0.9, ymax: 1.7, xticks: [0, 0.5, 1], yticks: [1.05, 1.31, 1.61],
           xlabel: 'degree of B2 order', ylabel: 'S_cfg  (kB / atom)',
           marks: [{ y: Math.log(5), label: 'random: kB ln 5', color: 'rgba(127,167,201,0.8)' }, { y: 1.31, label: 'AlCoCrFeNi, from XRD', color: 'rgba(201,138,127,0.9)' }] });
       out.textContent = 'order ' + e.toFixed(2) + '  ·  S_cfg ' + scfg(e).toFixed(2) + ' kB/atom  ·  B2 {100} superlattice peak at ' + Math.round(100 * I) + ' % of its fully ordered height';
@@ -556,7 +564,8 @@
    * How a harmonic phonon calculation works, drawn on a 2-D patch: still crystal -> nudge one
    * atom -> read the forces on its neighbours (toy springs, Al bonds stiffer) -> the springs set
    * the vibrations (a 1-D chain: long wave slow, short wave fast, omega ~ sin(ka/2)).
-   * Below: the 477 real harmonic frequencies of the 160-atom MD cell, each bar lit by the
+   * Below: the 477 real harmonic frequencies of the 160-atom MD cell (3 x 160 minus the three
+   * zero-frequency translations of the whole cell), each bar lit by the
    * entropy one vibration of that frequency carries at the slider temperature,
    * s(x) = x/(e^x - 1) - ln(1 - e^-x), x = h nu / kB T. */
   function phon(root) {
@@ -569,7 +578,7 @@
     el[2 * NX + 3] = 4;                                    // one Al right next to the nudged atom
     var CI = 2 * NX + 2;                                   // the atom that gets nudged
     function lat(g) {
-      var s = Math.min(g.w / (NX + 0.6), (g.h - 18) / (NY + 0.4));
+      var s = Math.max(1, Math.min(g.w / (NX + 0.6), (g.h - 18) / (NY + 0.4)));
       return { s: s, ox: (g.w - s * (NX - 1)) / 2, oy: (g.h - 14 - s * (NY - 1)) / 2 };
     }
     function arrow(c, x0, y0, x1, y1, col, w) {
@@ -631,7 +640,7 @@
         c.strokeStyle = RULE; c.beginPath(); c.moveTo(12, y0); c.lineTo(g.w - 12, y0); c.stroke();
         for (var i = 0; i < n; i++) {
           var dy = A * Math.cos(k * i) * Math.cos(w * t * 2.4);
-          c.fillStyle = SAGE; c.beginPath(); c.arc(12 + i * s, y0 + dy, Math.min(5.5, s * 0.3), 0, 6.2832); c.fill();
+          c.fillStyle = SAGE; c.beginPath(); c.arc(12 + i * s, y0 + dy, Math.max(0.5, Math.min(5.5, s * 0.3)), 0, 6.2832); c.fill();
         }
         c.fillStyle = INK; c.textAlign = 'center'; c.fillText(m[2], g.w / 2, y0 + A + 18);
       });
@@ -669,7 +678,8 @@
   var FIGS = { count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell, md: md, phon: phon };
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-hea]').forEach(function (el) {
-      var f = FIGS[el.dataset.hea]; if (f) f(el);
+      // one figure failing (e.g. a canvas with no width yet) must not stop the ones after it
+      var f = FIGS[el.dataset.hea]; if (f) { try { f(el); } catch (err) { if (window.console) console.error(err); } }
     });
   });
 })();

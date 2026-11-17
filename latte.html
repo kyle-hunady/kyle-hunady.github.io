@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kyle café · latte log</title>
-<meta name="description" content="Photos of every latte I have poured since August 2025, newest first.">
+<meta name="description" content="Latte art I have poured and photographed since August 2025, newest first.">
 <link rel="canonical" href="https://kyle-hunady.github.io/latte.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/latte.html">
 <meta property="og:title" content="Kyle café · latte log">
-<meta property="og:description" content="Photos of every latte I have poured since August 2025, newest first.">
+<meta property="og:description" content="Latte art I have poured and photographed since August 2025, newest first.">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261116204832">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117065748">
 </head>
 <body class="cafe">
 
@@ -45,15 +45,16 @@
 </nav> <header class="page__head">
   <div class="container header__container">
     <div class="cafe-cup" aria-hidden="true"><svg><use href="#i-cup"/></svg></div>
-    <p class="header__eyebrow">Kyle café · open every day</p>
+    <p class="header__eyebrow">Kyle café</p>
     <h1>The latte log</h1>
-    <p class="header__line">I started pouring latte art in August 2025 and have photographed every cup since. Newest first.</p>
+    <p class="header__line">I started pouring latte art in August 2025. These are the cups I photographed, newest first.</p>
   </div>
 </header>
 
 <section id="gallery">
   <div class="container"><a href="index.html" class="back-link"><svg><use href="#i-arrow-left"/></svg>Back home</a> <div class="latte-top"> <p class="latte-badge" id="latte-badge"></p> <button class="btn" id="latte-shuffle" type="button">Shuffle the cups</button></div>
-    <div class="cafe-months" id="cafe-months" aria-label="Cups poured per month"></div>
+    <p class="latte-badge" id="cafe-months-label">Cups per month</p>
+    <div class="cafe-months" id="cafe-months" role="img" aria-label="Cups photographed per month"></div>
 
     <div class="latte-grid" id="latte-grid"></div>
   </div>
@@ -69,8 +70,8 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=20261116082828"></script>
-<script src="assets/js/latte-dates.js"></script>
+<script src="assets/js/site.js?v=20261117065748"></script>
+<script src="assets/js/latte-dates.js?v=20261117120000"></script>
 <script>
 (function () {
   const BASE = 'assets/img/latte/';
@@ -93,22 +94,38 @@
   if (!all.length) { badge.textContent = 'No photos yet'; return; }
 
   const pad = (n) => String(n).padStart(3, '0');
-  const label = (n) => dates[n] ? `#${pad(n)} · ${dates[n]}` : `#${pad(n)}`;
+  // Dates arrive as 'May 08, 2026'; show them as 'May 8, 2026'.
+  const day = (n) => dates[n] ? dates[n].replace(/ 0(\d),/, ' $1,') : 'undated';
+  const label = (n) => dates[n] ? `#${pad(n)} · ${day(n)}` : `#${pad(n)}`;
 
-  badge.textContent = `${all.length} cups so far · first pour ${dates[all[0]]}`;
+  // Parse 'Mon DD, YYYY' by hand; Date() parsing of that string varies by browser.
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const ym = (s) => { const r = /^([A-Z][a-z]{2}) \d{1,2}, (\d{4})$/.exec(s || ''); return r && MON.includes(r[1]) ? [+r[2], MON.indexOf(r[1])] : null; };
 
-  // A little bar per month: how busy the café was.
-  const months = {};
-  all.forEach((n) => { const d = new Date(dates[n]); if (!isNaN(d)) { const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); months[k] = (months[k] || 0) + 1; } });
-  const keys = Object.keys(months).sort(), peak = Math.max(...Object.values(months));
-  const mbox = document.getElementById('cafe-months');
-  keys.forEach((k) => {
-    const [y, m] = k.split('-').map(Number);
-    const col = document.createElement('div'); col.className = 'cafe-month';
-    col.title = `${months[k]} cups in ${new Date(y, m - 1).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`;
-    col.innerHTML = `<span style="height:${Math.round(100 * months[k] / peak)}%"></span><b>${new Date(y, m - 1).toLocaleString('en-US', { month: 'short' })[0]}</b>`;
-    mbox.appendChild(col);
-  });
+  // The badge and the chart label share the same first and latest dates.
+  badge.textContent = `${all.length} cups · ${day(all[0])} to ${day(all[all.length - 1])}`;
+
+  // One bar per calendar month from the first cup to the latest, empty months included.
+  const counts = {};
+  all.forEach((n) => { const d = ym(dates[n]); if (d) { const k = d[0] * 12 + d[1]; counts[k] = (counts[k] || 0) + 1; } });
+  const idx = Object.keys(counts).map(Number);
+  if (idx.length) {
+    const lo = Math.min(...idx), hi = Math.max(...idx), peak = Math.max(...Object.values(counts));
+    const name = (k) => `${MON[k % 12]} ${Math.floor(k / 12)}`;
+    document.getElementById('cafe-months-label').textContent = `Cups per month, ${name(lo)} to ${name(hi)}`;
+    const mbox = document.getElementById('cafe-months');
+    mbox.setAttribute('aria-label', `Bar chart of cups photographed per month, ${name(lo)} to ${name(hi)}. Busiest month: ${peak} cups.`);
+    for (let k = lo; k <= hi; k++) {
+      const c = counts[k] || 0;
+      const col = document.createElement('div'); col.className = 'cafe-month';
+      col.title = `${c} ${c === 1 ? 'cup' : 'cups'} in ${LONG[k % 12]} ${Math.floor(k / 12)}`;
+      // An empty month gets zero height and no 3px minimum, so it reads as a gap.
+      const bar = c ? `height:${Math.round(100 * c / peak)}%` : 'height:0;min-height:0';
+      col.innerHTML = `<span style="${bar}"></span><b>${MON[k % 12]}</b>`;
+      mbox.appendChild(col);
+    }
+  }
 
   let order = [...all].reverse();   // newest first
   let current = 0;                  // index into `order` while the lightbox is open
@@ -120,12 +137,12 @@
       const cell = document.createElement('button');
       cell.className = 'latte-cell';
       cell.type = 'button';
-      cell.setAttribute('aria-label', `Enlarge cup ${n}, ${dates[n] || 'undated'}`);
+      cell.setAttribute('aria-label', `Enlarge cup ${n}, ${day(n)}`);
 
       const img = document.createElement('img');
       img.src = `${BASE}${pad(n)}.${EXT}`;
-      img.alt = `Latte ${n}, ${dates[n] || 'undated'}`;
-      img.loading = i < 12 ? 'eager' : 'lazy';
+      img.alt = `Latte ${n}, ${day(n)}`;
+      img.loading = i < 6 ? 'eager' : 'lazy';
       img.decoding = 'async';
       cell.appendChild(img);
 
@@ -145,7 +162,7 @@
     current = (i + order.length) % order.length;
     const n = order[current];
     lbImg.src = `${BASE}${pad(n)}.${EXT}`;
-    lbImg.alt = `Latte ${n}`;
+    lbImg.alt = `Latte ${n}, ${day(n)}`;
     lbCap.textContent = label(n);
   }
 

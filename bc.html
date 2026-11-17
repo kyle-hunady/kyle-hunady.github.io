@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>B.C. (before Claude) · Kyle Hunady</title>
-<meta name="description" content="Older projects on GitHub, 2020 to 2022.">
+<meta name="description" content="Two Inkscape extensions, an ESP32 camera that uploads photos to Google Drive, and a Minecraft server plugin that Kyle Hunady wrote between 2020 and 2022, before AI coding tools.">
 <link rel="canonical" href="https://kyle-hunady.github.io/bc.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/bc.html">
-<meta property="og:title" content="B.C. (before Claude)">
-<meta property="og:description" content="Older projects on GitHub, 2020 to 2022.">
+<meta property="og:title" content="B.C. (before Claude) · Kyle Hunady">
+<meta property="og:description" content="Two Inkscape extensions, an ESP32 camera that uploads photos to Google Drive, and a Minecraft server plugin that Kyle Hunady wrote between 2020 and 2022, before AI coding tools.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261116204832">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117065748">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -39,48 +39,52 @@
   <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
 </svg>
 <nav aria-label="Sections">
-  <a href="index.html" aria-label="Home" title="Home"><svg><use href="index.html#i-home"/></svg></a>
-  <a href="index.html#about" aria-label="About" title="About"><svg><use href="index.html#i-user"/></svg></a>
-  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="index.html#i-flask"/></svg></a>
-  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="index.html#i-grid"/></svg></a>
-  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="index.html#i-users"/></svg></a>
-  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="index.html#i-mail"/></svg></a>
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
 </nav>
 
 <header class="page__head">
   <div class="container header__container">
     <p class="header__eyebrow">B.C. · before Claude</p>
     <h1>Older code on GitHub</h1>
-    <p class="header__line">Small tools I wrote between 2020 and 2022.</p>
+    <p class="header__line">Small tools I wrote between 2020 and 2022, before I started writing code with Claude, an AI coding assistant. My newer work is on <a href="automation.html">reading the literature with Claude Code</a>.</p>
   </div>
 </header>
 
 <main id="main" class="page">
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
-    <article class="bcitem">
+    <figure class="fig" style="max-width:20rem;margin:0 0 1.2rem">
+      <img src="assets/img/proj-bc.png" alt="An Arduino loop drawn by mouse in Microsoft Paint" width="1038" height="649" loading="lazy" style="border-radius:.4rem">
+      <figcaption>An Arduino loop, drawn by mouse in Microsoft Paint.</figcaption>
+    </figure>
+    <article class="bcitem" id="export-layers">
       <div class="bcitem__year">2020</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/export-layers" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>export-layers</a></h2>
-        <div class="bcitem__kind">Inkscape 1.0 extension</div>
-        <p>Exports each layer of an Inkscape drawing as its own SVG, PNG, JPEG or PDF file. It is a port of an older extension to Inkscape 1.0.</p></div>
+        <div class="bcitem__kind">Inkscape 1.0 extension (Python)</div>
+        <p>Exports each layer of a drawing in Inkscape, a free vector-drawing program, as its own SVG, PNG, JPEG or PDF file. It updates jespino's <a href="https://github.com/jespino/inkscape-export-layers" target="_blank" rel="noreferrer">inkscape-export-layers</a> to work in Inkscape 1.0.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2020</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/multilayer-grid" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>multilayer-grid</a></h2>
-        <div class="bcitem__kind">Inkscape 1.0 extension</div>
-        <p>Arranges the selected objects into a grid. When a grid fills, the rest continue on a new layer.</p></div>
+        <div class="bcitem__kind">Inkscape 1.0 extension (Python)</div>
+        <p>Arranges the selected objects into a grid. When a grid fills, the rest continue on a new layer. I used it to lay out more than 50 card scans as 3 × 3 pages, then saved each page as a file with <a href="#export-layers">export-layers</a>.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2022</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/esp32cam-gdrive" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>esp32cam-gdrive</a></h2>
-        <div class="bcitem__kind">ESP32-CAM sketch + Google Apps Script</div>
-        <p>An ESP32-CAM takes a photo on a timer and uploads it to a Google Drive folder through an Apps Script web app. WiFi is set up from a phone through a captive portal.</p></div>
+        <div class="bcitem__kind">Camera-board firmware (C++) + Google Apps Script</div>
+        <p>An ESP32-CAM, a small Wi-Fi camera board, takes a photo on a timer and uploads it to a Google Drive folder through a web app written in Google Apps Script. Wi-Fi is set up from a phone: the camera opens its own hotspot, and a setup page asks for the network name and password.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2022</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/villager-essentials" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>villager-essentials</a></h2>
-        <div class="bcitem__kind">Spigot 1.19 plugin (Java)</div>
-        <p>Changes villager trading for multiplayer Minecraft servers: discounts one player earns apply to everyone, villagers killed by zombies always convert, and zombies pick up items.</p></div>
+        <div class="bcitem__kind">Minecraft server plugin (Java, Spigot 1.19)</div>
+        <p>Changes how villagers and zombies behave on multiplayer Minecraft servers. A discount one player earns with a villager carries over to any player who trades with it, villagers killed by zombies always turn into zombie villagers, and zombies pick up items.</p></div>
     </article>
     <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>
@@ -91,6 +95,6 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<script src="assets/js/site.js?v=20261116082828"></script>
+<script src="assets/js/site.js?v=20261117065748"></script>
 </body>
 </html>

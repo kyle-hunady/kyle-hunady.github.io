@@ -1,3 +1,17 @@
+/* Icon sprite references. Every page carries its own copy of the sprite, but
+ * a nav copied from another page can point at it as <use href="index.html#i-x">.
+ * Browsers do not resolve <use> into an HTML document, so the icon renders
+ * blank. Point any such reference at the local copy when one exists. */
+(function () {
+  document.querySelectorAll('use').forEach(function (u) {
+    var h = u.getAttribute('href') || u.getAttribute('xlink:href') || '';
+    var k = h.indexOf('#');
+    if (k <= 0) return;
+    var id = h.slice(k + 1);
+    if (document.getElementById(id)) u.setAttribute('href', '#' + id);
+  });
+})();
+
 /* Nav highlighting.
  *
  * Jedi's version sets the active pill on click, so it goes stale the moment
