@@ -284,7 +284,134 @@
     });
   }
 
-  var FIGS = { name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd };
+  /* ------------------------------------------------- four kinds of entropy ---
+   * Four small animated panels, one mechanism each, then a stacked bar of their sizes for
+   * CoCrFeMnNi at 385 K: ideal configurational kB ln 5, electronic from DFT (paper Table 2),
+   * and vibrational + magnetic = measured 4.71 minus electronic. */
+  function kinds(root) {
+    var cvs = root.querySelectorAll('canvas.hea-kind'), bar = $(root, 'canvas.hea-kindbar');
+    var t = 0, raf = null, visible = true;
+    var cfg = [], NX = 9, NY = 6;
+    for (var i = 0; i < NX * NY; i++) cfg.push(Math.floor(Math.random() * 5));
+    var ph = []; for (var k = 0; k < NX * NY; k++) ph.push([Math.random() * 6.28, Math.random() * 6.28, 0.7 + Math.random() * 0.6]);
+    var spin = []; for (var m = 0; m < NX * NY; m++) spin.push(Math.random() * 6.28);
+    function grid(g, f) {
+      var s = Math.min(g.w / (NX + 0.5), (g.h - 4) / (NY + 0.3)), ox = (g.w - s * NX) / 2 + s / 2, oy = (g.h - s * NY) / 2 + s / 2;
+      for (var y = 0; y < NY; y++) for (var x = 0; x < NX; x++) f(ox + x * s, oy + y * s, s, y * NX + x);
+    }
+    function draw() {
+      // 1 configurational: frozen random arrangement
+      var g = ctx2d(cvs[0]);
+      grid(g, function (x, y, s, i) { g.c.fillStyle = ELEM[cfg[i]]; g.c.beginPath(); g.c.arc(x, y, s * 0.33, 0, 6.2832); g.c.fill(); });
+      // 2 vibrational: atoms jiggle about their sites
+      g = ctx2d(cvs[1]);
+      grid(g, function (x, y, s, i) {
+        var p = ph[i], a = s * 0.14;
+        g.c.strokeStyle = RULE; g.c.beginPath(); g.c.arc(x, y, s * 0.33, 0, 6.2832); g.c.stroke();
+        g.c.fillStyle = SAGE; g.c.beginPath();
+        g.c.arc(x + a * Math.sin(t * 3.1 * p[2] + p[0]), y + a * Math.sin(t * 2.7 * p[2] + p[1]), s * 0.3, 0, 6.2832); g.c.fill();
+      });
+      // 3 electronic: levels filled below the Fermi level, blurred near it
+      g = ctx2d(cvs[2]);
+      var L = 16, top = 8, bot = g.h - 8, w0 = g.w * 0.22, w1 = g.w * 0.78;
+      for (var l = 0; l < L; l++) {
+        var y = bot - (l + 0.5) * (bot - top) / L, e = (l - L / 2 + 0.5) / 1.6;
+        var occ = 1 / (1 + Math.exp(e));
+        g.c.strokeStyle = RULE; g.c.beginPath(); g.c.moveTo(w0, y); g.c.lineTo(w1, y); g.c.stroke();
+        for (var q = 0; q < 6; q++) {               // six states per level; near E_F each flickers with probability f(E)
+          var r = 0.5 + 0.5 * Math.sin(t * (1.3 + 0.37 * q) + l * 2.3 + q * 1.9);
+          if (occ > 0.97 || (occ > 0.03 && r < occ)) {
+            g.c.fillStyle = BLUE; g.c.beginPath(); g.c.arc(w0 + (q + 0.5) * (w1 - w0) / 6, y, 2.6, 0, 6.2832); g.c.fill();
+          }
+        }
+      }
+      g.c.strokeStyle = GOLD; g.c.setLineDash([4, 3]); g.c.beginPath(); g.c.moveTo(w0 - 10, (top + bot) / 2); g.c.lineTo(w1 + 10, (top + bot) / 2); g.c.stroke(); g.c.setLineDash([]);
+      g.c.fillStyle = GOLD; g.c.textAlign = 'left'; g.c.fillText('Fermi level', w1 - 52, (top + bot) / 2 - 5);
+      // 4 magnetic: moments that wander
+      g = ctx2d(cvs[3]);
+      grid(g, function (x, y, s, i) {
+        var a = spin[i] + 0.9 * Math.sin(t * 1.3 + i * 2.1), r = s * 0.32;
+        g.c.strokeStyle = ROSE; g.c.lineWidth = 1.6; g.c.beginPath();
+        g.c.moveTo(x - r * Math.cos(a), y - r * Math.sin(a)); g.c.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); g.c.stroke();
+        g.c.fillStyle = ROSE; g.c.beginPath(); g.c.arc(x + r * Math.cos(a), y + r * Math.sin(a), 2.2, 0, 6.2832); g.c.fill();
+        g.c.lineWidth = 1;
+      });
+    }
+    function drawBar() {
+      var g = ctx2d(bar), c = g.c, L = 8, R = 8, y0 = 22, h = 22;
+      var parts = [{ v: 4.71 - 0.155, col: SAGE, lab: 'vibrational + magnetic  4.55' },
+                   { v: 0.155, col: BLUE, lab: 'electronic 0.16' },
+                   { v: Math.log(5), col: GOLD, lab: 'configurational (ideal)  1.61' }];
+      var tot = parts.reduce(function (a, p) { return a + p.v; }, 0), X = function (v) { return L + v / 6.6 * (g.w - L - R); }, x = 0;
+      parts.forEach(function (p, i) {
+        c.fillStyle = p.col; c.fillRect(X(x), y0, X(x + p.v) - X(x) - 1, h);
+        c.fillStyle = i === 1 ? BLUE : WHITE; c.textAlign = i === 1 ? 'center' : 'left';
+        if (i === 1) c.fillText('electronic 0.16', X(x + p.v / 2), y0 + h + 14);
+        else c.fillText(p.lab, X(x) + 6, y0 + h / 2 + 3);
+        x += p.v;
+      });
+      c.fillStyle = INK; c.textAlign = 'left'; c.fillText('CoCrFeMnNi at 385 K, kB per atom (total ≈ ' + tot.toFixed(1) + ')', L, 12);
+    }
+    function frame() { raf = null; if (visible && !reduced) { t += 1 / 60; draw(); } if (!reduced) raf = requestAnimationFrame(frame); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(root);
+    onResize(function () { draw(); drawBar(); });
+    draw(); drawBar(); if (!reduced) raf = requestAnimationFrame(frame);
+  }
+
+  /* --------------------------------------------------------------- B2 cell ---
+   * A 2x2x2 block of BCC cells in oblique projection. Two sublattices: corners (alpha)
+   * and body centers (beta). Order parameter eta mixes each sublattice from the random
+   * equiatomic AlCoCrFeNi (0.2 each) toward full order (alpha: Al, Ni; beta: Co, Cr, Fe).
+   * S_cfg = mean over sublattices of -sum c ln c. The {100} superlattice intensity scales
+   * as (f_alpha - f_beta)^2 with f ~ Z, normalized to its fully ordered value. */
+  function cell(root) {
+    var cv = $(root, 'canvas.hea-cell'), cvP = $(root, 'canvas.hea-peak'), eta = $(root, '.hea-eta'), out = $(root, '.fig-out');
+    var EL = ['Al', 'Ni', 'Co', 'Cr', 'Fe'], Z = [13, 28, 27, 24, 26], COL = [GOLD, BLUE, SAGE, ROSE, LILAC];
+    var ALPHA = [0.5, 0.5, 0, 0, 0], BETA = [0, 0, 1 / 3, 1 / 3, 1 / 3];
+    var sites = [];
+    for (var x = 0; x <= 2; x++) for (var y = 0; y <= 2; y++) for (var z = 0; z <= 2; z++) sites.push({ p: [x, y, z], sub: 0, u: Math.random() });
+    for (var a = 0; a < 2; a++) for (var b = 0; b < 2; b++) for (var d = 0; d < 2; d++) sites.push({ p: [a + 0.5, b + 0.5, d + 0.5], sub: 1, u: Math.random() });
+    function comp(sub, e) { var o = sub ? BETA : ALPHA; return o.map(function (v) { return (1 - e) * 0.2 + e * v; }); }
+    function scfg(e) {
+      return [0, 1].reduce(function (s, sub) { return s + 0.5 * comp(sub, e).reduce(function (q, c) { return q - (c > 0 ? c * Math.log(c) : 0); }, 0); }, 0);
+    }
+    function fdiff(e) {
+      var fa = comp(0, e).reduce(function (s, c, i) { return s + c * Z[i]; }, 0), fb = comp(1, e).reduce(function (s, c, i) { return s + c * Z[i]; }, 0);
+      return fa - fb;
+    }
+    var F1 = fdiff(1);
+    function pick(sub, e, u) { var c = comp(sub, e), acc = 0; for (var i = 0; i < 5; i++) { acc += c[i]; if (u < acc) return i; } return 4; }
+    function draw() {
+      var e = +eta.value, g = ctx2d(cv), c = g.c;
+      var s = Math.min(g.w * 0.8 / 2.62, g.h * 0.8 / 2.44), ox = g.w / 2 - s * 1.31, oy = g.h / 2 + s * 1.22;
+      var P = function (p) { return [ox + p[0] * s + p[1] * s * 0.62, oy - p[2] * s - p[1] * s * 0.22]; };
+      c.strokeStyle = 'rgba(242,243,240,0.16)';
+      for (var i = 0; i <= 2; i++) for (var j = 0; j <= 2; j++) {
+        [[[i, j, 0], [i, j, 2]], [[i, 0, j], [i, 2, j]], [[0, i, j], [2, i, j]]].forEach(function (seg) {
+          var A = P(seg[0]), B = P(seg[1]); c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(B[0], B[1]); c.stroke();
+        });
+      }
+      sites.slice().sort(function (A, B) { return B.p[1] - A.p[1]; }).forEach(function (st) {
+        var q = P(st.p), el = pick(st.sub, e, st.u);
+        c.fillStyle = COL[el]; c.beginPath(); c.arc(q[0], q[1], st.sub ? s * 0.12 : s * 0.095, 0, 6.2832); c.fill();
+        if (st.sub) { c.strokeStyle = 'rgba(11,12,11,0.8)'; c.lineWidth = 1.5; c.stroke(); c.lineWidth = 1; }
+      });
+      c.textAlign = 'left';
+      EL.forEach(function (n, i) { c.fillStyle = COL[i]; c.fillText('● ' + n, 6, 14 + i * 14); });
+      c.fillStyle = INK; c.fillText('small: corners', 6, 94); c.fillText('outlined: centers', 6, 108);
+      // right: S_cfg vs eta, and the superlattice peak growing
+      var Es = [], Ss = []; for (var k = 0; k <= 50; k++) { Es.push(k / 50); Ss.push(scfg(k / 50)); }
+      var I = Math.pow(fdiff(e) / F1, 2);
+      linePlot(cvP, [{ x: Es, y: Ss, color: GOLD, width: 1.8 }, { x: [e], y: [scfg(e)], color: WHITE, dots: true, r: 4 }],
+        { xmin: 0, xmax: 1, ymin: 0.8, ymax: 1.7, xticks: [0, 0.5, 1], yticks: [0.9, 1.31, 1.61],
+          xlabel: 'degree of B2 order', ylabel: 'S_cfg  (kB / atom)',
+          marks: [{ y: Math.log(5), label: 'random: kB ln 5', color: 'rgba(127,167,201,0.8)' }, { y: 1.31, label: 'AlCoCrFeNi, from XRD', color: 'rgba(201,138,127,0.9)' }] });
+      out.textContent = 'order ' + e.toFixed(2) + '  ·  S_cfg ' + scfg(e).toFixed(2) + ' kB/atom  ·  B2 {100} superlattice peak at ' + Math.round(100 * I) + ' % of its fully ordered height';
+    }
+    eta.addEventListener('input', draw); onResize(draw); draw();
+  }
+
+  var FIGS = { name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell };
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-hea]').forEach(function (el) {
       var f = FIGS[el.dataset.hea]; if (f) f(el);
