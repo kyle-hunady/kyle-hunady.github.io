@@ -159,6 +159,76 @@ def pipeline(theta):
                 k_row_8p5=[round(float(x), 5) for x in K[int(np.argmin(abs(v - 8.5)))]])
 
 
+# ---------------------------------------------------------------- 4. teaching: minerals, rocks, smear cases
+RS = MC / "analysis/261104_rock_spectra_smear"
+LIB = [("hematite", "hematite", "Fe³⁺ oxide, rust-red"), ("magnetite", "magnetite", "Fe²⁺/Fe³⁺ oxide, magnetic"),
+       ("goethite", "goethite", "Fe³⁺ oxyhydroxide, forms in water"), ("olivine", "olivine", "Fe²⁺ silicate in basalt"),
+       ("pyroxene", "pyroxene", "Fe²⁺ silicate in basalt"), ("np-oxide", "nanophase oxide", "Fe³⁺ weathering product"),
+       ("jarosite", "jarosite", "Fe³⁺ sulfate, holds water")]
+CASES = [("hematite", "magnetite"), ("hematite", "goethite"), ("olivine", "pyroxene"), ("np-oxide", "jarosite")]
+ROCKS = [("morris2006a_fig2a_adirondack", "Adirondack", "unaltered basalt"),
+         ("morris2006a_fig2d_clovis", "Clovis", "altered by water")]
+
+
+def ds(a, k=2):
+    return [round(float(x), 4) for x in a[::k]]
+
+
+def teaching(theta_deg):
+    """Mineral line shapes and smear cases from smear_core / desmear (the distinguishability study's own code)."""
+    sys.path.insert(0, str(RS))
+    import desmear as D
+    import smear_core as SC
+    v = SC.V
+    keep = (v >= -11) & (v <= 11)
+    vk = v[keep]
+    lib = []
+    for key, name, note in LIB:
+        y = SC.phase(SC.MINERALS[key])
+        sub = SC.MINERALS[key][0]
+        par = (f"δ {sub[1]:.2f}, B {sub[3]:.0f} T" if sub[0] == "s" else f"δ {sub[1]:.2f}, ΔE_Q {sub[2]:.2f} mm/s")
+        lib.append(dict(key=key, name=name, note=note, kind=sub[0], par=par, y=ds(y[keep] / y.max())))
+    rocks = []
+    for fid, name, note in ROCKS:
+        e = json.loads((RS / "entries" / f"{fid}.json").read_text(encoding="utf-8"))
+        comps, tot = [], np.zeros_like(v)
+        for ph in e["phases"]:
+            sh = SC.from_table(ph)
+            if sh is None or not ph.get("area_pct"):
+                continue
+            y = sh * ph["area_pct"] / 100.0
+            tot += y
+            comps.append(dict(name=ph["name"].split(" (")[0], pct=ph["area_pct"], y=y))
+        m = tot.max()
+        rocks.append(dict(name=name, note=note, citation=e["citation"], doi=e["doi"],
+                          comps=[dict(name=c["name"], pct=c["pct"], y=ds(c["y"][keep] / m)) for c in comps],
+                          total=ds(tot[keep] / m)))
+    edges = np.radians(np.arange(0, 30.5, 0.25))
+    h, _ = np.histogram(np.radians(theta_deg), edges)
+    c = np.cos(0.5 * (edges[1:] + edges[:-1]))
+    ok = h > 0
+    w = h[ok] / h.sum()
+    ours = dict(label="our head (ver2)", w=w, cos=c[ok], stretch_pct=float(100 * (np.sum(w / c[ok]) - 1)))
+    K = {k["standoff_mm"]: k for k in SC.kernels()}
+    kern = [("ours", ours), ("8 mm", K[8.0]), ("1 mm", K[1.0])]
+    cases = []
+    for a, b in CASES:
+        r = D.distinguishability(D.library([(a, 0.5), (b, 0.5)]), [k for _, k in kern])
+        ya, yb = SC.phase(SC.MINERALS[a]) * 0.5, SC.phase(SC.MINERALS[b]) * 0.5
+        y0 = ya + yb
+        m = y0.max()
+        out = dict(a=a, b=b, ya=ds(ya[keep] / m), yb=ds(yb[keep] / m), y0=ds(y0[keep] / m), rows=[])
+        for (lab, Kd), row in zip(kern, r["kernels"]):
+            out["rows"].append(dict(label=lab, stretch=round(row["stretch_pct"], 2),
+                                    time=round(float(np.mean(np.square(row["ratio"]))), 2),
+                                    sep=round(float(row["pairs"][0]["retained"]), 2)))
+            if lab in ("ours", "1 mm"):
+                out["y_" + lab.replace(" ", "")] = ds(SC.smear(v, y0, Kd)[keep] / m)
+        cases.append(out)
+    return dict(v=ds(vk), lib=lib, rocks=rocks, cases=cases,
+                kernels=[dict(label=l, stretch=round(k["stretch_pct"], 2)) for l, k in kern])
+
+
 def main():
     sb = setback()
     figs, num, spec, scene, theta, setback_mm, table = ver123()
@@ -169,13 +239,16 @@ def main():
         h = h[:h.index(a) + len(a)] + "\n" + table + "\n" + h[h.index(b):]
         page.write_text(h, encoding="utf-8")
     pipe = pipeline(theta)
-    DATA.write_text(json.dumps(dict(setback=sb, heads=figs, scene=scene, num=num, spec=spec, pipe=pipe,
+    teach = teaching(theta)
+    DATA.write_text(json.dumps(dict(setback=sb, heads=figs, scene=scene, num=num, spec=spec, pipe=pipe, teach=teach,
                                     setback_mm=round(setback_mm, 2)), separators=(",", ":"), default=float, allow_nan=False),
                     encoding="utf-8")
     print("mc.json", DATA.stat().st_size // 1024, "KB")
     print("setback", [(o["mm"], o["speed"], o["fwhm"], o["spot"]) for o in sb["rows"]])
     print({k: (n["x_ver2"], n["smear"], n["eff"]) for k, n in num.items()})
     print("pipe", {k: pipe[k] for k in ("n", "mean_deg", "max_deg", "stretch", "spread")})
+    print("cases", [(c["a"], c["b"], [(r["label"], r["stretch"], r["time"], r["sep"]) for r in c["rows"]]) for c in teach["cases"]])
+    print("rocks", [(r["name"], [(c["name"], c["pct"]) for c in r["comps"]]) for r in teach["rocks"]])
 
 
 if __name__ == "__main__":

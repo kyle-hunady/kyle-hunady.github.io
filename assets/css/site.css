@@ -881,3 +881,17 @@ details.details summary { cursor: pointer; color: var(--white); font-size: 0.85r
 }
 .pipe > li.pipe__wide { grid-column: 1 / -1; }
 .pipe__wide .plot--square { max-width: 34rem; margin: 0 auto; }
+.fig--light .plot--build { height: 230px; display: block; }
+.fig--light .plot--lib { height: 360px; }
+.fig--light .plot--rocks { height: 330px; }
+.fig--light .plot--cases { height: 560px; }
+.btn--light { color: #1e211d; border-color: #b9b9b2; font-size: 0.72rem; padding: 0.25rem 0.7rem; }
+.tablewrap { overflow-x: auto; margin-top: 0.6rem; }
+table.mini { border-collapse: collapse; font-family: var(--sans); font-size: 0.78rem; color: #2b2f2a; width: 100%; }
+table.mini th, table.mini td { padding: 0.3rem 0.5rem; border-bottom: 1px solid #deded8; text-align: left; }
+table.mini th small { color: #6b7068; font-weight: 400; }
+@media screen and (max-width: 760px) {
+  .fig--light .plot--lib { height: 620px; }
+  .fig--light .plot--rocks { height: 620px; }
+  .fig--light .plot--cases { height: 1000px; }
+}

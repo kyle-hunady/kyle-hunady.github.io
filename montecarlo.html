@@ -18,8 +18,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261116202155">
-<meta name="report-waive" content="M1: the moving part is the photon path, shown as 3-D rays the reader can turn, and nothing else moves; S1: section I draws its generic head with the rays at all three knob values before any number, as a side view because the head is generic, and the real head is drawn in 3-D with rays in sections II and III; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
+<link rel="stylesheet" href="assets/css/site.css?v=20261116204832">
+<meta name="report-waive" content="M1: section I animates the spectrum building up on a timer-driven canvas, which the audit does not detect, and the photon paths are 3-D rays the reader can turn; S1: section II draws its generic head with the rays at all three knob values before any number, as a side view because the head is generic, and the real head is drawn in 3-D with rays in sections IV and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -54,7 +54,7 @@
   <div class="container header__container">
     <p class="header__eyebrow">Instrument modeling · Caltech and JPL</p>
     <h1>A photon Monte Carlo for a Mössbauer head</h1>
-    <p class="header__line">Where the source sits decides how fast a backscatter head counts and how much it blurs the spectrum. I simulate that trade from photographs of the real head.</p>
+    <p class="header__line">A small spectrometer for reading iron minerals on other planets, and the trade between how fast it counts and how sharp its spectrum is. Written for readers new to Mössbauer spectroscopy.</p>
   </div>
 </header>
 
@@ -62,18 +62,48 @@
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
 
-    <div class="callout abstract"><div><b>Scope.</b> The photon Monte Carlo I wrote for the SiNRG backscatter Mössbauer head, a JPL and Caltech instrument for NASA's PICASSO program. Method: <span class="chip">photo of the head</span> → <span class="chip">annotated dimensions</span> → <span class="chip">3-D photon Monte Carlo</span> → <span class="chip">angle of each detected photon</span> → <span class="chip">smearing kernel</span> → <span class="chip">simulated spectrum</span>. Every figure is simulated; measured spectra stay with the paper in preparation.</div></div>
+    <div class="callout abstract"><div><b>Scope.</b> The photon Monte Carlo I wrote for the SiNRG backscatter Mössbauer head, a JPL and Caltech instrument for NASA's PICASSO program. Method: <span class="chip">mineral spectra from published values</span> → <span class="chip">photo of the head</span> → <span class="chip">annotated dimensions</span> → <span class="chip">3-D photon Monte Carlo</span> → <span class="chip">angle of each detected photon</span> → <span class="chip">smearing kernel</span> → <span class="chip">simulated spectrum</span>. Every figure is simulated; measured spectra stay with the paper in preparation.</div></div>
 
-    <div class="callout tldr"><div><b>Question.</b> Can a head count faster without blurring the lines more? <b>Answer (simulated):</b> yes. The head in use, ver2, detects 9.6 × 10<sup>−5</sup> 14.4 keV photons per source decay and stretches the outer lines by 1.8 %. The next design, ver3, with its source set 12 mm further back, matches that 1.8 % and detects <b>2.0×</b> as many photons. Drawn as is, ver3 detects 8.3× as many, at 7.7 % stretch. <i>Stretch</i> = ⟨1/cos θ⟩ − 1, how far the outer lines move outward. ver1 is the original head, ver2 the one in use, ver3 the next design. The raw Monte Carlo stretch reads 1.3 to 1.6× high against measured spectra, so the ratios are the claim.</div></div>
+    <div class="callout tldr"><div><b>Question.</b> A head that counts faster also blurs its spectrum. Does the blur only cost time, or can it hide minerals? <b>Answer (simulated):</b> at our head's blur it costs time, at most <b>1.65×</b> for the hardest pair (hematite with magnetite), and every pair stays readable. The next design, ver3, with its source set 12 mm further back than drawn, keeps that blur and counts 2.0× as fast as the head in use (ver2). The blur is measured as <i>stretch</i>, ⟨1/cos θ⟩ − 1: how far the outer lines move outward, 1.8 % for both. The raw Monte Carlo reads it 1.3 to 1.6× high against measured spectra, so the ratios are the claim.</div></div>
 
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
-      <li><a href="#trade"><b>I. The trade</b><span>Move the source closer: more photons, wider lines</span></a></li>
-      <li><a href="#pipeline"><b>II. From a photo to a kernel</b><span>One real head, five steps</span></a></li>
-      <li><a href="#heads"><b>III. Three heads</b><span>ver1, ver2 and ver3 at the same scale</span></a></li>
-      <li><a href="#next"><b>IV. What it is for</b><span>Caveats, and the second half of the thesis</span></a></li>
+      <li><a href="#read"><b>I. What a spectrum reads</b><span>Why iron minerals matter, and how a spectrum appears</span></a></li>
+      <li><a href="#trade"><b>II. Why lines smear</b><span>Move the source closer: more photons, wider lines</span></a></li>
+      <li><a href="#risk"><b>III. Time or minerals?</b><span>Which mineral pairs smearing hurts, and by how much</span></a></li>
+      <li><a href="#pipeline"><b>IV. From a photo to a kernel</b><span>One real head, five steps</span></a></li>
+      <li><a href="#heads"><b>V. Three heads</b><span>ver1, ver2 and ver3 at the same scale</span></a></li>
+      <li><a href="#next"><b>VI. What it is for</b><span>Caveats, and the second half of the thesis</span></a></li>
     </ol></div>
 
-    <h2 class="part" id="trade"><span>I</span>The trade</h2>
+    <h2 class="part" id="read"><span>I</span>What a Mössbauer spectrum reads</h2>
+    <p class="lead-line">Iron sits in almost every rock, and its spectrum says which mineral holds it.</p>
+    <p>In olivine, iron is Fe²⁺ inside a volcanic silicate. In goethite it is Fe³⁺ bound to hydroxide, and goethite forms in water. On Mars, the MIMOS II spectrometers on the Spirit and Opportunity rovers used this difference. Spirit found goethite in the Columbia Hills, which Morris and colleagues read as evidence of past water [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>]. Opportunity found jarosite, a sulfate that carries about 10 % water in its structure as hydroxide [<a href="https://doi.org/10.1126/science.1104653">Klingelhöfer et al. 2004</a>].</p>
+
+    <h3>How a spectrum shows up</h3>
+    <p>The source is radioactive ⁵⁷Co. It emits gamma rays at 14.4 keV with an extremely narrow energy. ⁵⁷Fe nuclei in the rock absorb and re-emit only at their own energy, and that energy shifts slightly with the iron's chemical surroundings. To scan across those shifts, the instrument moves the source. A source moving at a few mm/s Doppler-shifts its gamma rays by just the right amount. So the horizontal axis of a Mössbauer spectrum is the source velocity. Wherever the source velocity matches a nucleus's energy, the rock sends extra photons back to the detector and a peak appears.</p>
+    <div class="fig fig--light" data-mc="build">
+      <canvas class="plot plot--build" aria-label="A source moving back and forth while a spectrum of counts per velocity accumulates"></canvas>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls"><button type="button" class="btn btn--light" title="Start counting again">restart counting</button></div>
+      <p class="legend"><span><i class="sw" style="background:#e31a1c"></i>source and its velocity now</span><span><i class="sw" style="background:#7b341e;height:.5rem;width:.5rem;border-radius:50%"></i>counts in each velocity channel (simulated)</span></p>
+      <p class="cap"><span class="tag-model">simulated</span><b>The spectrum builds up one sweep at a time.</b> The source swings between −11 and +11 mm/s. Each velocity channel collects counts whenever the source passes through it. Hematite's six peaks rise out of the noise only after many sweeps. A real measurement takes hours, which is why counting rate matters so much.</p>
+    </div>
+
+    <h3>Each mineral has a fingerprint</h3>
+    <p>Two patterns show up. Magnetic minerals split into six lines (a sextet) that span up to ±9 mm/s. Non-magnetic ones give two lines (a doublet) close to zero. The positions of those lines identify the mineral and tell Fe²⁺ from Fe³⁺.</p>
+    <div class="fig fig--light">
+      <div id="mc-lib" class="plot plot--lib" role="img" aria-label="Model spectra of seven iron minerals"></div>
+      <p class="cap"><span class="tag-model">model</span><b>Seven iron minerals found on Mars.</b> Top row: sextets (note the wide velocity axis). Bottom row: doublets, on a zoomed axis. Line positions are published values measured by the rover spectrometers [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>; jarosite: <a href="https://doi.org/10.1126/science.1104653">Klingelhöfer et al. 2004</a>].</p>
+    </div>
+
+    <h3>A rock is a mixture</h3>
+    <p>A rock holds several iron minerals at once, so the instrument records the sum of their fingerprints. Fitting that sum back into its parts gives the share of the iron in each mineral. Below are two Spirit rocks, rebuilt from the phase fractions Morris and colleagues published for them.</p>
+    <div class="fig fig--light">
+      <div id="mc-rocks" class="plot plot--rocks" role="img" aria-label="Two Mars rocks as overlaid mineral spectra"></div>
+      <p class="cap"><span class="tag-model">model</span><b>Fresh basalt versus a rock that saw water.</b> Adirondack is mostly olivine and pyroxene, two doublets near zero. Clovis is dominated by goethite and hematite sextets. Each fill is one mineral's share of the iron. The dark line is their sum, which is what a spectrometer records. Fractions and line positions from Morris et al. 2006, Tables 1 and 5.</p>
+    </div>
+
+    <h2 class="part" id="trade"><span>II</span>Why lines smear</h2>
     <p class="lead-line">A closer source counts up to 24× faster, and its outermost line (line 6) comes out four times wider.</p>
     <p>A Mössbauer spectrometer tunes its gamma rays by moving the source. A photon that leaves at an angle θ to the drive axis sees only v cos θ, so a line that belongs at v<sub>0</sub> is recorded at v<sub>0</sub>/cos θ. Every photon has its own θ, so the lines smear outward, the outer lines most. To count fast, a backscatter head must accept a wide spread of angles. The simplest knob is how far the source sits behind its aperture. This example is a generic head, not ours. Ours sits about 17 to 20 mm back, between the first two columns.</p>
 
@@ -87,8 +117,20 @@
       <p class="cap"><span class="tag-model">simulated</span><b>One knob, three settings.</b> Top: photon paths from the <sup>57</sup>Co source (purple bar) through the aperture to the rock (colour) and on to the detector (grey). Bottom: an α-Fe sextet with 0.28 mm/s lines before (grey) and after (colour) the angle spread. "Faster" is detected photons per emitted photon, relative to 30 mm. Spot = the rock area that gives 90 % of the signal. Panels from my year-end review slides.</p>
     </div>
 
-    <h2 class="part" id="pipeline"><span>II</span>From a photo to a kernel</h2>
-    <p class="lead-line">The head in use spreads its detected photons over 0–22° and stretches the lines by 1.8 %.</p>
+    <h2 class="part" id="risk"><span>III</span>Time or minerals?</h2>
+    <p class="lead-line">At our head's smear, the worst case costs 1.65× the counting time; no pair becomes unreadable.</p>
+    <p>Smearing can hurt in two ways. Wider lines carry the same information with more noise per channel, so a usable spectrum takes longer to collect. If the lines blur enough, two minerals can start to look alike, and no amount of counting fully separates them. I checked both for pairs of minerals that a Mars spectrum has to tell apart. "Time" is how much longer you count to measure each mineral's share as precisely as with no smear. "Kept" is the share of the difference between the two minerals' spectra that survives the smear.</p>
+    <div class="fig fig--light">
+      <div id="mc-cases" class="plot plot--cases" role="img" aria-label="Four mineral pairs with and without smearing"></div>
+      <div class="tablewrap"><table class="mini">
+        <thead><tr><th>pair (equal iron)</th><th>our head<br><small>1.8 % stretch</small></th><th>source 8 mm back<br><small>7.2 %</small></th><th>source 1 mm back<br><small>33 %</small></th></tr></thead>
+        <tbody id="mc-cases-table"></tbody>
+      </table></div>
+      <p class="cap"><span class="tag-model">simulated</span><b>Sextets suffer most, because smear grows with velocity.</b> Hematite and magnetite sit far out at ±8 mm/s, so their lines move most and run into each other. At our head this pair needs 1.65× the time, and 82 % of the difference between them survives. With the source 1 mm back, it needs 17× and only 9 % survives. The doublets near zero barely notice: olivine and pyroxene cost 1.09× at our head. Each cell gives time × and kept %. Method: a 50/50 mix, fitted for each mineral's share with line positions and widths free within published tolerances (0.05 mm/s on position, 0.10 on splitting and width, 1 T on field). Time × is the ratio of the share's variance (its Cramér-Rao bound) with and without smear, so it is the extra counting needed to match the unsmeared precision. Kept % is the squared difference between the two minerals' spectra after smearing, over before.</p>
+    </div>
+
+    <h2 class="part" id="pipeline"><span>IV</span>From a photo to a kernel</h2>
+    <p class="lead-line">The head in use spreads its detected photons over 0 to 22° and stretches the lines by 1.8 %.</p>
     <p>The real head was assembled by hand, so its drawings are not its geometry. I measure it from a photograph instead. The example is the September 2026 α-Fe run that defines ver2, the head in use.</p>
 
     <ol class="pipe">
@@ -99,7 +141,7 @@
       <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">5</span><div id="mc-kernel" class="plot plot--square" role="img" aria-label="Kernel matrix: where a line at each true velocity is recorded"></div><div class="fig-out" aria-live="polite"></div><figcaption><span class="tag-model">simulated</span><b>The kernel matrix,</b> zoomed on the outermost lines (double-click for all of it). Column = where a line truly sits, row = where the drive records it. Without smearing it would be the dotted diagonal. Here each column fans upward, because 1/cos θ is never below 1, and the fan widens with velocity. Multiply any spectrum by it to see what this head would record.</figcaption></figure></li>
     </ol>
 
-    <h2 class="part" id="heads"><span>III</span>Three heads</h2>
+    <h2 class="part" id="heads"><span>V</span>Three heads</h2>
     <p class="lead-line">At the same 1.8 % stretch, ver3 counts 2.0× as fast as the head in use.</p>
     <p>ver2 is measured from the photo above; ver3 is read from its CAD file. As drawn, ver3 counts 8.3× faster but stretches lines by 7.7 %. Sliding its source 12.1 mm back along its axis matches ver2's stretch and keeps a factor of 2.</p>
 
@@ -118,17 +160,16 @@
         <div id="mc-spec-full" class="plot" role="img" aria-label="Simulated hematite spectrum through each head"></div>
         <div id="mc-spec-zoom" class="plot" role="img" aria-label="Zoom on the outermost line"></div>
       </div>
-      <p class="cap"><span class="tag-model">simulated</span><b>What each head does to hematite.</b> Grey: the input sextet with no smear. Left: through each head's angle histogram. Right: the outermost line (gold band). ver1's line 6 drops to under half its height and widens 2.9×. ver2 and ver3 lie on top of each other, which is the point: the factor of 2 costs nothing in resolution.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>What each head does to hematite.</b> Grey: the input sextet with no smear. Left: through each head's angle histogram. Right: the outermost line (gold band). ver1's line 6 drops to under half its height and widens 2.9×. ver2 and ver3 lie on top of each other, so ver3's factor of 2 costs no resolution.</p>
     </div>
 
-    <h2 class="part" id="next"><span>IV</span>What it is for</h2>
-    <p class="lead-line">Smear costs counting time, not the ability to tell minerals apart.</p>
-    <p>Because the raw stretch reads high, I compare heads as ratios. With that caveat, the model of the measured head accounts for most of the extra line width that backscatter adds. In my counting model, wider lines only lengthen the run.</p>
+    <h2 class="part" id="next"><span>VI</span>What it is for</h2>
+    <p>Because the raw stretch reads high, I compare heads as ratios. With that caveat, the model of the measured head accounts for most of the extra line width that backscatter adds.</p>
     <p>This is the second half of my thesis. The first half asks what entropy holds an alloy together (<a href="entropy.html">the entropy page</a>). This half asks how to lay out a small spectrometer so it reads a rock fast without blurring it. The head, its drive and its counting electronics are a team effort with JPL (<a href="instrument.html">the instrument page</a>). My parts are the drive metrology, the audit of the counting chain, the photograph measurements and this Monte Carlo.</p>
     <ul class="caveats">
       <li>Geometry only: the stretch comes from angles. Detector resolution, source line width and drive error are left out.</li>
       <li>ver3's 12.1 mm setback does not fit today's parts. It needs a longer collimator nose or a re-cut mount.</li>
-      <li>Section I uses a generic head, so its numbers show the trend, not our line widths.</li>
+      <li>Section II uses a generic head, so its numbers show the trend, not our line widths.</li>
     </ul>
 
     <details class="details">
@@ -139,7 +180,7 @@
 <table><caption><span data-region-table="10" data-unsourced="0"></span>Generated from the region list the transport ran (research_kit.region_table): one row per transported region, plus bodies drawn but not transported. Sample frame: sample at z = 0, +z toward the head. Distances in mm. </caption><thead><tr><th>ID</th><th>body</th><th>material</th><th>dimensions / position (mm)</th><th>source of the number</th><th>status</th><th>in the MC?</th></tr></thead><tbody><tr><td>ver1-S</td><td>ver1: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 30.0 from the sample, axis 0.0° off normal</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver1-O</td><td>ver1: limiting opening</td><td>Pb</td><td>Ø16.0, 20.50 in front of the source</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver1-D</td><td>ver1: detector chip</td><td>Si</td><td>Ø7.7, 11.75 from the sample, axis 0.0° off normal</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver2-S</td><td>ver2: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 44.4 from the sample, axis 26.1° off normal</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver2-O</td><td>ver2: limiting opening</td><td>Pb</td><td>Ø7.8, 19.73 in front of the source</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver2-D</td><td>ver2: detector chip</td><td>Si</td><td>Ø7.7, 24.44 from the sample, axis 13.2° off normal</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver3-S</td><td>ver3: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 37.2 from the sample, axis 22.5° off normal</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>ver3-O</td><td>ver3: limiting opening</td><td>Pb</td><td>Ø8.0, 19.86 in front of the source</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>ver3-D</td><td>ver3: detector chip</td><td>Si</td><td>Ø7.7, 17.59 from the sample, axis 22.5° off normal</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>P</td><td>sample plane (all heads)</td><td>re-emitter</td><td>infinite plane z = 0</td><td>study assumption</td><td><i>assumed</i></td><td>yes</td></tr></tbody></table><table><caption>Assumptions</caption><thead><tr><th>quantity</th><th>value</th><th>status</th><th>source / reason</th></tr></thead><tbody><tr><td>line broadening</td><td>geometry only: detector resolution, source line width and drive error left out</td><td><i>assumed</i></td><td>this study</td></tr><tr><td>detected photons per head</td><td>about 30,000 (ver1 33,350, ver2 33,430, ver3 30,008)</td><td>computed</td><td>the ver1/ver2/ver3 study</td></tr><tr><td>statistical error</td><td>about 0.5 % on counts per decay, 0.01 % on stretch</td><td>computed</td><td>the ver1/ver2/ver3 study</td></tr><tr><td>ver1-S ver1: 57Co active area</td><td>Co in Rh, disk Ø8, 30.0 from the sample, axis 0.0° off normal</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>ver1-O ver1: limiting opening</td><td>Pb, Ø16.0, 20.50 in front of the source</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>ver1-D ver1: detector chip</td><td>Si, Ø7.7, 11.75 from the sample, axis 0.0° off normal</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>P sample plane (all heads)</td><td>re-emitter, infinite plane z = 0</td><td><i>assumed</i></td><td>study assumption</td></tr></tbody></table>
 <!-- bodies:end -->
       <p>The kernel matrix spreads a line at v over c·v for each angle bin, with weights from the histogram, then interpolates onto a 0.1 mm/s grid. This page rebuilds it in the browser from the same histogram and checks one row against the Python code.</p>
-      <p>Nothing here was drawn for the page. The panels, 3-D bodies, rays and spectra come from the study and slide builders behind my November 2026 PICASSO review. A script in this site's <code>tools/</code> folder copies them over.</p>
+      <p>The panels, 3-D bodies, rays and spectra come from the study and slide builders behind my November 2026 PICASSO review. A script in this site's <code>tools/</code> folder copies them over.</p>
     </details>
 
     <div class="next-links"><a class="btn" href="instrument.html">The instrument</a><a class="btn" href="index.html#projects">All projects</a></div>
@@ -158,6 +199,7 @@
 
 <script src="assets/js/site.js?v=20261116082828"></script>
 <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
-<script src="assets/js/mc.js?v=20261116202155" data-mc="assets/data/mc.json?v=20261117041500"></script>
+<script src="assets/js/mc.js?v=20261116204832" data-mc="assets/data/mc.json?v=20261116204832"></script>
+<script src="assets/js/mc-teach.js?v=20261116204953" data-x="assets/data/mc.json?v=20261116204832"></script>
 </body>
 </html>
