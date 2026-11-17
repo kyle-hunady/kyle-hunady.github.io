@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A photon Monte Carlo for a Mössbauer head · Kyle Hunady</title>
+<meta name="description" content="Simulated: how source and detector placement trade photon counts against line broadening in a backscatter Mössbauer head, from a photo of the real head to a smearing kernel.">
+<link rel="canonical" href="https://kyle-hunady.github.io/montecarlo.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/montecarlo.html">
+<meta property="og:title" content="A photon Monte Carlo for a Mössbauer head · Kyle Hunady">
+<meta property="og:description" content="Simulated: how source and detector placement trade photon counts against line broadening in a backscatter Mössbauer head, from a photo of the real head to a smearing kernel.">
+<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v=20261116202155">
+<meta name="report-waive" content="M1: the moving part is the photon path, shown as 3-D rays the reader can turn, and nothing else moves; S1: section I draws its generic head with the rays at all three knob values before any number, as a side view because the head is generic, and the real head is drawn in 3-D with rays in sections II and III; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8"/><path d="M16.5 5.3a3.4 3.4 0 0 1 0 6.4"/><path d="M18 14.6c2.2.6 3.5 2.4 3.5 5.4"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3.2 9.3h3.6V21H3.2zM10 9.3h3.45v1.6h.05c.48-.9 1.72-1.85 3.55-1.85 3.8 0 4.5 2.45 4.5 5.65V21h-3.6v-5.5c0-1.3-.02-3-1.85-3-1.85 0-2.13 1.42-2.13 2.9V21H10z"/></symbol>
+  <symbol id="i-scholar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 8.6 12 13.7l10.2-5.1z"/><path d="M5.9 10.8v4.4c0 1.9 2.7 3.3 6.1 3.3s6.1-1.4 6.1-3.3v-4.4"/><path d="M21.6 9v5"/></symbol>
+  <symbol id="i-orcid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M8.4 10.2v6.1"/><circle cx="8.4" cy="7.6" r="0.9" fill="currentColor" stroke="none"/><path d="M12.3 16.3v-6.1h2.1a3.05 3.05 0 0 1 0 6.1z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.29-1.71-1.29-1.71-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+<nav aria-label="Sections">
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
+</nav>
+
+<header class="page__head">
+  <div class="container header__container">
+    <p class="header__eyebrow">Instrument modeling · Caltech and JPL</p>
+    <h1>A photon Monte Carlo for a Mössbauer head</h1>
+    <p class="header__line">Where the source sits decides how fast a backscatter head counts and how much it blurs the spectrum. I simulate that trade from photographs of the real head.</p>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="container">
+    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
+
+    <div class="callout abstract"><div><b>Scope.</b> The photon Monte Carlo I wrote for the SiNRG backscatter Mössbauer head, a JPL and Caltech instrument for NASA's PICASSO program. Method: <span class="chip">photo of the head</span> → <span class="chip">annotated dimensions</span> → <span class="chip">3-D photon Monte Carlo</span> → <span class="chip">angle of each detected photon</span> → <span class="chip">smearing kernel</span> → <span class="chip">simulated spectrum</span>. Every figure is simulated; measured spectra stay with the paper in preparation.</div></div>
+
+    <div class="callout tldr"><div><b>Question.</b> Can a head count faster without blurring the lines more? <b>Answer (simulated):</b> yes. The head in use, ver2, detects 9.6 × 10<sup>−5</sup> 14.4 keV photons per source decay and stretches the outer lines by 1.8 %. The next design, ver3, with its source set 12 mm further back, matches that 1.8 % and detects <b>2.0×</b> as many photons. Drawn as is, ver3 detects 8.3× as many, at 7.7 % stretch. <i>Stretch</i> = ⟨1/cos θ⟩ − 1, how far the outer lines move outward. ver1 is the original head, ver2 the one in use, ver3 the next design. The raw Monte Carlo stretch reads 1.3 to 1.6× high against measured spectra, so the ratios are the claim.</div></div>
+
+    <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
+      <li><a href="#trade"><b>I. The trade</b><span>Move the source closer: more photons, wider lines</span></a></li>
+      <li><a href="#pipeline"><b>II. From a photo to a kernel</b><span>One real head, five steps</span></a></li>
+      <li><a href="#heads"><b>III. Three heads</b><span>ver1, ver2 and ver3 at the same scale</span></a></li>
+      <li><a href="#next"><b>IV. What it is for</b><span>Caveats, and the second half of the thesis</span></a></li>
+    </ol></div>
+
+    <h2 class="part" id="trade"><span>I</span>The trade</h2>
+    <p class="lead-line">A closer source counts up to 24× faster, and its outermost line (line 6) comes out four times wider.</p>
+    <p>A Mössbauer spectrometer tunes its gamma rays by moving the source. A photon that leaves at an angle θ to the drive axis sees only v cos θ, so a line that belongs at v<sub>0</sub> is recorded at v<sub>0</sub>/cos θ. Every photon has its own θ, so the lines smear outward, the outer lines most. To count fast, a backscatter head must accept a wide spread of angles. The simplest knob is how far the source sits behind its aperture. This example is a generic head, not ours. Ours sits about 17 to 20 mm back, between the first two columns.</p>
+
+    <div class="fig fig--light" data-mc="setback">
+      <div class="fig-row fig-row--3 setback">
+        <div><p class="col-title" style="color:#2b6cb0">source 30 mm back</p><img src="assets/img/mc/setback_rays_30mm.png" alt="Simulated rays from a source 30 mm behind its aperture: a narrow beam onto the rock" width="720" height="556" loading="lazy"><img src="assets/img/mc/setback_spec_30mm.png" alt="Simulated iron sextet for the 30 mm case: lines barely wider than the input" width="800" height="400" loading="lazy"><p class="col-num" style="color:#2b6cb0"><b>1×</b> (reference)<span>line 6: 0.31 mm/s · spot Ø17 mm</span></p></div>
+        <div><p class="col-title" style="color:#805ad5">source 8 mm back</p><img src="assets/img/mc/setback_rays_8mm.png" alt="Simulated rays from a source 8 mm behind its aperture: a wider beam" width="720" height="556" loading="lazy"><img src="assets/img/mc/setback_spec_8mm.png" alt="Simulated iron sextet for the 8 mm case: lines visibly broadened" width="800" height="400" loading="lazy"><p class="col-num" style="color:#805ad5"><b>8×</b> faster<span>line 6: 0.73 mm/s · spot Ø38 mm</span></p></div>
+        <div><p class="col-title" style="color:#b7791f">source 1 mm back</p><img src="assets/img/mc/setback_rays_1mm.png" alt="Simulated rays from a source 1 mm behind its aperture: rays spread across the rock" width="720" height="556" loading="lazy"><img src="assets/img/mc/setback_spec_1mm.png" alt="Simulated iron sextet for the 1 mm case: outer lines strongly broadened" width="800" height="400" loading="lazy"><p class="col-num" style="color:#b7791f"><b>24×</b> faster<span>line 6: 1.27 mm/s · spot Ø60 mm</span></p></div>
+      </div>
+      <p class="legend"><span><i class="sw sw--fill"></i>input sextet, no smear</span><span><i class="sw" style="background:#805ad5"></i>Monte Carlo (colour = setting)</span><span><i class="sw" style="background:#999"></i>rays rock → detector</span></p>
+      <p class="cap"><span class="tag-model">simulated</span><b>One knob, three settings.</b> Top: photon paths from the <sup>57</sup>Co source (purple bar) through the aperture to the rock (colour) and on to the detector (grey). Bottom: an α-Fe sextet with 0.28 mm/s lines before (grey) and after (colour) the angle spread. "Faster" is detected photons per emitted photon, relative to 30 mm. Spot = the rock area that gives 90 % of the signal. Panels from my year-end review slides.</p>
+    </div>
+
+    <h2 class="part" id="pipeline"><span>II</span>From a photo to a kernel</h2>
+    <p class="lead-line">The head in use spreads its detected photons over 0–22° and stretches the lines by 1.8 %.</p>
+    <p>The real head was assembled by hand, so its drawings are not its geometry. I measure it from a photograph instead. The example is the September 2026 α-Fe run that defines ver2, the head in use.</p>
+
+    <ol class="pipe">
+      <li><figure class="fig fig--light"><span class="pipe__n">1</span><img src="assets/img/mc/pipe_annotated.jpg" alt="Top-down photo of the head with clicked landmarks: sample edge S1–S2, aperture cup C1–C2, detector D1–D2, enclosure corners" width="763" height="586" loading="lazy"><figcaption><b>Photo, annotated.</b> I click the sample edge (S), the aperture cup (C), the detector face (D) and the enclosure corners (E). A known length on the enclosure sets the scale. Out come the angles and distances.</figcaption></figure></li>
+      <li><figure class="fig fig--light"><span class="pipe__n">2</span><div id="mc-ver2" class="plot plot--3d" role="img" aria-label="3-D Monte Carlo of the as-built head: source, lead collimator, detector and detected rays"></div><figcaption><span class="tag-model">simulated</span><b>3-D Monte Carlo.</b> Those dimensions build the source (red), lead collimator, Ø7.8 mm opening (black ring) and detector chip (blue). Orange paths are detected photons.</figcaption></figure></li>
+      <li><figure class="fig fig--light"><span class="pipe__n">3</span><img src="assets/img/mc/pipe_rays_on_photo.jpg" alt="The simulated rays drawn back onto the photograph of the head" width="763" height="586" loading="lazy"><figcaption><span class="tag-model">simulated</span><b>Check against the photo.</b> The same rays projected back onto the picture. Orange runs source to sample, green runs sample to detector. A misread landmark shows up here as a beam that misses the sample.</figcaption></figure></li>
+      <li><figure class="fig fig--light"><span class="pipe__n">4</span><div id="mc-theta" class="plot" role="img" aria-label="Histogram of the angle between each detected photon and the source axis"></div><figcaption><span class="tag-model">simulated</span><b>Angle off the source axis</b> for 33,430 detected photons. Mean 9.7°, none past 22°. This histogram is all the spectrum needs from the geometry: ⟨1/cos θ⟩ − 1 = 1.8 %.</figcaption></figure></li>
+      <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">5</span><div id="mc-kernel" class="plot plot--square" role="img" aria-label="Kernel matrix: where a line at each true velocity is recorded"></div><div class="fig-out" aria-live="polite"></div><figcaption><span class="tag-model">simulated</span><b>The kernel matrix,</b> zoomed on the outermost lines (double-click for all of it). Column = where a line truly sits, row = where the drive records it. Without smearing it would be the dotted diagonal. Here each column fans upward, because 1/cos θ is never below 1, and the fan widens with velocity. Multiply any spectrum by it to see what this head would record.</figcaption></figure></li>
+    </ol>
+
+    <h2 class="part" id="heads"><span>III</span>Three heads</h2>
+    <p class="lead-line">At the same 1.8 % stretch, ver3 counts 2.0× as fast as the head in use.</p>
+    <p>ver2 is measured from the photo above; ver3 is read from its CAD file. As drawn, ver3 counts 8.3× faster but stretches lines by 7.7 %. Sliding its source 12.1 mm back along its axis matches ver2's stretch and keeps a factor of 2.</p>
+
+    <div class="fig fig--light">
+      <div id="mc-heads" class="plot plot--heads" role="img" aria-label="ver1, ver2 and ver3 heads side by side in 3-D with detected rays"></div>
+      <div class="fig-row fig-row--3 head-nums">
+        <p style="color:#7b5ea7"><b>ver1 · 2.9×</b><span>stretch 4.5 % · source 20.5 mm behind the opening</span></p>
+        <p style="color:#d95f02"><b>ver2 · 1×</b><span>stretch 1.8 % · 19.7 mm · the head in use</span></p>
+        <p style="color:#1f78b4"><b>ver3 · 2.0×</b><span>stretch 1.8 % · 19.9 mm (12.1 mm further back than drawn)</span></p>
+      </div>
+      <p class="cap"><span class="tag-model">simulated</span><b>Same camera, same scale.</b> Grey: lead collimator. Black ring: the opening that limits the beam. Red: the Ø8 mm source. Blue: the Ø7.7 mm detector chip. Orange: detected photon paths, 45 per head. "×" is detected 14.4 keV photons per source decay, relative to ver2.</p>
+    </div>
+
+    <div class="fig fig--light">
+      <div class="fig-row fig-row--wide">
+        <div id="mc-spec-full" class="plot" role="img" aria-label="Simulated hematite spectrum through each head"></div>
+        <div id="mc-spec-zoom" class="plot" role="img" aria-label="Zoom on the outermost line"></div>
+      </div>
+      <p class="cap"><span class="tag-model">simulated</span><b>What each head does to hematite.</b> Grey: the input sextet with no smear. Left: through each head's angle histogram. Right: the outermost line (gold band). ver1's line 6 drops to under half its height and widens 2.9×. ver2 and ver3 lie on top of each other, which is the point: the factor of 2 costs nothing in resolution.</p>
+    </div>
+
+    <h2 class="part" id="next"><span>IV</span>What it is for</h2>
+    <p class="lead-line">Smear costs counting time, not the ability to tell minerals apart.</p>
+    <p>Because the raw stretch reads high, I compare heads as ratios. With that caveat, the model of the measured head accounts for most of the extra line width that backscatter adds. In my counting model, wider lines only lengthen the run.</p>
+    <p>This is the second half of my thesis. The first half asks what entropy holds an alloy together (<a href="entropy.html">the entropy page</a>). This half asks how to lay out a small spectrometer so it reads a rock fast without blurring it. The head, its drive and its counting electronics are a team effort with JPL (<a href="instrument.html">the instrument page</a>). My parts are the drive metrology, the audit of the counting chain, the photograph measurements and this Monte Carlo.</p>
+    <ul class="caveats">
+      <li>Geometry only: the stretch comes from angles. Detector resolution, source line width and drive error are left out.</li>
+      <li>ver3's 12.1 mm setback does not fit today's parts. It needs a longer collimator nose or a re-cut mount.</li>
+      <li>Section I uses a generic head, so its numbers show the trend, not our line widths.</li>
+    </ul>
+
+    <details class="details">
+      <summary>Details: how the figures were made</summary>
+      <p>The tracer launches photons from a Ø8 mm disk source into a cone, follows them through the opening into a flat sample and back out, and keeps those that reach the detector chip. It records each one's angle to the source axis. Counts per decay are into 4π. Statistical error is about 0.5 % on efficiency and 0.01 % on stretch.</p>
+      <p>The bodies each head traces:</p>
+      <!-- bodies:start -->
+<table><caption><span data-region-table="10" data-unsourced="0"></span>Generated from the region list the transport ran (research_kit.region_table): one row per transported region, plus bodies drawn but not transported. Sample frame: sample at z = 0, +z toward the head. Distances in mm. </caption><thead><tr><th>ID</th><th>body</th><th>material</th><th>dimensions / position (mm)</th><th>source of the number</th><th>status</th><th>in the MC?</th></tr></thead><tbody><tr><td>ver1-S</td><td>ver1: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 30.0 from the sample, axis 0.0° off normal</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver1-O</td><td>ver1: limiting opening</td><td>Pb</td><td>Ø16.0, 20.50 in front of the source</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver1-D</td><td>ver1: detector chip</td><td>Si</td><td>Ø7.7, 11.75 from the sample, axis 0.0° off normal</td><td>original design drawing</td><td><i>assumed</i></td><td>yes</td></tr><tr><td>ver2-S</td><td>ver2: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 44.4 from the sample, axis 26.1° off normal</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver2-O</td><td>ver2: limiting opening</td><td>Pb</td><td>Ø7.8, 19.73 in front of the source</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver2-D</td><td>ver2: detector chip</td><td>Si</td><td>Ø7.7, 24.44 from the sample, axis 13.2° off normal</td><td>measured from the photo</td><td>photo</td><td>yes</td></tr><tr><td>ver3-S</td><td>ver3: 57Co active area</td><td>Co in Rh</td><td>disk Ø8, 37.2 from the sample, axis 22.5° off normal</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>ver3-O</td><td>ver3: limiting opening</td><td>Pb</td><td>Ø8.0, 19.86 in front of the source</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>ver3-D</td><td>ver3: detector chip</td><td>Si</td><td>Ø7.7, 17.59 from the sample, axis 22.5° off normal</td><td>CAD of the next design, source moved 12.1 mm back</td><td>derived</td><td>yes</td></tr><tr><td>P</td><td>sample plane (all heads)</td><td>re-emitter</td><td>infinite plane z = 0</td><td>study assumption</td><td><i>assumed</i></td><td>yes</td></tr></tbody></table><table><caption>Assumptions</caption><thead><tr><th>quantity</th><th>value</th><th>status</th><th>source / reason</th></tr></thead><tbody><tr><td>line broadening</td><td>geometry only: detector resolution, source line width and drive error left out</td><td><i>assumed</i></td><td>this study</td></tr><tr><td>detected photons per head</td><td>about 30,000 (ver1 33,350, ver2 33,430, ver3 30,008)</td><td>computed</td><td>the ver1/ver2/ver3 study</td></tr><tr><td>statistical error</td><td>about 0.5 % on counts per decay, 0.01 % on stretch</td><td>computed</td><td>the ver1/ver2/ver3 study</td></tr><tr><td>ver1-S ver1: 57Co active area</td><td>Co in Rh, disk Ø8, 30.0 from the sample, axis 0.0° off normal</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>ver1-O ver1: limiting opening</td><td>Pb, Ø16.0, 20.50 in front of the source</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>ver1-D ver1: detector chip</td><td>Si, Ø7.7, 11.75 from the sample, axis 0.0° off normal</td><td><i>assumed</i></td><td>original design drawing</td></tr><tr><td>P sample plane (all heads)</td><td>re-emitter, infinite plane z = 0</td><td><i>assumed</i></td><td>study assumption</td></tr></tbody></table>
+<!-- bodies:end -->
+      <p>The kernel matrix spreads a line at v over c·v for each angle bin, with weights from the histogram, then interpolates onto a 0.1 mm/s grid. This page rebuilds it in the browser from the same histogram and checks one row against the Python code.</p>
+      <p>Nothing here was drawn for the page. The panels, 3-D bodies, rays and spectra come from the study and slide builders behind my November 2026 PICASSO review. A script in this site's <code>tools/</code> folder copies them over.</p>
+    </details>
+
+    <div class="next-links"><a class="btn" href="instrument.html">The instrument</a><a class="btn" href="index.html#projects">All projects</a></div>
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image"><div class="lightbox-card lightbox-card--wide"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous image">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next image">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close">&#10005;</button></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-links"><a href="index.html">Home</a><a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer">GitHub</a><a href="latte.html" class="cup" title="The latte log"><svg><use href="#i-cup"/></svg>Latte log</a></div>
+  <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
+</footer>
+
+<script src="assets/js/site.js?v=20261116082828"></script>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script src="assets/js/mc.js?v=20261116202155" data-mc="assets/data/mc.json?v=20261117041500"></script>
+</body>
+</html>

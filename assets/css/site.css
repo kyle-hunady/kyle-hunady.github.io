@@ -841,3 +841,43 @@ a.org__badge:hover { transform: translateY(-2px); box-shadow: 0 0 0 2px var(--ac
   .kinds--3 figcaption { font-size: 0.66rem; }
   .versus > div { padding: 0.45rem 0.5rem; font-size: 0.72rem; }
 }
+
+/* ---------- montecarlo.html: reused slide/study figures sit on light panels, as on the slides ---------- */
+.callout { border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 0.6rem; background: var(--surface); padding: 0.9rem 1.1rem; margin: 1rem 0; }
+.callout > div { font-family: var(--sans); font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+.callout b { color: var(--white); font-weight: 500; }
+.callout.abstract { border-left-color: var(--rule); }
+.callout .chip { display: inline-block; border: 1px solid var(--rule); border-radius: 1rem; padding: 0 0.5rem; font-size: 0.78rem; color: var(--white); white-space: nowrap; }
+.lead-line { color: var(--white); font-size: 0.98rem; margin: -0.3rem 0 0.8rem; }
+.fig--light { background: #f7f7f4; border-color: transparent; }
+.fig--light .cap, .fig--light figcaption { color: #4a4f48; }
+.fig--light .cap b, .fig--light figcaption b { color: #1e211d; }
+.fig--light .fig-out { color: #8a6a3e; }
+.fig--light img { display: block; width: 100%; height: auto; }
+.setback .col-title { font-weight: 600; font-size: 0.95rem; text-align: center; margin: 0 0 0.3rem; }
+.setback .col-num { text-align: center; margin: 0.2rem 0 0; }
+.setback .col-num b { font-size: 1.5rem; }
+.setback .col-num span, .head-nums span { display: block; font-size: 0.75rem; color: #4a4f48; }
+.head-nums p { text-align: center; margin: 0.2rem 0; }
+.head-nums b { font-size: 1.15rem; }
+.fig--light .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.75rem; color: #4a4f48; margin: 0.6rem 0 0; }
+.legend .sw { display: inline-block; border-radius: 1px; width: 1.1rem; height: 0.22rem; vertical-align: middle; margin-right: 0.35rem; }
+.legend .sw--fill { height: 0.6rem; background: rgba(154,160,166,0.35); border-top: 1.5px solid #9aa0a6; }
+.fig--light .plot { width: 100%; height: 300px; }
+.fig--light .plot--3d { height: 340px; }
+.fig--light .plot--square { height: 400px; }
+.fig--light .plot--heads { height: 400px; }
+.pipe { list-style: none; padding: 0; margin: 1rem 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; counter-reset: none; }
+.pipe > li { margin: 0; }
+.pipe .fig { position: relative; height: 100%; margin: 0; }
+.pipe__n { position: absolute; top: 0.5rem; left: 0.6rem; z-index: 2; background: #1e211d; color: var(--accent); font-size: 0.72rem; border-radius: 1rem; padding: 0.05rem 0.5rem; }
+.caveats { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); padding-left: 1.2rem; }
+.caveats li { margin: 0.25rem 0; }
+details.details { border: 1px solid var(--rule); border-radius: 0.6rem; padding: 0.6rem 1rem; margin: 1.2rem 0; }
+details.details summary { cursor: pointer; color: var(--white); font-size: 0.85rem; }
+@media screen and (max-width: 760px) {
+  .pipe { grid-template-columns: 1fr; }
+  .fig--light .plot--heads { height: 760px; }
+}
+.pipe > li.pipe__wide { grid-column: 1 / -1; }
+.pipe__wide .plot--square { max-width: 34rem; margin: 0 auto; }
