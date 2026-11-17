@@ -586,7 +586,7 @@ button.btn { font-size: 0.8rem; }
 .cap-under b { color: var(--white); font-weight: 500; }
 @media (max-width: 760px) {
   .fig-row--wide, .fig-row--3 { grid-template-columns: 1fr; }
-  .swaps, .kinds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .swaps, .kinds, .examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .parts { grid-template-columns: 1fr; }
 }
 
@@ -605,6 +605,12 @@ h2.part span { color: var(--accent); font-size: 0.8em; }
 .fig .plot--bar { height: 4.6rem; margin-top: 1rem; }
 .fig .plot--cell { height: 17rem; }
 .fig .gallery--sem { margin-top: 1rem; }
+
+.examples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-top: 1rem; }
+.ex { border: 1px solid var(--rule); border-radius: 0.6rem; padding: 0.8rem 0.9rem; background: var(--surface); }
+.ex b { display: block; color: var(--white); font-weight: 500; font-size: 0.85rem; }
+.ex em { display: block; font-style: normal; color: var(--accent); font-size: 0.72rem; margin: 0.15rem 0 0.45rem; }
+.ex span { display: block; font-family: var(--sans); color: var(--muted); font-size: 0.76rem; line-height: 1.5; }
 
 /* ---- galleries ---- */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }

@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261117003000">
+<link rel="stylesheet" href="assets/css/site.css?v=20261117010000">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -64,15 +64,39 @@
     <p class="lede">Mix five metals in equal parts and you get a "high-entropy alloy." The name makes a claim: these alloys hold together because their atoms are so thoroughly mixed. I tested that claim by measuring the total entropy of eight of these alloys. Mixing turned out to be the smaller share, and adding aluminum as one more element lowered the total.</p>
 
     <ol class="parts">
-      <li><a href="#idea"><b>I. The idea</b><span>What entropy is, and why the name bets on one kind of it</span></a></li>
+      <li><a href="#idea"><b>I. The idea</b><span>What entropy is, why it makes things stable, and the bet the name makes</span></a></li>
       <li><a href="#doubt"><b>II. The doubt</b><span>Atoms choose their neighbors, and that costs entropy</span></a></li>
       <li><a href="#measure"><b>III. The measurement</b><span>Heat capacity to 2 K, and what aluminum does to it</span></a></li>
     </ol>
 
     <h2 class="part" id="idea"><span>I</span>The idea</h2>
 
+    <h3>What is entropy?</h3>
+    <p>Entropy is a count. Fix everything you can measure about a material: its shape, its temperature, its composition. Then ask how many atomic arrangements look exactly like that. Boltzmann's answer is S = k<sub>B</sub> ln W, where W is that number. A perfect crystal of one element has one arrangement and no configurational entropy. Mix in a second kind of atom and the count explodes.</p>
+    <div class="fig" data-hea="count">
+      <div class="fig-row">
+        <canvas class="hea-box plot" aria-label="Forty sites, some gold and some blue, reshuffled continuously"></canvas>
+        <canvas class="hea-w plot" aria-label="Entropy per site against fraction of gold atoms, peaking at one half"></canvas>
+      </div>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>gold atoms <input class="hea-k" type="range" min="0" max="40" step="1" value="20"></label>
+      </div>
+      <p class="cap"><span class="tag-model">model</span><b>An even mix has the most arrangements, so it has the most entropy.</b> The left panel keeps reshuffling, and every shuffle is a different arrangement that looks the same from outside. Forty sites at half gold already allow 1.4 × 10<sup>11</sup> of them. A real crystal has around 10<sup>23</sup> sites.</p>
+    </div>
+    <p>Why should a count decide anything? A material at temperature T settles into the state with the lowest free energy, G = H − TS. The enthalpy H rewards strong bonds. The −TS term rewards having many arrangements, and it grows with temperature. So when something costs energy but happens anyway, entropy is paying for it. Everyday life is full of examples.</p>
+    <div class="examples">
+      <div class="ex"><b>Ice melts</b><em>0 °C</em><span>Breaking the crystal costs 6 kJ per mole. Liquid water has 22 J/mol·K more entropy, and above 273 K the −TS term covers the bill.</span></div>
+      <div class="ex"><b>A cold pack gets cold</b><em>room temperature</em><span>Dissolving ammonium nitrate absorbs heat, which is why the pack chills. It dissolves anyway, because ions loose in water have far more arrangements than ions locked in a crystal.</span></div>
+      <div class="ex"><b>A heated rubber band shrinks</b><em>any temperature</em><span>Stretching lines up the polymer chains. Coiled chains can take many more shapes, so a warm band pulls itself shorter.</span></div>
+      <div class="ex"><b>A magnet stops being a magnet</b><em>770 °C for iron</em><span>Aligned moments have the lowest energy. Above the Curie point, moments pointing every which way win on entropy.</span></div>
+      <div class="ex"><b>Brass forgets its order</b><em>about 460 °C</em><span>Below it, CuZn is ordered B2, with Cu on the cube corners and Zn on the centers. Above it the atoms mix at random. My aluminum alloys order the same way.</span></div>
+      <div class="ex"><b>Every crystal has holes</b><em>near melting</em><span>An empty lattice site costs energy, but it can sit at any site. Near its melting point, copper keeps roughly one site in ten thousand empty.</span></div>
+    </div>
+    <p class="cap-under"><b>In each case the high-temperature state has more ways to be arranged.</b> Heat makes entropy count for more, until it beats the bonds. High-entropy alloys rest on the same logic. Mixing many elements adds arrangements, so a random crystal should stay stable down to lower temperatures than it would with fewer elements.</p>
+
     <h3>Four ways to be disordered</h3>
-    <p>Entropy counts the ways a material can be arranged without anyone noticing a difference. A metal has four separate ways. Atoms can trade places on the lattice. They vibrate about their sites. Electrons near the top of the filled levels spread into empty ones, and magnetic moments wander. Each one adds its own entropy, and they add up.</p>
+    <p>The gold-and-blue count above is only one kind of entropy. A metal has four. Atoms can trade places on the lattice. They vibrate about their sites. Electrons near the top of the filled levels spread into empty ones, and magnetic moments wander. Each one adds its own entropy, and they add up.</p>
     <div class="fig" data-hea="kinds">
       <div class="kinds">
         <figure><canvas class="hea-kind" aria-label="Five kinds of atom placed at random on a lattice"></canvas><figcaption><b>Configurational</b>Which atom sits where. Fixed once the atoms stop moving between sites.</figcaption></figure>
@@ -217,6 +241,6 @@
 
 <script src="assets/js/site.js?v=20261116082828"></script>
 <script src="assets/js/md.js?v=20261116081401"></script>
-<script src="assets/js/hea.js?v=20261117001500"></script>
+<script src="assets/js/hea.js?v=20261117010000"></script>
 </body>
 </html>

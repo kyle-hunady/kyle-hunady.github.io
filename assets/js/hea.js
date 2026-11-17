@@ -411,7 +411,38 @@
     eta.addEventListener('input', draw); onResize(draw); draw();
   }
 
-  var FIGS = { name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell };
+  /* ------------------------------------------------------- count the ways ---
+   * N sites, k of them gold, reshuffled continuously. W = N! / (k! (N-k)!), S = kB ln W.
+   * The curve is S per site against k/N. */
+  function count(root) {
+    var cv = $(root, 'canvas.hea-box'), cvS = $(root, 'canvas.hea-w'), kk = $(root, '.hea-k'), out = $(root, '.fig-out');
+    var N = 40, COLS = 10, order = [], t = 0, visible = true;
+    function lnC(n, k) { var s = 0; for (var i = 1; i <= k; i++) s += Math.log(n - k + i) - Math.log(i); return s; }
+    function shuffle() { order = []; for (var i = 0; i < N; i++) order.push(i); for (var j = N - 1; j > 0; j--) { var r = Math.floor(Math.random() * (j + 1)), q = order[j]; order[j] = order[r]; order[r] = q; } }
+    function draw() {
+      var k = +kk.value, g = ctx2d(cv), c = g.c, rows = N / COLS;
+      var s = Math.min(g.w / COLS, g.h / rows), ox = (g.w - s * COLS) / 2, oy = (g.h - s * rows) / 2;
+      for (var i = 0; i < N; i++) {
+        var x = i % COLS, y = Math.floor(i / COLS);
+        c.fillStyle = order[i] < k ? GOLD : BLUE;
+        c.beginPath(); c.arc(ox + (x + 0.5) * s, oy + (y + 0.5) * s, s * 0.36, 0, 6.2832); c.fill();
+      }
+      var xs = [], ys = []; for (var m = 0; m <= N; m++) { xs.push(m / N); ys.push(lnC(N, m) / N); }
+      linePlot(cvS, [{ x: xs, y: ys, color: GOLD, width: 1.8 }, { x: [k / N], y: [lnC(N, k) / N], color: WHITE, dots: true, r: 4 }],
+        { xmin: 0, xmax: 1, ymin: 0, ymax: 0.75, xticks: [0, 0.5, 1], yticks: [0, 0.35, 0.69],
+          xlabel: 'fraction gold', ylabel: 'S per site  (kB)', marks: [{ y: Math.log(2), label: 'kB ln 2', color: 'rgba(127,167,201,0.8)' }] });
+      var W = lnC(N, k) / Math.LN10;
+      out.textContent = k + ' gold of ' + N + '  ·  ' + (k === 0 || k === N ? 'exactly 1 arrangement' :
+        (W < 6 ? Math.round(Math.pow(10, W)).toLocaleString() : '~10^' + W.toFixed(1)) + ' arrangements') +
+        '  ·  S = kB ln W = ' + (lnC(N, k) / N).toFixed(2) + ' kB per site';
+    }
+    function frame() { if (visible && ++t % 40 === 0) { shuffle(); draw(); } requestAnimationFrame(frame); }
+    kk.addEventListener('input', draw);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(root);
+    onResize(draw); shuffle(); draw(); if (!reduced) requestAnimationFrame(frame);
+  }
+
+  var FIGS = { count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell };
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-hea]').forEach(function (el) {
       var f = FIGS[el.dataset.hea]; if (f) f(el);
