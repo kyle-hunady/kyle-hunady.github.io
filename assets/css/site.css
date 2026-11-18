@@ -957,3 +957,17 @@ img.rounded { border-radius: 0.4rem; }
   .versus > .versus__row + div,
   .versus > .versus__row + div + div { border-top: 0; }
 }
+
+/* montecarlo.html animated figures (assets/js/mc-story.js): one canvas engine, segmented controls */
+.fig--light canvas.story { display: block; width: 100%; touch-action: none; }
+.fig--light .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid #b9b9b2; border-radius: 6px; overflow: hidden; }
+.fig--light .seg button { font: inherit; font-size: 0.72rem; background: #fff; color: var(--paper-ink); border: 0; border-right: 1px solid #b9b9b2; padding: 0.28rem 0.7rem; cursor: pointer; }
+.fig--light .seg button:last-child { border-right: 0; }
+.fig--light .seg button.on { background: var(--paper-ink); color: #fff; }
+.fig--light .fig-controls label { color: var(--paper-ink); }
+.fig--light .story-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+@media (max-width: 760px) { .fig--light .story-two { grid-template-columns: 1fr; } }
+.fig--light #f6b { cursor: grab; background: #fbfaf7; border-radius: 6px; }
+.fig--light #f8-table table { margin-top: 0.6rem; }
+.fig--light #f8-table tr.on td { background: #f0ebfa; font-weight: 600; }
+.fig--light #f8-table th, .fig--light #f8-table td { color: var(--paper-ink); border-bottom: 1px solid #dedbd2; background: transparent; }

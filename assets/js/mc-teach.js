@@ -83,16 +83,15 @@
           line: { color: q[2], width: 0.8 }, fillcolor: rgba(q[2], 0.18), name: q[1], showlegend: false,
           hovertemplate: q[1] + "<extra></extra>" });
       });
-      var spec = [[c.y0, "mixture, no smear", "#8a8f87", 2.2], [c.y_ours, "our head (1.8 % stretch)", C_OURS, 1.8],
-                  [c.y_1mm, "source 1 mm back (33 % stretch)", C_1MM, 1.8]];
+      var spec = [[c.y0, "mixture, no smear", "#8a8f87", 2.2], [c.y_ours, "our head (1.8 % stretch)", C_OURS, 1.8]];
       spec.forEach(function (q, k) {
         tr.push({ x: T.v, y: q[0], xaxis: "x" + s, yaxis: "y" + s, type: "scatter", mode: "lines", line: { color: q[2], width: q[3] },
           name: q[1], legendgroup: q[1], showlegend: i === 0, hovertemplate: "%{x:.2f} mm/s<extra>" + q[1] + "</extra>" });
       });
       L["xaxis" + s].range = sext ? [-10.5, 10.5] : [-1.6, 3.4];
       L["xaxis" + s].title = { text: "velocity (mm/s)", font: { size: 10 } };
-      var o = c.rows[0], h = c.rows[2];
-      ann.push(title(i, 0, "<b>" + na + " + " + nb + "</b> · time ×" + o.time.toFixed(2) + " (ours), ×" + h.time.toFixed(1) + " (1 mm)"));
+      var o = c.rows[0], h = c.rows[1];
+      ann.push(title(i, 0, "<b>" + na + " + " + nb + "</b> · time ×" + o.time.toFixed(2) + " (ours), ×" + h.time.toFixed(1) + " (8 mm)"));
     });
     L.annotations = ann; L.showlegend = true;
     L.legend = { orientation: "h", y: -0.12, yanchor: "top", x: 0, font: { size: 10 } };
@@ -100,7 +99,7 @@
     Plotly.newPlot(el, tr, base(L), CFG);
     var tb = document.getElementById("mc-cases-table");
     if (tb) tb.innerHTML = T.cases.map(function (c) {
-      return "<tr><td>" + (NICE[c.a] || c.a) + " + " + (NICE[c.b] || c.b) + "</td>" + c.rows.map(function (r) {
+      return "<tr><td>" + (NICE[c.a] || c.a) + " + " + (NICE[c.b] || c.b) + "</td>" + c.rows.slice(0, 2).map(function (r) {
         return "<td>×" + r.time.toFixed(2) + " · " + Math.round(100 * Math.min(r.sep, 1)) + " %</td>"; }).join("") + "</tr>";
     }).join("");
   }
