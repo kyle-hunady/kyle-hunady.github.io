@@ -996,20 +996,3 @@ img.rounded { border-radius: 0.4rem; }
   color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 0.2rem 0.6rem 0.2rem 0.3rem; }
 .art-links a:hover { border-color: var(--accent-deep); color: var(--white); background: var(--accent-dim); }
 .rb-icon { width: 1rem; height: 1rem; flex: none; }
-
-/* Home art card: the lamp thumb sits dark and flickers on when hovered. */
-.project__thumb--lamp img { filter: brightness(0.32) saturate(0.5); transition: filter 0.6s ease; }
-a.project--lamp:hover .project__thumb--lamp img,
-a.project--lamp:focus-visible .project__thumb--lamp img { animation: lamp-on 0.9s linear forwards; }
-@keyframes lamp-on {
-  0%   { filter: brightness(0.32) saturate(0.5); }
-  8%   { filter: brightness(1.15) saturate(1.1); }
-  14%  { filter: brightness(0.4) saturate(0.6); }
-  26%  { filter: brightness(1.1) saturate(1.1); }
-  32%  { filter: brightness(0.7) saturate(0.8); }
-  100% { filter: brightness(1.08) saturate(1.15); }
-}
-@media (hover: none) { .project__thumb--lamp img { filter: none; } }
-@media (prefers-reduced-motion: reduce) {
-  a.project--lamp:hover .project__thumb--lamp img, a.project--lamp:focus-visible .project__thumb--lamp img { animation: none; filter: none; }
-}
