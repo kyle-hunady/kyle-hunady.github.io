@@ -981,7 +981,7 @@ img.rounded { border-radius: 0.4rem; }
 .gallery--wonky figure:hover, .gallery--wonky figure:focus-within { transform: none; }
 .gallery--wonky img { aspect-ratio: auto; }
 .gallery--wonky .placard { display: block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.15rem; }
-.ilove { font-family: var(--mono); font-size: clamp(1.3rem, 4vw, 2rem); letter-spacing: 0.04em; margin: 2.4rem 0 1rem; transform: rotate(-1deg); transform-origin: left; }
+.ilove { font-family: var(--mono); font-size: clamp(1.9rem, 6vw, 3.2rem); letter-spacing: 0.04em; margin: 2.4rem 0 1rem; transform: rotate(-1deg); transform-origin: left; }
 .ilove:nth-of-type(2n) { transform: rotate(0.8deg); }
 .art__note { font-size: 0.75rem; color: var(--faint); margin-top: 0.4rem; }
 @media (prefers-reduced-motion: reduce) {
@@ -989,7 +989,7 @@ img.rounded { border-radius: 0.4rem; }
 }
 
 /* art.html: the I LOVE CAFFEINE card, centered, and small logo link chips in captions */
-.art-coffee { display: flex; justify-content: center; margin: 0 0 2rem; }
+.art-coffee { display: flex; justify-content: flex-start; margin: 0 0 2rem; }
 .art-coffee .project { width: min(100%, 24rem); }
 .art-links { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
 .art-links a { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em;
