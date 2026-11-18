@@ -195,13 +195,13 @@ function seg(id, opts, onPick, init) {   // segmented button group
 (function () {
   if (!document.getElementById("f1")) return;
   let match = true;
-  seg("f1-env", [["same", "sample: same Fe environment as the source"], ["diff", "sample: different Fe environment"]],
+  seg("f1-env", [["same", "Matching iron environment"], ["diff", "Different iron environment"]],
       v => { match = v === "same"; }, "same");
   canvas("f1", 0.46, (d) => {
     const { ctx, w, h } = d, t = d.t;
     // --- decay scheme (left)
     const L = Math.min(0.3 * w, 290), x0 = 18, x1 = L;
-    txt(ctx, "Where the photon comes from", x0, 20, { w: 600, size: 13 });
+    txt(ctx, "How the source emits a gamma ray", x0, 20, { w: 600, size: 13 });
     const yCo = 0.17 * h, y136 = 0.34 * h, y14 = 0.70 * h, y0 = 0.86 * h;
     ctx.lineWidth = 2.5; ctx.strokeStyle = C.ink;
     ctx.beginPath(); ctx.moveTo(x0, yCo); ctx.lineTo(x0 + 0.38 * L, yCo); ctx.stroke();
@@ -225,7 +225,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
 
     // --- source nucleus -> sample nucleus (right)
     const R0 = L + 0.06 * w, sx = R0 + 0.06 * w, ax = w - 0.13 * w, cy = 0.40 * h, r = Math.min(30, 0.045 * w);
-    txt(ctx, "Resonant absorption: only an exact energy match is absorbed", R0, 20, { w: 600, size: 13 });
+    txt(ctx, "Absorption peaks when the energies match", R0, 20, { w: 600, size: 13 });
     const nucleus = (x, col, lab, glow) => {
       if (glow > 0) { ctx.fillStyle = `rgba(229,62,62,${0.25 * glow})`; ctx.beginPath(); ctx.arc(x, cy, r + 12 * glow, 0, 7); ctx.fill(); }
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
@@ -239,11 +239,11 @@ function seg(id, opts, onPick, init) {   // segmented button group
     const T = 2.6, ph = (t % T) / T, travel = 0.45;
     const absorbed = match && ph > travel;
     const glow = absorbed ? Math.max(0, 1 - (ph - travel) / 0.25) : 0;
-    nucleus(sx, C.src, "source ⁵⁷Fe (in the ⁵⁷Co source)", 0);
+    nucleus(sx, C.src, "⁵⁷Fe in the source", 0);
     nucleus(ax, C.sample, "⁵⁷Fe in the sample", glow);
     ladder(sx - r - 30, 34, false);
     ladder(ax + r + 30, match ? 34 : 44, absorbed && ph < travel + 0.25);
-    txt(ctx, match ? "same gap" : "gap shifted", ax + r + 30, cy + 34, { align: "center", size: 10.5, col: C.mute });
+    txt(ctx, match ? "matching energy" : "shifted energy", ax + r + 30, cy + 34, { align: "center", size: 10.5, col: C.mute });
     // photon wave packet
     const wave = (xc, col, dir = 1) => {
       ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath();
@@ -258,12 +258,12 @@ function seg(id, opts, onPick, init) {   // segmented button group
     else if (!match) {
       const xx = ax - r - 10 + ((ph - travel) / (1 - travel)) * (w - ax + r);
       if (xx < w - 10) wave(xx, C.red);
-      txt(ctx, "passes straight through", ax, cy - r - 14, { align: "center", size: 11.5, col: C.mute });
+      txt(ctx, "passes through the sample", ax, cy - r - 14, { align: "center", size: 11.5, col: C.mute });
     } else if (ph > travel + 0.18) {   // re-emission back toward the instrument
       const k = (ph - travel - 0.18) / (1 - travel - 0.18), ang = Math.PI * 0.82;
       const ex = ax + Math.cos(ang) * (r + 10 + k * 0.42 * (ax - sx)), ey = cy - Math.sin(ang) * (r + 10 + k * 0.6 * h * 0.4);
       ctx.fillStyle = C.purple; ctx.beginPath(); ctx.arc(ex, ey, 4.5, 0, 7); ctx.fill();
-      txt(ctx, "re-emitted back out: 14.4 keV γ, 6.4 keV X-ray or an electron", ax, cy - r - 30, { align: "right", size: 11.5, col: C.purple });
+      txt(ctx, "Decay can emit a gamma ray, X-ray or electron", ax, cy - r - 30, { align: "right", size: 11.5, col: C.purple });
     }
     // energy ruler: the two lines on a neV scale
     const P = new Plot(ctx, R0 + 0.04 * w, 0.73 * h, w - R0 - 0.08 * w, 0.15 * h, [-60, 60], [0, 1.15]);
@@ -271,7 +271,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     const xs = grid(-60, 60, 400), g = GAMMA_NEV / 2, sh = match ? 0 : 0.4 * NEV_PER_MMS;
     P.line(xs, xs.map(x => g * g / (x * x + g * g)), C.src, 2);
     P.line(xs, xs.map(x => g * g / ((x - sh) ** 2 + g * g)), C.sample, 2, [5, 3]);
-    legend(ctx, P.x + 4, P.y - 6, [["emitted line", C.src, "line"], ["what the sample absorbs", C.sample, "dash"]]);
+    legend(ctx, P.x + 4, P.y - 6, [["emission line", C.src, "line"], ["absorption line", C.sample, "dash"]]);
     txt(ctx, `line width ${GAMMA_NEV.toFixed(1)} neV = 1 part in ${(E0_EV * 1e9 / GAMMA_NEV / 1e12).toFixed(0)} trillion of 14.4 keV`,
         P.x + P.w, P.y - 6, { align: "right", size: 11, col: C.mute });
     if (!match) txt(ctx, `shifted ${sh.toFixed(0)} neV (0.4 mm/s): no overlap`, P.X(sh) + 8, P.Y(0.75), { size: 11, col: C.sample });
@@ -350,7 +350,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     txt(ctx, m.src, P.x + P.w - 6, P.y + P.h - 8, { align: "right", size: 10.5, col: C.mute });
     // --- fingerprint strip: every mineral on the same axis
     const S0 = 0.66 * h, rowH = (h - S0 - 40) / MIN.length;
-    txt(ctx, "Fingerprints on one axis (click a row)", 10, S0 - 8, { w: 600, size: 13 });
+    txt(ctx, "Select a row to compare spectra", 10, S0 - 8, { w: 600, size: 13 });
     geom = { x: P.x, w: P.w, S0, rowH };
     MIN.forEach((mm, r) => {
       const yb = S0 + (r + 1) * rowH - 3;
@@ -388,7 +388,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
   const photons = [];
   seg("f3-samp", [["fe", "α-Fe"], ["hem", "hematite"], ["jar", "jarosite"]], v => { samp = v; reset(); }, "fe");
   seg("f3-speed", [[1, "1×"], [3, "3×"], [10, "10×"]], v => { speed = +v; }, 1);
-  document.getElementById("f3-play").onclick = e => { playing = !playing; e.target.textContent = playing ? "pause" : "play"; };
+  document.getElementById("f3-play").onclick = e => { playing = !playing; e.target.textContent = playing ? "Pause" : "Play"; };
   document.getElementById("f3-reset").onclick = () => reset();
   reset();
   const vOf = p => { p = ((p % 2) + 2) % 2; return p < 1 ? -VMAX + 2 * VMAX * p : VMAX - 2 * VMAX * (p - 1); };
@@ -432,7 +432,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
       else if (ph.res && ph.t < 1.15) { ctx.fillStyle = "rgba(128,90,213,.35)"; ctx.beginPath(); ctx.arc(dX, dY, 22, 0, 7); ctx.fill(); }
       else if (ph.t > 1.15 || (!ph.res && ph.t > 0.5)) photons.splice(i, 1);
     }
-    txt(ctx, "orange: 14.4 keV photons out · purple: resonant re-emission counted", Sx + 4, Sy + Sh + 22, { size: 10.5, col: C.mute });
+    txt(ctx, "Orange: source photons · Purple: detected photons", Sx + 4, Sy + Sh + 22, { size: 10.5, col: C.mute });
     // --- displacement and velocity vs time (top right)
     const P = new Plot(ctx, 0.55 * w, 40, 0.38 * w, 0.40 * h - 30, [0, 2], [-VMAX * 1.1, VMAX * 1.1]);
     txt(ctx, "Drive motion over one cycle", P.x, 18, { w: 600, size: 13 });
@@ -458,8 +458,8 @@ function seg(id, opts, onPick, init) {   // segmented button group
     S.vline(v, C.red, 2);
     txt(ctx, `pass ${pass}`, S.x + 6, S.y + 16, { w: 600, size: 13, col: C.red });
     txt(ctx, `v = ${v >= 0 ? "+" : ""}${v.toFixed(2)} mm/s  ·  ΔE = ${(v * NEV_PER_MMS).toFixed(0)} neV`, S.x + 70, S.y + 16, { size: 12, col: C.ink });
-    txt(ctx, pass < 10 ? "counts land only in the channel under the red mark; the lines climb out of the noise pass by pass"
-                       : "after ~10 passes every line stands clear of the counting noise",
+    txt(ctx, pass < 10 ? "The red marker shows the channel being counted"
+                       : "The lines are visible after about 10 passes",
         S.x + S.w - 6, S.y + 16, { align: "right", size: 11.5, col: C.mute });
   }, 1.25);
 })();
@@ -515,7 +515,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     pos += (+sb - pos) * (1 - Math.exp(-dt * 4));
     // --- geometry (left): the source slides along the drive axis behind a fixed aperture
     const Lw = 0.44 * w;
-    txt(ctx, "A photon leaving at angle θ sees only v·cos θ", 10, 18, { w: 600, size: 13 });
+    txt(ctx, "Velocity along the photon path is v cos θ", 10, 18, { w: 600, size: 13 });
     tag(ctx, "SCHEMATIC", Lw - 80, 18);
     const sy = 0.46 * h, smX = Lw - 24, apX = 10 + 0.62 * (smX - 10), apR = 0.07 * h, mmPx = (apX - 40) / 32;
     const sx = apX - pos * mmPx;
@@ -548,7 +548,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     // --- MC angle distributions (top right)
     const qmax = Math.max(...SBK["30"].q, ...SBK["8"].q);
     const H = new Plot(ctx, 0.53 * w, 46, 0.44 * w, 0.24 * h, [0, 40], [0, qmax * 1.12]);
-    txt(ctx, "How often each θ reaches the detector (Monte Carlo)", H.x, 18, { w: 600, size: 13 });
+    txt(ctx, "Angles of detected photons", H.x, 18, { w: 600, size: 13 });
     H.frame({ xlabel: "θ, angle from the drive axis (deg)", nx: 8, zero: false });
     for (const k of ["30", "8"]) {
       const K = SBK[k]; H.clip(c => {
@@ -571,7 +571,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     Q.line(xz, xz.map(one), C.red, 1.1, [4, 3]);
     Q.line(xs, SM["30"], C.blue, sb === "30" ? 2.6 : 1.6);
     Q.line(xs, SM["8"], C.purple, sb === "8" ? 2.6 : 1.6);
-    legend(ctx, Q.x, Q.y + Q.h + 44, [T ? ["α-Fe in transmission (measured)", C.data, "dot"] : ["α-Fe, no smear (model)", "#8a8f87", "line"], ["30 mm back", C.blue, "line"], ["8 mm back", C.purple, "line"], [`only θ = ${th}°`, C.red, "dash"]]);
+    legend(ctx, Q.x, Q.y + Q.h + 44, [T ? ["α-Fe in transmission (measured)", C.data, "dot"] : ["α-Fe before broadening", "#8a8f87", "line"], ["30 mm back", C.blue, "line"], ["8 mm back", C.purple, "line"], [`only θ = ${th}°`, C.red, "dash"]]);
   }, 1.4);
 })();
 
@@ -672,7 +672,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
     lab(add(G.S, mul(G.n, -14)), "source on drive", C.src); lab(G.A, "aperture", "#4a5568"); lab(G.D, "detector", C.det); lab([L * 0.7, -L * 0.7, z], "sample", C.sample);
     const K = SB.kernels[head];
     txt(ctx, `Monte Carlo geometry · drag to rotate, scroll to zoom`, 8, 16, { size: 11.5, w: 600 });
-    txt(ctx, `rays coloured by θ: blue 0° → purple 25° · grey = stopped by the aperture`, 8, h - 24, { size: 11, col: C.mute });
+    txt(ctx, `Blue 0° to purple 25° · Gray paths stop at the aperture`, 8, h - 24, { size: 11, col: C.mute });
     txt(ctx, `detected photons: mean θ ${K.theta_mean}°, line stretch ${K.stretch_pct}%, spread ${K.spread_pct}%`, 8, h - 8, { size: 11, w: 600 });
   }, 0.95);
 })();
@@ -711,8 +711,8 @@ function seg(id, opts, onPick, init) {   // segmented button group
   const SYS = SB.transmission ? [
     { k: "fe", name: "α-Fe (measured transmission)", meas: SB.transmission.fe_260508 },
     { k: "hem", name: "hematite (measured transmission)", meas: SB.transmission.hematite_260624 },
-    ...MIN.slice(2).map(m => ({ k: m.k, name: m.name + " (literature model)", ph: m.ph })),
-  ] : MIN.map(m => ({ k: m.k, name: m.name + " (literature model)", ph: m.ph }));
+    ...MIN.slice(2).map(m => ({ k: m.k, name: m.name + " (published parameters)", ph: m.ph })),
+  ] : MIN.map(m => ({ k: m.k, name: m.name + " (published parameters)", ph: m.ph }));
   const HEADS = SB.transmission
     ? [["hem", "hematite head"], ["fe_8mm", "α-Fe head"], ["fe_highsmear", "high-smear head (provisional)"]]
     : [["fe_8mm", "our head (ver2)"], ["sb8", "source 8 mm back"]];
@@ -736,7 +736,7 @@ function seg(id, opts, onPick, init) {   // segmented button group
   };
   function table() {
     const rows = SYS.map((s, i) => { const st = stats(s, head); return `<tr class="${i === sys ? "on" : ""}"><td>${s.name}</td><td>${st.v0.toFixed(2)}</td><td>${st.shift.toFixed(3)}</td><td>${(st.shift / LW).toFixed(2)}</td><td>${st.spread.toFixed(3)}</td></tr>`; });
-    document.getElementById("f8-table").innerHTML = `<table><thead><tr><th>system</th><th>outermost line (mm/s)</th><th>moves out by (mm/s)</th><th>in line widths</th><th>extra spread (mm/s)</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+    document.getElementById("f8-table").innerHTML = `<table><thead><tr><th>Sample</th><th>Outermost line (mm/s)</th><th>Shift (mm/s)</th><th>Shift in line widths</th><th>Added spread (mm/s)</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
   }
   table();
   canvas("f8", 0.46, (d) => {
@@ -744,12 +744,12 @@ function seg(id, opts, onPick, init) {   // segmented button group
     const xs = grid(-11, 11, 800), ys = xs.map(f), ysm = xs.map(g);
     const P = new Plot(ctx, 60, 44, w - 80, h - 110, [-11, 11], [Math.min(...ys) - 0.01, 1.01]);
     P.frame({ energy: true, yticks: true, ny: 3, ylabel: "transmission", yfmt: t => t.toFixed(2), xlabel: "source velocity (mm/s)" });
-    txt(ctx, `${s.name}, through the kernel of: ${HNAME[head]}`, P.x, 14, { w: 600, size: 13 });
+    txt(ctx, `${s.name} · ${HNAME[head]}`, P.x, 14, { w: 600, size: 13 });
     if (s.meas) P.dots(s.meas.v, s.meas.y, C.blue, 1.8); else P.line(xs, ys, C.blue, 1.8);
     P.line(xs, ysm, C.purple, 2.2);
     const st = stats(s, head);
-    legend(ctx, P.x + 6, P.y + P.h - 10, [[s.meas ? "transmission (measured)" : "transmission (model)", C.blue, s.meas ? "dot" : "line"], ["after cosine smearing (MC kernel)", C.purple, "line"]]);
-    txt(ctx, `outermost line moves out ${st.shift.toFixed(3)} mm/s = ${(st.shift / LW).toFixed(2)} line widths`, P.x + P.w - 6, P.y + 16, { align: "right", size: 12, w: 600, col: C.purple });
+    legend(ctx, P.x + 6, P.y + P.h - 10, [[s.meas ? "transmission (measured)" : "transmission (model)", C.blue, s.meas ? "dot" : "line"], ["after simulated broadening", C.purple, "line"]]);
+    txt(ctx, `Outermost line shifts ${st.shift.toFixed(3)} mm/s (${(st.shift / LW).toFixed(2)} line widths)`, P.x + P.w - 6, P.y + 16, { align: "right", size: 12, w: 600, col: C.purple });
   }, 0.9);
 })();
 

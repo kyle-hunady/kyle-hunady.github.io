@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>B.C. (before Claude) · Kyle Hunady</title>
-<meta name="description" content="Two Inkscape extensions, an ESP32 camera that uploads photos to Google Drive, and a Minecraft server plugin that Kyle Hunady wrote between 2020 and 2022, before AI coding tools.">
+<title>Early coding projects · Kyle Hunady</title>
+<meta name="description" content="Four projects I built from 2020 to 2022, including two Inkscape extensions, an ESP32 camera and a Minecraft server plugin.">
 <link rel="canonical" href="https://kyle-hunady.github.io/bc.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/bc.html">
-<meta property="og:title" content="B.C. (before Claude) · Kyle Hunady">
-<meta property="og:description" content="Two Inkscape extensions, an ESP32 camera that uploads photos to Google Drive, and a Minecraft server plugin that Kyle Hunady wrote between 2020 and 2022, before AI coding tools.">
+<meta property="og:title" content="Early coding projects · Kyle Hunady">
+<meta property="og:description" content="Four projects I built from 2020 to 2022, including two Inkscape extensions, an ESP32 camera and a Minecraft server plugin.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261118131221">
+<link rel="stylesheet" href="assets/css/site.css?v=29a93633dfe0">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -49,9 +49,9 @@
 
 <header class="page__head">
   <div class="container header__container">
-    <p class="header__eyebrow">B.C. · before Claude</p>
-    <h1>Older code on GitHub</h1>
-    <p class="header__line">Small tools I wrote between 2020 and 2022, before I started writing code with Claude, an AI coding assistant. My newer work is on <a href="automation.html">reading the literature with Claude Code</a>.</p>
+    <p class="header__eyebrow">2020–2022</p>
+    <h1>Early coding projects</h1>
+    <p class="header__line">A few things I built for drawing, taking photos and playing Minecraft. My newer projects include <a href="automation.html">tools for keeping up with research papers</a>.</p>
   </div>
 </header>
 
@@ -59,32 +59,32 @@
   <div class="container">
     <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
     <figure class="fig" style="max-width:20rem;margin:0 0 1.2rem">
-      <img src="assets/img/proj-bc.png" alt="An Arduino loop drawn by mouse in Microsoft Paint" width="1038" height="649" loading="lazy" style="border-radius:.4rem">
-      <figcaption>An Arduino loop, drawn by mouse in Microsoft Paint.</figcaption>
+      <img src="assets/img/proj-bc.png" alt="An Arduino loop drawn with a mouse in Microsoft Paint" width="1038" height="649" loading="lazy" style="border-radius:.4rem">
+      <figcaption>An Arduino loop I drew with a mouse in Microsoft Paint.</figcaption>
     </figure>
     <article class="bcitem" id="export-layers">
       <div class="bcitem__year">2020</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/export-layers" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>export-layers</a></h2>
         <div class="bcitem__kind">Inkscape 1.0 extension (Python)</div>
-        <p>Exports each layer of a drawing in Inkscape, a free vector-drawing program, as its own SVG, PNG, JPEG or PDF file. It updates jespino's <a href="https://github.com/jespino/inkscape-export-layers" target="_blank" rel="noreferrer">inkscape-export-layers</a> to work in Inkscape 1.0.</p></div>
+        <p>I updated jespino’s <a href="https://github.com/jespino/inkscape-export-layers" target="_blank" rel="noreferrer">Inkscape extension</a> for version 1.0. It saves each layer of a drawing as a separate SVG, PNG, JPEG or PDF.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2020</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/multilayer-grid" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>multilayer-grid</a></h2>
         <div class="bcitem__kind">Inkscape 1.0 extension (Python)</div>
-        <p>Arranges the selected objects into a grid. When a grid fills, the rest continue on a new layer. I used it to lay out more than 50 card scans as 3 × 3 pages, then saved each page as a file with <a href="#export-layers">export-layers</a>.</p></div>
+        <p>I used this extension to lay out more than 50 card scans, nine to a page in a 3 × 3 grid. When one grid fills up, the extension starts another on a new layer. I saved each page with <a href="#export-layers">export-layers</a>.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2022</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/esp32cam-gdrive" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>esp32cam-gdrive</a></h2>
-        <div class="bcitem__kind">Camera-board firmware (C++) + Google Apps Script</div>
-        <p>An ESP32-CAM, a small Wi-Fi camera board, takes a photo on a timer and uploads it to a Google Drive folder through a web app written in Google Apps Script. Wi-Fi is set up from a phone: the camera opens its own hotspot, and a setup page asks for the network name and password.</p></div>
+        <div class="bcitem__kind">ESP32-CAM firmware (C++) and Google Apps Script</div>
+        <p>I programmed a small Wi-Fi camera to take photos on a timer and send them to Google Drive through a Google Apps Script web app. To set it up, connect your phone to the camera’s hotspot and enter your Wi-Fi details on the setup page.</p></div>
     </article>
     <article class="bcitem">
       <div class="bcitem__year">2022</div>
       <div><h2 class="bcitem__name"><a href="https://github.com/kyle-hunady/villager-essentials" target="_blank" rel="noreferrer"><svg><use href="#i-github"/></svg>villager-essentials</a></h2>
         <div class="bcitem__kind">Minecraft server plugin (Java, Spigot 1.19)</div>
-        <p>Changes how villagers and zombies behave on multiplayer Minecraft servers. A discount one player earns with a villager carries over to any player who trades with it, villagers killed by zombies always turn into zombie villagers, and zombies pick up items.</p></div>
+        <p>I wrote this for multiplayer Minecraft servers. When one player earns a discount with a villager, everyone who trades with that villager gets it. When a zombie kills a villager, the villager always turns into a zombie villager. Zombies also pick up items.</p></div>
     </article>
     <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>

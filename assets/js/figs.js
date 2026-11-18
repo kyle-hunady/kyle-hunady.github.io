@@ -77,7 +77,7 @@
       var hrs = t / 3600;
       out.textContent = Math.round(cps()).toLocaleString() + ' counts/s  ·  ' +
         (hrs < 1 ? Math.round(t / 60) + ' min' : hrs.toFixed(1) + ' h') +
-        ' of counting  ·  ' + Math.round(total).toLocaleString() + ' counts  ·  outer-line S/N ' + snr.toFixed(1);
+        ' elapsed  ·  ' + Math.round(total).toLocaleString() + ' counts  ·  Outer line signal-to-noise ratio ' + snr.toFixed(1);
     }
     // The loop keeps ticking while running and only does work when the figure
     // is on screen, so a missed visibility callback cannot stall it.
@@ -237,10 +237,10 @@
       linePlot(cvC, [{ x: curve.x, y: curve.y, color: SAGE, dots: true, r: 2.2 }],
         { xmin: 2, xmax: 10, ymin: 0, ymax: ymax, xticks: [2, 4, 6, 8, 10], yticks: [0, +ymax.toFixed(1)],
           xlabel: 'detector ring radius (mm)', ylabel: 'detected (%)',
-          marks: [{ x: r, color: GOLD, label: 'you' }] });
+          marks: [{ x: r, color: GOLD, label: 'Selected radius' }] });
       var here = eff(r, +hh.value, 6000) * 100;
-      out.textContent = 'This geometry: ' + here.toFixed(2) + ' % of source photons detected  ·  best in sweep: r = ' +
-        curve.x[best].toFixed(1) + ' mm (' + curve.y[best].toFixed(2) + ' %)';
+      out.textContent = 'Current geometry: ' + here.toFixed(2) + '% of source photons detected  ·  Highest in this sweep at ' +
+        curve.x[best].toFixed(1) + ' mm (' + curve.y[best].toFixed(2) + '%)';
     }
     function frame() {
       raf = null;

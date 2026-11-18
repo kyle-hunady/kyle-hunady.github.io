@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The entropy of high-entropy alloys · Kyle Hunady</title>
-<meta name="description" content="Heat capacity from 2 to 400 K, diffraction, microscopy and DFT on aluminum-added high-entropy alloys.">
+<meta name="description" content="Caltech research on how aluminum changes the entropy of high-entropy alloys. The study combines heat capacity measurements from 2 to 400 K with diffraction, microscopy and simulations.">
 <link rel="canonical" href="https://kyle-hunady.github.io/entropy.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/entropy.html">
 <meta property="og:title" content="The entropy of high-entropy alloys · Kyle Hunady">
-<meta property="og:description" content="Heat capacity from 2 to 400 K, diffraction, microscopy and DFT on aluminum-added high-entropy alloys.">
+<meta property="og:description" content="Caltech research on how aluminum changes the entropy of high-entropy alloys, using calorimetry, diffraction, microscopy and simulations.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261118131221">
+<link rel="stylesheet" href="assets/css/site.css?v=29a93633dfe0">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -53,7 +53,7 @@
   <div class="container header__container">
     <p class="header__eyebrow">Alloy thermodynamics · Caltech</p>
     <h1>The entropy of high-entropy alloys</h1>
-    <p class="header__line">What the name assumes, why it might be wrong, and what calorimetry down to 2 K says about three families of high-entropy alloys.</p>
+    <p class="header__line">I measured the heat capacity of eight alloys down to 2 K to find out where their entropy comes from and how aluminum changes it.</p>
   </div>
 </header>
 
@@ -61,20 +61,20 @@
   <div class="container">
     <a href="index.html#research" class="back-link"><svg><use href="#i-arrow-left"/></svg>Research</a>
 
-    <p class="lede">Mix five metals in equal parts and you get a "high-entropy alloy." The name makes a claim: these alloys hold together because their atoms are so thoroughly mixed. I tested that claim on eight of these alloys, measuring their entropy from heat capacity and estimating the mixing part from diffraction and microscopy. Mixing turned out to be about a quarter of the total, and adding aluminum lowered the total.</p>
-    <p>The eight are CoCrFeNi, CoCrFeMnNi and NbTa<sub>0.5</sub>TiZr, each with and without added aluminum. The work is published in <a href="https://doi.org/10.1016/j.actamat.2026.122808" target="_blank" rel="noreferrer"><i>Acta Materialia</i> (2026)</a>, with Ihab Elmasri and Brent Fultz.</p>
+    <p class="lede">High-entropy alloys get their name from the many ways different elements can share a crystal lattice. Does that mixing explain how stable the alloys are? I measured the entropy from heat capacity and used diffraction and microscopy to estimate how much came from mixing. In these alloys, atomic vibrations accounted for most of the entropy, and adding aluminum lowered the total.</p>
+    <p>I studied three alloy families based on CoCrFeNi, CoCrFeMnNi and NbTa<sub>0.5</sub>TiZr, with and without added aluminum. I published the study with Ihab Elmasri and Brent Fultz in <a href="https://doi.org/10.1016/j.actamat.2026.122808" target="_blank" rel="noreferrer"><i>Acta Materialia</i> (2026)</a>.</p>
 
     <ol class="parts">
-      <li><a href="#idea"><b>I. The idea</b><span>What entropy is, why it makes things stable, and the bet the name makes</span></a></li>
-      <li><a href="#doubt"><b>II. The doubt</b><span>Atoms choose their neighbors, and that costs entropy</span></a></li>
-      <li><a href="#measure"><b>III. The measurement</b><span>Heat capacity to 2 K, and what aluminum does to it</span></a></li>
-      <li><a href="#sim"><b>IV. The simulation</b><span>Atoms in motion, bonds as springs, and how close they get</span></a></li>
+      <li><a href="#idea"><b>I. Entropy and stability</b><span>How mixing and atomic motion contribute</span></a></li>
+      <li><a href="#doubt"><b>II. Chemical order</b><span>How preferred neighbors reduce the entropy of mixing</span></a></li>
+      <li><a href="#measure"><b>III. Heat capacity measurements</b><span>What changed when I added aluminum</span></a></li>
+      <li><a href="#sim"><b>IV. Simulating atomic vibrations</b><span>Comparing phonons and molecular dynamics with measurements</span></a></li>
     </ol>
 
-    <h2 class="part" id="idea"><span>I</span>The idea</h2>
+    <h2 class="part" id="idea"><span>I</span>Entropy and stability</h2>
 
     <h3>What is entropy?</h3>
-    <p>Entropy is a count. Fix everything you can measure about a material: its shape, its temperature, its composition. Then ask how many atomic arrangements look exactly like that. Boltzmann's answer is S = k<sub>B</sub> ln W, where W is that number and k<sub>B</sub> is Boltzmann's constant. On this page entropy is given in k<sub>B</sub> per atom, and 1 k<sub>B</sub> per atom is 8.3 J/mol·K. A perfect crystal of one element has one arrangement and no configurational entropy. Mix in a second kind of atom and the count explodes.</p>
+    <p>There are many microscopic ways to arrange a material while keeping its composition and other bulk properties the same. In Boltzmann’s formula, S = k<sub>B</sub> ln W, W is the number of accessible microscopic states and k<sub>B</sub> is Boltzmann’s constant. Here I report entropy in k<sub>B</sub> per atom, equivalent to about 8.3 J/(mol·K) for each k<sub>B</sub> per atom. For a perfect crystal of one element, there’s only one way to fill the lattice sites, so its configurational entropy is zero. Adding another element gives the atoms many more ways to occupy those sites.</p>
     <div class="fig" data-hea="count">
       <div class="fig-row">
         <canvas class="hea-box plot" aria-label="Forty sites, some gold and some blue, reshuffled continuously"></canvas>
@@ -82,51 +82,51 @@
       </div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>gold atoms <input class="hea-k" type="range" min="0" max="40" step="1" value="20"></label>
+        <label>Gold atoms <input class="hea-k" type="range" min="0" max="40" step="1" value="20"></label>
       </div>
-      <p class="cap"><span class="tag-model">model</span><b>An even mix has the most arrangements, so it has the most entropy.</b> The left panel keeps reshuffling, and every shuffle is a different arrangement that looks the same from outside. Forty sites at half gold already allow 1.4 × 10<sup>11</sup> of them. A real crystal has around 10<sup>23</sup> sites.</p>
+      <p class="cap"><span class="tag-model">model</span><b>A 50/50 mix has the most possible arrangements.</b> Each shuffle on the left places the same number of gold atoms on different sites. With 20 gold atoms and 40 sites, there are about 1.4 × 10<sup>11</sup> possible arrangements. A mole of atoms has on the order of 10<sup>23</sup> sites.</p>
     </div>
-    <p>Why should a count decide anything? A material at temperature T settles into the state with the lowest free energy, G = H − TS. The enthalpy H rewards strong bonds. The −TS term rewards having many arrangements, and it grows with temperature. So when something costs energy but happens anyway, entropy is paying for it.</p>
+    <p>At a fixed temperature and pressure, the stable state has the lowest Gibbs free energy, G = H − TS. Stronger bonds can lower the enthalpy H. Higher entropy S lowers G through the −TS term, and this contribution grows with temperature. A state with higher enthalpy can therefore become stable when the temperature rises.</p>
     <div class="examples">
-      <div class="ex"><b>Ice melts</b><em>0 °C</em><span>Breaking the crystal costs 6 kJ per mole. Liquid water has 22 J/mol·K more entropy, and above 273 K the −TS term covers the bill.</span></div>
-      <div class="ex"><b>A cold pack gets cold</b><em>room temperature</em><span>Dissolving ammonium nitrate absorbs heat, which is why the pack chills. It dissolves anyway, because ions loose in water have far more arrangements than ions locked in a crystal.</span></div>
-      <div class="ex"><b>A heated rubber band shrinks</b><em>any temperature</em><span>Stretching lines up the polymer chains. Coiled chains can take many more shapes, so a warm band pulls itself shorter.</span></div>
-      <div class="ex"><b>A magnet stops being a magnet</b><em>770 °C for iron</em><span>Aligned moments have the lowest energy. Above the Curie point, moments pointing every which way win on entropy.</span></div>
-      <div class="ex"><b>Brass forgets its order</b><em>about 460 °C</em><span>Below it, CuZn is ordered B2, with Cu on the cube corners and Zn on the centers. Above it the atoms mix at random. My aluminum alloys order the same way.</span></div>
-      <div class="ex"><b>Every crystal has holes</b><em>near melting</em><span>An empty lattice site costs energy, but it can sit at any site. Near its melting point, copper keeps roughly one site in ten thousand empty.</span></div>
+      <div class="ex"><b>Ice melts</b><em>0 °C</em><span>Melting costs about 6 kJ per mole. Liquid water has about 22 J/(mol·K) more entropy than ice, enough to favor the liquid above 273 K at ordinary pressure.</span></div>
+      <div class="ex"><b>A cold pack cools down</b><em>Room temperature</em><span>Dissolving ammonium nitrate absorbs heat. The dissolved ions can take up many more arrangements in water than in the crystal.</span></div>
+      <div class="ex"><b>A stretched rubber band contracts when heated</b><em>Rubber elasticity</em><span>Stretching lines up the polymer chains. The chains can take many more shapes when coiled, so heating a stretched band favors contraction.</span></div>
+      <div class="ex"><b>Iron loses its magnetization</b><em>770 °C for iron</em><span>Aligned magnetic moments have lower energy. Above the Curie temperature, thermal motion disrupts their alignment.</span></div>
+      <div class="ex"><b>CuZn becomes disordered</b><em>About 460 °C</em><span>At lower temperatures, Cu and Zn prefer separate sites in the ordered B2 structure. Above the transition, they share both sets of sites. I found the same type of order in two aluminum-rich alloys.</span></div>
+      <div class="ex"><b>Crystals form vacancies</b><em>Near melting</em><span>An empty lattice site costs energy to form, but there are many sites it could occupy. Near its melting point, copper has roughly one vacancy per ten thousand sites.</span></div>
     </div>
-    <p class="cap-under"><b>In each case the high-temperature state has more ways to be arranged.</b> The −TS term grows with temperature until it outweighs the energy the bonds save. High-entropy alloys rest on the same logic. Mixing many elements adds arrangements, so a random crystal should stay stable down to lower temperatures than it would with fewer elements.</p>
+    <p class="cap-under"><b>In each example, entropy helps determine which state is stable.</b> A similar argument motivated the name high-entropy alloy. Mixing more elements gives atoms more ways to occupy the lattice, which can favor a disordered solid solution over an ordered compound.</p>
 
-    <h3>Four ways to be disordered</h3>
-    <p>The gold-and-blue count above is only one kind of entropy. A metal has four. Atoms can trade places on the lattice. They vibrate about their sites. Electrons near the top of the filled levels spread into empty ones, and magnetic moments wander. Each adds its own entropy, and the four sum to the total.</p>
+    <h3>Four contributions to entropy</h3>
+    <p>The gold-and-blue model shows configurational entropy, which comes from how atoms share lattice sites. Three other contributions matter in metals. Atoms vibrate, electrons occupy different energy states, and magnetic moments fluctuate.</p>
     <div class="fig" data-hea="kinds">
       <div class="kinds">
-        <figure><canvas class="hea-kind" aria-label="Five kinds of atom placed at random on a lattice"></canvas><figcaption><b>Configurational</b>Which atom sits where. Fixed once the atoms stop moving between sites.</figcaption></figure>
-        <figure><canvas class="hea-kind" aria-label="Atoms vibrating about their lattice sites"></canvas><figcaption><b>Vibrational</b>Atoms shaking about their sites. The largest term in every alloy here.</figcaption></figure>
-        <figure><canvas class="hea-kind" aria-label="Electron energy levels, filled below the Fermi level"></canvas><figcaption><b>Electronic</b>Electrons near the Fermi level, the top of the filled levels, spreading into empty states.</figcaption></figure>
-        <figure><canvas class="hea-kind" aria-label="Magnetic moments pointing in fluctuating directions"></canvas><figcaption><b>Magnetic</b>Moments on Fe, Co, Ni and Mn that point every which way.</figcaption></figure>
+        <figure><canvas class="hea-kind" aria-label="Five kinds of atom placed at random on a lattice"></canvas><figcaption><b>Configurational</b>The ways to arrange different elements on the lattice sites.</figcaption></figure>
+        <figure><canvas class="hea-kind" aria-label="Atoms vibrating about their lattice sites"></canvas><figcaption><b>Vibrational</b>Motion of atoms around their lattice sites. This is the largest contribution in these alloys.</figcaption></figure>
+        <figure><canvas class="hea-kind" aria-label="Electron energy levels, filled below the Fermi level"></canvas><figcaption><b>Electronic</b>Electrons near the Fermi level can move into available higher-energy states.</figcaption></figure>
+        <figure><canvas class="hea-kind" aria-label="Magnetic moments pointing in fluctuating directions"></canvas><figcaption><b>Magnetic</b>The ways magnetic moments on elements such as Fe, Co, Ni and Mn can be oriented.</figcaption></figure>
       </div>
       <canvas class="hea-kindbar plot--bar" aria-label="Sizes of the four entropy terms for CoCrFeMnNi at 385 K"></canvas>
-      <p class="cap"><span class="tag-data">data</span><span class="tag-model">model</span><b>The term the alloys are named after is about a quarter of the total.</b> For CoCrFeMnNi at 385 K, ideal mixing (a model) gives 1.61 k<sub>B</sub> per atom. Calorimetry measures 4.71 for the other three together, and quantum-mechanical calculations (DFT) put 0.16 of that in the electrons.</p>
+      <p class="cap"><span class="tag-data">data</span><span class="tag-model">model</span><b>In CoCrFeMnNi at 385 K, ideal mixing accounts for about a quarter of the total.</b> Ideal mixing gives 1.61 k<sub>B</sub> per atom. Calorimetry gives 4.71 k<sub>B</sub> per atom for the other three contributions combined. Density functional theory (DFT) puts the electronic contribution at 0.16 k<sub>B</sub> per atom.</p>
     </div>
 
-    <h3>The bet behind the name</h3>
-    <p>Mixtures of metals often form ordered compounds, because unlike atoms bond more strongly than like ones. In 2004 two groups melted five or more metals together in equal amounts and many of them came out as one simple crystal anyway <a href="https://doi.org/10.1002/adem.200300567" target="_blank" rel="noreferrer">(Yeh 2004</a>; <a href="https://doi.org/10.1016/j.msea.2003.10.257" target="_blank" rel="noreferrer">Cantor 2004)</a>. Yeh's explanation was configurational entropy. With <i>n</i> elements on random sites, each atom carries k<sub>B</sub> ln <i>n</i>. At high enough temperature, the −TS from that term can outweigh what the compound gains from bonding.</p>
+    <h3>Can mixing stabilize a solid solution?</h3>
+    <p>Metals often form ordered compounds because some pairs of elements bond more strongly than others. In 2004, two groups showed that certain alloys with five or more principal elements could form simple solid solutions <a href="https://doi.org/10.1002/adem.200300567" target="_blank" rel="noreferrer">(Yeh 2004</a>, <a href="https://doi.org/10.1016/j.msea.2003.10.257" target="_blank" rel="noreferrer">Cantor 2004)</a>. Yeh proposed that configurational entropy could help explain this. For <i>n</i> elements mixed randomly in equal proportions, the contribution is k<sub>B</sub> ln <i>n</i> per atom. At sufficiently high temperatures, this entropy can outweigh the enthalpy advantage of an ordered compound.</p>
     <div class="fig" data-hea="gibbs">
       <canvas class="hea-g plot" aria-label="Free energy of a solid solution and an ordered compound against temperature"></canvas>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>elements <input class="hea-n" type="range" min="2" max="6" step="1" value="5"></label>
-        <label>bonding advantage of the compound <input class="hea-dh" type="range" min="20" max="150" step="5" value="80"></label>
-        <label>extra vibrational entropy <input class="hea-svib" type="range" min="-0.6" max="0.6" step="0.05" value="0"></label>
+        <label>Number of elements <input class="hea-n" type="range" min="2" max="6" step="1" value="5"></label>
+        <label>Enthalpy advantage of the ordered compound <input class="hea-dh" type="range" min="20" max="150" step="5" value="80"></label>
+        <label>Vibrational entropy difference <input class="hea-svib" type="range" min="-0.6" max="0.6" step="0.05" value="0"></label>
       </div>
-      <p class="cap"><span class="tag-model">model</span><b>The random alloy (green) wins wherever its line falls below the compound (red).</b> Adding a sixth element moves the crossover a little. A vibrational difference of a few tenths of k<sub>B</sub>, the size I measured, moves it by hundreds of kelvin. So the bet depends on mixing being the only entropy difference between the two.</p>
+      <p class="cap"><span class="tag-model">model</span><b>The solid solution is favored where its free energy (green) is below that of the ordered compound (red).</b> In this model, adding a sixth element moves the crossover temperature a little. A vibrational entropy difference of a few tenths of k<sub>B</sub> per atom, comparable to what I measured, can move it by hundreds of kelvin.</p>
     </div>
 
-    <h2 class="part" id="doubt"><span>II</span>The doubt</h2>
+    <h2 class="part" id="doubt"><span>II</span>Chemical order</h2>
 
-    <h3>Same mixing entropy, different fates</h3>
-    <p>If mixing entropy decided everything, any five-element alloy should behave like any other. Otto and co-workers checked this directly. They took the single-phase Cantor alloy, CoCrFeMnNi, and swapped out one element at a time, which keeps the element count, and so the mixing entropy, fixed <a href="https://doi.org/10.1016/j.actamat.2013.01.042" target="_blank" rel="noreferrer">(Otto 2013)</a>.</p>
+    <h3>Alloys with the same ideal mixing entropy can form different phases</h3>
+    <p>Otto and co-workers started with the single-phase Cantor alloy, CoCrFeMnNi, and replaced one element at a time. Each alloy kept the same number of elements in equal proportions, so they all had the same ideal configurational entropy (<a href="https://doi.org/10.1016/j.actamat.2013.01.042" target="_blank" rel="noreferrer">Otto 2013</a>).</p>
     <div class="fig">
       <div class="swaps">
         <div class="swap swap--ok"><b>Co Cr Fe Mn Ni</b><span>one FCC phase</span></div>
@@ -136,11 +136,11 @@
         <div class="swap"><b>Co Cr <em>V</em> Mn Ni</b><span>multiphase</span></div>
         <div class="swap"><b>Co Cr Fe Mn <em>Cu</em></b><span>multiphase</span></div>
       </div>
-      <p class="cap"><span class="tag-data">literature</span><b>Only the original alloy stayed a single face-centered cubic (FCC) phase.</b> After three-day anneals at 1000 °C (850 °C for the Cu alloy), the other five had grown intermetallics (ordered compounds) or split into two solid solutions.</p>
+      <p class="cap"><span class="tag-data">literature</span><b>Only the original alloy remained a single face-centered cubic (FCC) phase.</b> After three days of annealing at 1000 °C (850 °C for the Cu alloy), the other five contained intermetallic compounds or two distinct solid solutions.</p>
     </div>
 
-    <h3>Ordering, drawn as a crystal structure</h3>
-    <p>The formula k<sub>B</sub> ln <i>n</i> assumes every site is a free choice. Real atoms have preferences. Aluminum and nickel bond strongly, so in AlCoCrFeNi they collect on one set of sites. The crystal is still body-centered cubic (BCC), but the cube corners and the cube centers now hold different atoms. That is the B2 structure, the same pattern as CsCl. Each sublattice now has fewer kinds of atom to choose from, so there are fewer arrangements.</p>
+    <h3>What B2 ordering looks like</h3>
+    <p>The formula k<sub>B</sub> ln <i>n</i> assumes that the elements mix randomly. In AlCoCrFeNi, aluminum and nickel prefer one set of sites on the body-centered cubic (BCC) lattice. The cube corners and centers then have different compositions, giving the ordered B2 structure, the same pattern as CsCl. The site preferences reduce the number of possible arrangements.</p>
     <div class="fig" data-hea="cell">
       <div class="fig-row">
         <canvas class="hea-cell plot plot--cell" aria-label="A block of body-centered cubic cells, corners and centers colored by element"></canvas>
@@ -148,29 +148,29 @@
       </div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>random <input class="hea-eta" type="range" min="0" max="1" step="0.02" value="1"> ordered B2</label>
+        <label>Random mixing <input class="hea-eta" type="range" min="0" max="1" step="0.02" value="1"> B2 order</label>
       </div>
-      <p class="cap"><span class="tag-model">model</span><b>In ordered B2, Al and Ni (gold, blue) prefer the cube corners, and Co, Cr and Fe the centers. Slide toward random to give the entropy back.</b> Al and Ni make up only 40 % of the atoms, so even at full order some Co sits on the corners, and AlCoCrFeNi still keeps about 1.05 k<sub>B</sub> of its 1.61. Ordering also makes the corners and centers scatter X-rays differently, which creates a new diffraction peak. From the size of that peak I estimate 1.31 for the real alloy, so it sits partway along the slider.</p>
+      <p class="cap"><span class="tag-model">model</span><b>In the B2 model, Al and Ni (gold and blue) prefer corner sites, while Co, Cr and Fe favor the centers.</b> Move the slider toward random mixing to see configurational entropy rise. Al and Ni make up only 40% of the atoms, so Co occupies some corner sites even at full order. The model gives 1.05 k<sub>B</sub> per atom at full order and 1.61 for random mixing. Ordering also changes how the sites scatter X-rays, producing an additional diffraction peak. From its intensity, I estimated 1.31 k<sub>B</sub> per atom for the measured alloy.</p>
     </div>
 
-    <h3>What actually formed</h3>
-    <p>I looked for that peak in every alloy. I also polished and imaged each one, because the elements can separate into regions of different composition as the melt freezes, and that lowers the mixing entropy too.</p>
+    <h3>What formed in the samples</h3>
+    <p>I checked every alloy for the B2 diffraction peak. I also polished and imaged the samples to look for regions with different compositions. Those regions can form as an alloy solidifies and reduce its configurational entropy.</p>
     <div class="fig" data-hea="xrd" data-src="assets/data/hea-xrd.json">
       <canvas class="hea-xrd plot plot--tall" aria-label="X-ray diffraction patterns of the alloys, stacked"></canvas>
       <div class="fig-controls">
-        <label>family <select class="hea-fam"><option value="cantor">CoCrFeNi and CoCrFeMnNi + Al</option><option value="refractory">NbTa₀.₅TiZr + Al</option></select></label>
+        <label>Alloy family <select class="hea-fam"><option value="cantor">CoCrFeNi and CoCrFeMnNi + Al</option><option value="refractory">NbTa₀.₅TiZr + Al</option></select></label>
       </div>
       <div class="gallery gallery--2 gallery--sem">
-        <figure><button type="button" data-full="assets/img/hea-sem-al125cocrfemnni.jpg" data-caption="Al1.25CoCrFeMnNi, backscattered electrons, etched. Dendrites and the regions between them differ in composition."><img src="assets/img/hea-sem-al125cocrfemnni.jpg" alt="Backscattered-electron micrograph of Al1.25CoCrFeMnNi showing rounded dendrites in a lighter network" width="1024" height="695" loading="lazy" decoding="async"></button><figcaption>Al<sub>1.25</sub>CoCrFeMnNi: rounded dendrites in a lighter network.</figcaption></figure>
-        <figure><button type="button" data-full="assets/img/hea-sem-al02nbta05tizr.jpg" data-caption="Al0.2NbTa0.5TiZr, backscattered electrons. Bright dendrites are Nb–Ta rich, dark regions Al–Zr rich."><img src="assets/img/hea-sem-al02nbta05tizr.jpg" alt="Backscattered-electron micrograph of Al0.2NbTa0.5TiZr showing bright branching dendrites on a dark background" width="1400" height="950" loading="lazy" decoding="async"></button><figcaption>Al<sub>0.2</sub>NbTa<sub>0.5</sub>TiZr: Nb–Ta dendrites (bright) in Al–Zr-rich regions (dark).</figcaption></figure>
+        <figure><button type="button" data-full="assets/img/hea-sem-al125cocrfemnni.jpg" data-caption="Backscattered-electron image of etched Al1.25CoCrFeMnNi. The dendrites and surrounding regions differ in composition."><img src="assets/img/hea-sem-al125cocrfemnni.jpg" alt="Backscattered-electron micrograph of Al1.25CoCrFeMnNi showing rounded dendrites in a lighter network" width="1024" height="695" loading="lazy" decoding="async"></button><figcaption>Rounded dendrites in a lighter network of Al<sub>1.25</sub>CoCrFeMnNi.</figcaption></figure>
+        <figure><button type="button" data-full="assets/img/hea-sem-al02nbta05tizr.jpg" data-caption="Backscattered-electron image of Al0.2NbTa0.5TiZr. Bright dendrites are rich in Nb and Ta. Dark regions are rich in Al and Zr."><img src="assets/img/hea-sem-al02nbta05tizr.jpg" alt="Backscattered-electron micrograph of Al0.2NbTa0.5TiZr showing bright branching dendrites on a dark background" width="1400" height="950" loading="lazy" decoding="async"></button><figcaption>Bright Nb–Ta-rich dendrites and dark Al–Zr-rich regions in Al<sub>0.2</sub>NbTa<sub>0.5</sub>TiZr.</figcaption></figure>
       </div>
-      <p class="cap"><span class="tag-data">data</span><b>With enough aluminum the Cantor-type alloys order into B2, and the refractory alloys separate into regions.</b> The B2 {100} peak (dashed line) can appear only when corners and centers hold different atoms, and it shows up only in AlCoCrFeNi and Al<sub>1.25</sub>CoCrFeMnNi. The refractory alloys stay plain BCC, but under the microscope they split into Nb–Ta-rich dendrites (tree-shaped crystals that grow as the melt freezes) and Ti–Zr- or Al–Zr-rich regions between them. The aluminum-rich Cantor-type alloys separate too. Both effects pull the mixing entropy below k<sub>B</sub> ln <i>n</i>.</p>
+      <p class="cap"><span class="tag-data">data</span><b>Two aluminum-rich alloys show B2 order, and microscopy reveals regions of different composition.</b> The B2 {100} reflection (dashed line) appears in AlCoCrFeNi and Al<sub>1.25</sub>CoCrFeMnNi. The refractory alloys retain a disordered BCC structure but also show Nb–Ta-rich dendrites, which form as the melt freezes. The regions between them are rich in Ti and Zr or in Al and Zr. The two alloys with B2 order also show chemical segregation. Both ordering and segregation lower configurational entropy.</p>
     </div>
 
-    <h2 class="part" id="measure"><span>III</span>The measurement</h2>
+    <h2 class="part" id="measure"><span>III</span>Heat capacity measurements</h2>
 
     <h3>Heat capacity down to 2 K</h3>
-    <p>Configurational entropy is hard to measure, but the other three terms are not. Heat a sample a fraction of a kelvin and record how much energy it takes. That is the heat capacity. Divide it by temperature and add up the area from absolute zero, and you have the vibrational, electronic and magnetic entropy together. I did this for eight alloys in a commercial low-temperature calorimeter (PPMS), three times at each temperature from 2 to 400 K.</p>
+    <p>Heat capacity is the energy it takes to raise a sample’s temperature by a given amount. Integrating heat capacity divided by temperature from absolute zero gives the combined vibrational, electronic and magnetic entropy in these alloys. I measured heat capacity with a Physical Property Measurement System (PPMS), taking three measurements at each temperature from 2 to 400 K for all eight alloys.</p>
     <div class="fig" data-hea="cpdata" data-hea-src="assets/data/hea-cp.json">
       <div class="fig-row">
         <canvas class="hea-cpt plot" aria-label="Measured heat capacity divided by temperature"></canvas>
@@ -179,30 +179,30 @@
       <div class="legend"></div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>family <select class="hea-fam"><option value="cantor">CoCrFeNi + Al</option><option value="cantor5">CoCrFeMnNi + Al</option><option value="refractory">NbTa₀.₅TiZr + Al</option></select></label>
-        <label>temperature <input class="hea-t" type="range" min="10" max="390" step="5" value="385"></label>
+        <label>Alloy family <select class="hea-fam"><option value="cantor">CoCrFeNi + Al</option><option value="cantor5">CoCrFeMnNi + Al</option><option value="refractory">NbTa₀.₅TiZr + Al</option></select></label>
+        <label>Temperature <input class="hea-t" type="range" min="10" max="390" step="5" value="385"></label>
       </div>
-      <p class="cap"><span class="tag-data">data</span><b>Aluminum pushes the entropy down in every family.</b> The area under the measured C<sub>p</sub>/T (left) is the entropy (right). By 385 K it is roughly three times k<sub>B</sub> ln 5, and the aluminum-rich alloy is lowest each time.</p>
+      <p class="cap"><span class="tag-data">data</span><b>The measured entropy drops when aluminum is added in all three families.</b> The right plot shows the integral of C<sub>p</sub>/T from the left plot. At 385 K, the measured entropy is roughly three times k<sub>B</sub> ln 5, and the alloy with the most aluminum has the lowest measured entropy in each family.</p>
     </div>
 
-    <h3>The entropy budget</h3>
-    <p>Aluminum is light, and its bonds to the transition metals are partly covalent. Both make the lattice stiffer, so the atoms vibrate faster and carry less entropy. In every family that loss is bigger than the mixing entropy aluminum brings.</p>
+    <h3>How aluminum changes the entropy</h3>
+    <p>Aluminum is light and forms relatively stiff, partly covalent bonds with the transition metals. Lower masses and stiffer bonds both raise vibrational frequencies, which lowers vibrational entropy. In each family, the loss is larger than the gain in ideal mixing entropy from adding aluminum.</p>
     <div class="fig" data-hea="budget">
       <canvas class="hea-budget plot plot--tall" aria-label="Measured and configurational entropy of eight alloys at 385 K"></canvas>
-      <div class="legend"><span><i style="background:#8FA095"></i>measured (vibrational, electronic, magnetic)</span><span><i style="background:#7FA7C9"></i>configurational; dashed part lost to order or separation</span></div>
+      <div class="legend"><span><i style="background:#8FA095"></i>Measured (vibrational, electronic, magnetic)</span><span><i style="background:#7FA7C9"></i>Configurational (dashed portion is lost to ordering or segregation)</span></div>
       <canvas class="hea-delta plot" aria-label="Entropy change on adding aluminum, by contribution"></canvas>
-      <div class="legend"><span><i style="background:#7FA7C9"></i>mixing gained, ideal</span><span><i style="background:#8FA095"></i>measured change</span><span><i style="background:#A99BC9"></i>lost to order or separation</span><span><i style="background:#D9B26F"></i>net</span></div>
-      <p class="cap"><span class="tag-data">data</span><b>Adding aluminum lowers the total entropy in all three families.</b> Top: the measured terms are about three times the configurational one. Bottom: aluminum adds 0.16–0.22 k<sub>B</sub> of ideal mixing, but the measured entropy drops 0.34–0.44, and B2 order takes more in the Cantor-type alloys. Net: −0.46, −0.62 and −0.17 k<sub>B</sub> per atom.</p>
+      <div class="legend"><span><i style="background:#7FA7C9"></i>Gain from ideal mixing</span><span><i style="background:#8FA095"></i>Measured change</span><span><i style="background:#A99BC9"></i>Loss from ordering or segregation</span><span><i style="background:#D9B26F"></i>Net change</span></div>
+      <p class="cap"><span class="tag-data">data</span><b>Adding aluminum lowers total entropy in all three alloy families.</b> The top plot compares measured and configurational entropy at 385 K. For the highest aluminum content in each family, ideal mixing adds 0.16–0.22 k<sub>B</sub> per atom and measured entropy falls by 0.34–0.44 k<sub>B</sub> per atom. B2 order further reduces configurational entropy in the two Cantor-type alloys. The net changes are −0.46, −0.62 and −0.17 k<sub>B</sub> per atom.</p>
     </div>
-    <p>The −0.62 k<sub>B</sub> in Al<sub>1.25</sub>CoCrFeMnNi is about the mixing entropy you would lose by cutting a six-element alloy down to three elements (k<sub>B</sub> ln 2 = 0.69).</p>
+    <p>The 0.62 k<sub>B</sub> per atom lost in Al<sub>1.25</sub>CoCrFeMnNi is close to the change in ideal mixing entropy from going from six equally abundant elements to three (k<sub>B</sub> ln 2 ≈ 0.69 k<sub>B</sub>).</p>
 
-    <h2 class="part" id="sim"><span>IV</span>The simulation</h2>
+    <h2 class="part" id="sim"><span>IV</span>Simulating atomic vibrations</h2>
 
-    <p>Vibrations carry most of the entropy, so a calculation of them should reproduce most of the measured curve. Any such calculation needs the force on every atom for any arrangement of its neighbors. DFT gives those forces but takes minutes for each arrangement. I used MACE, a machine-learned force field trained on DFT results, which returns them for 160 atoms in a fraction of a second. There are two ways to get the vibrations from those forces, and I used both on the same cells.</p>
+    <p>Because vibrations contribute most of the entropy, I wanted to see how much of the measured curve they could explain. Both simulation methods need to compute forces on atoms as their positions change. In these calculations, DFT takes minutes for each arrangement. I used MACE, a machine-learned model trained on DFT data, to compute forces for 160 atoms in a fraction of a second. I ran molecular dynamics and phonon calculations on the same cells.</p>
 
-    <h3>Watching the atoms move: molecular dynamics</h3>
-    <p>Molecular dynamics is the direct route. Put 160 atoms of Al<sub>0.3</sub>NbTa<sub>0.5</sub>TiZr, one of the eight alloys, on a BCC lattice in a box that repeats in every direction, with the elements placed at random. Give each atom a random velocity. Then step Newton's law forward: compute every force, move every atom for 2 femtoseconds, compute the forces again. Twenty thousand steps cover 40 picoseconds.</p>
-    <p>At this scale, temperature measures how hard the atoms shake. Each atom's average kinetic energy is (3/2) k<sub>B</sub>T, so at twice the temperature the shaking carries twice the energy. A thermostat holds that average at the target by adjusting the velocities slightly each step. The figure shows a stretch of my run at three temperatures.</p>
+    <h3>Molecular dynamics</h3>
+    <p>I started with 160 atoms of Al<sub>0.3</sub>NbTa<sub>0.5</sub>TiZr randomly distributed on a BCC lattice in a periodic cell. I gave each atom an initial velocity and computed the forces and motion in 2-femtosecond steps. Twenty thousand steps covered 40 picoseconds.</p>
+    <p>In classical molecular dynamics, the average kinetic energy per atom is (3/2) k<sub>B</sub>T. A thermostat controls the velocities to keep the system near the target temperature. The figure shows part of the simulation at three temperatures.</p>
     <div class="fig" data-hea="md" data-src="assets/data/hea-md.json">
       <div class="kinds kinds--3">
         <figure><canvas class="hea-md" aria-label="The 160-atom cell at 50 K, atoms moving"></canvas><figcaption class="hea-mdcap"><b>50 K</b></figcaption></figure>
@@ -217,61 +217,61 @@
       <div class="legend"><span><i style="background:#D9B26F"></i>Al</span><span><i style="background:#7FA7C9"></i>Nb</span><span><i style="background:#A99BC9"></i>Ta</span><span><i style="background:#8FA095"></i>Ti</span><span><i style="background:#C98A7F"></i>Zr</span></div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>motion drawn <select class="hea-ex"><option value="1">true size</option><option value="4" selected>4× true size</option><option value="10">10× true size</option></select></label>
-        <button class="btn hea-play" type="button">pause</button>
+        <label>Motion scale <select class="hea-ex"><option value="1">Actual displacement</option><option value="4" selected>4× displacement</option><option value="10">10× displacement</option></select></label>
+        <button class="btn hea-play" type="button">Pause</button>
       </div>
-      <p class="cap"><span class="tag-model">simulation</span><b>Heat makes the atoms swing wider, but they stay on their sites.</b> Top: the whole cell, from my MACE run (drag a cell to turn it). Bottom: the path one niobium atom traced over the same 3 picoseconds, magnified but at the same scale in all three. The typical swing grows as the square root of temperature, from 0.07 Å at 50 K to 0.16 Å at 300 K. Neighbors sit 2.9 Å apart. Wider swings give each atom more positions to be in, and that is the vibrational entropy.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>Atoms move farther from their lattice sites at higher temperatures.</b> The top row shows the full MACE simulation cell. Drag a cell to rotate it. The bottom row shows one niobium atom’s path over 3 picoseconds on the same scale at each temperature. Its typical displacement increases from 0.07 Å at 50 K to 0.16 Å at 300 K, compared with 2.9 Å between neighboring atoms. The larger displacements are consistent with higher vibrational entropy.</p>
     </div>
 
-    <h3>Vibrations from springs: phonopy</h3>
-    <p>Phonopy <a href="https://doi.org/10.1016/j.scriptamat.2015.07.021" target="_blank" rel="noreferrer">(Togo 2015)</a> skips the clock and measures how stiff the bonds are instead: push one atom by 0.01 Å, read the force that appears on every other atom, and repeat for each atom in the cell. Those forces act like springs. A crystal of balls on springs can ring in a fixed set of patterns, one frequency each, and phonopy solves for all of them. Each pattern is a phonon. Soft springs and heavy atoms give low frequencies, and low frequencies carry the most entropy.</p>
+    <h3>Phonon calculations with phonopy</h3>
+    <p>Phonopy derives vibrational frequencies from the forces caused by small atomic displacements (<a href="https://doi.org/10.1016/j.scriptamat.2015.07.021" target="_blank" rel="noreferrer">Togo 2015</a>). I displaced each atom by 0.01 Å and used MACE to compute the forces on the other atoms. Those forces act like springs near equilibrium. Phonopy uses them to find the crystal’s vibration patterns and their frequencies. Softer bonds and heavier atoms lower the frequencies, which raises vibrational entropy.</p>
     <div class="fig" data-hea="phon" data-src="assets/data/hea-md.json">
       <div class="kinds">
-        <figure><canvas class="hea-ph" aria-label="A patch of crystal with every atom on its site"></canvas><figcaption><b>1. The still crystal</b>Atoms on their sites, elements at random.</figcaption></figure>
-        <figure><canvas class="hea-ph" aria-label="One atom pushed to the right; arrows show forces on its neighbors"></canvas><figcaption><b>2. Push one atom</b>Its neighbors feel forces (gold arrows). The push is drawn 30× larger.</figcaption></figure>
-        <figure><canvas class="hea-ph" aria-label="The same patch drawn with springs between neighbors"></canvas><figcaption><b>3. Forces become springs</b>Doing this for every atom gives every spring constant.</figcaption></figure>
-        <figure><canvas class="hea-ph" aria-label="Two vibration patterns of a row of atoms, slow and fast"></canvas><figcaption><b>4. Springs set the notes</b>Long waves ring slowly, short waves quickly.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="A patch of crystal with every atom on its site"></canvas><figcaption><b>1. Start at equilibrium</b>The elements occupy random lattice sites.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="One atom pushed to the right; arrows show forces on its neighbors"></canvas><figcaption><b>2. Displace one atom</b>Gold arrows show forces on its neighbors. The displacement is drawn 30× larger.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="The same patch drawn with springs between neighbors"></canvas><figcaption><b>3. Find the force constants</b>Repeat the displacement and force calculations for each atom.</figcaption></figure>
+        <figure><canvas class="hea-ph" aria-label="Two vibration patterns of a row of atoms, slow and fast"></canvas><figcaption><b>4. Calculate the vibration modes</b>The illustration shows a slow mode and a fast one.</figcaption></figure>
       </div>
       <canvas class="hea-phdos plot plot--short" aria-label="Histogram of the vibration frequencies of the 160-atom cell, bars lit by entropy per vibration"></canvas>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>temperature <input class="hea-pht" type="range" min="10" max="400" step="5" value="300"></label>
+        <label>Temperature <input class="hea-pht" type="range" min="10" max="400" step="5" value="300"></label>
       </div>
-      <p class="cap"><span class="tag-model">model + simulation</span><b>The bright bars are the vibrations that carry the most entropy at the chosen temperature.</b> Top: the four steps, drawn on a toy patch. Bottom: every vibration frequency phonopy found for the same 160-atom cell. Slide the temperature down. At 20 K only the lowest notes light up, which is why heat capacity starts from zero.</p>
+      <p class="cap"><span class="tag-model">model + simulation</span><b>Brighter bars show the frequencies that contribute more entropy at the selected temperature.</b> The diagrams above the plot illustrate how I calculated the frequencies for the 160-atom cell. Lower the temperature to 20 K to see how much of the entropy comes from the lowest-frequency vibrations.</p>
     </div>
 
     <div class="versus">
-      <div class="versus__head"></div><div class="versus__head">phonopy</div><div class="versus__head">molecular dynamics</div>
-      <div class="versus__row">atoms move</div><div>one at a time, by 0.01 Å</div><div>all at once, up to 0.5 Å</div>
-      <div class="versus__row">temperature</div><div>applied afterward, when the notes are counted</div><div>set during the run by the thermostat</div>
-      <div class="versus__row">assumes</div><div>the springs are the same at every temperature</div><div>nothing about the springs</div>
-      <div class="versus__row">misses</div><div>springs that soften or stiffen as swings grow</div><div>quantum effects at low temperature (atoms move classically)</div>
-      <div class="versus__row">cost</div><div>960 force calls (160 atoms, 3 directions, pushed both ways)</div><div>about 20,000 force calls per temperature</div>
+      <div class="versus__head"></div><div class="versus__head">Phonopy</div><div class="versus__head">Molecular dynamics</div>
+      <div class="versus__row">Atomic motion</div><div>Displace one atom at a time by 0.01 Å</div><div>All atoms move at once, up to 0.5 Å</div>
+      <div class="versus__row">Temperature</div><div>Applied afterward to calculate thermal populations</div><div>Set during the run by the thermostat</div>
+      <div class="versus__row">Forces</div><div>Uses the same force constants at every temperature</div><div>Recalculates forces as the atoms move</div>
+      <div class="versus__row">Limitations</div><div>Doesn’t capture changes in force constants as displacements grow</div><div>Classical motion misses quantum effects at low temperature</div>
+      <div class="versus__row">Computational cost</div><div>960 force calculations (160 atoms, 3 directions, both signs)</div><div>About 20,000 force calculations per temperature</div>
     </div>
-    <p class="cap-under"><b>If the springs changed with temperature, the two methods would disagree.</b> So I fitted a fresh set of springs to the forces in each MD run and compared them with phonopy's. Across five runs on NbTa<sub>0.5</sub>TiZr with 0, 0.2 and 0.3 Al (three random cells for the Al-free alloy), the average frequency at 300 K moved by −0.4 % to +0.9 %. To match the measured heat capacity, the frequencies would have to rise about 8 %.</p>
+    <p class="cap-under"><b>The fitted vibrational frequencies changed little with temperature.</b> I fitted force constants to the forces from molecular dynamics and compared them with phonopy. I used five cells in total for NbTa<sub>0.5</sub>TiZr with 0, 0.2 and 0.3 Al, including three random cells for the alloy without aluminum. At 300 K the average frequency differed by −0.4% to +0.9%. The frequencies would have to rise about 8% to match the measured heat capacity.</p>
 
-    <h3>Simulation against measurement</h3>
-    <p>Phonopy's frequencies give the vibrational entropy at every temperature. Here it is against the calorimetry for the five alloys I computed.</p>
+    <h3>Comparing simulations with calorimetry</h3>
+    <p>I used the phonon frequencies to calculate vibrational entropy and compared it with the calorimetry data for five alloys.</p>
     <div class="fig" data-hea="sim" data-sim="assets/data/hea-sim.json">
       <canvas class="hea-dos plot" aria-label="Measured entropy as dots and the MACE phonon calculation as a line, against temperature"></canvas>
       <div class="legend"><span><i style="background:#8FA095"></i>measured</span><span><i style="background:#D9B26F"></i>MACE phonons</span></div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label>alloy <select class="hea-pick"></select></label>
+        <label>Alloy <select class="hea-pick"></select></label>
       </div>
-      <p class="cap"><span class="tag-data">data</span><span class="tag-model">simulation</span><b>At 385 K, phonons alone come within 0.25 k<sub>B</sub> of the refractory alloys and miss CoCrFeNi and CoCrFeMnNi by about half a k<sub>B</sub>.</b> Dots are the calorimetry, the line is the calculation. The force field has no magnetism and no electrons, and those two terms make up most of the gap in the magnetic alloys. At 50 K the computed C<sub>p</sub>/T for the refractory alloys runs 10–20 % high, so the calculated springs are a little too soft. The molecular dynamics found the springs nearly constant with temperature, so the error most likely lies in the force field.</p>
+      <p class="cap"><span class="tag-data">data</span><span class="tag-model">simulation</span><b>At 385 K, the calculated entropy is within 0.25 k<sub>B</sub> per atom of the calorimetry for the refractory alloys and within about 0.5 k<sub>B</sub> per atom for CoCrFeNi and CoCrFeMnNi.</b> The dots show calorimetry data, and the line shows the phonon calculation. Magnetic and electronic contributions are absent from the calculation and account for much of the difference in the magnetic alloys. At 50 K, the computed C<sub>p</sub>/T for the refractory alloys runs 10–20% high. The force constants vary little with temperature in molecular dynamics, so the discrepancy likely comes from MACE underestimating bond stiffness.</p>
     </div>
 
-    <h2>What it means</h2>
-    <p>Mixing is about a quarter of the entropy in these alloys, and vibrations are the largest part. Aluminum adds mixing entropy, but by stiffening the bonds it removes more vibrational entropy than that. Predicting which of these alloys stays one random crystal needs the vibrations as well as the mixing.</p>
+    <h2>What I found</h2>
+    <p>Atomic vibrations contributed most of the entropy. Adding aluminum increased ideal mixing entropy, but it reduced vibrational entropy by a larger amount. For these alloys, predicting the stability of a disordered phase requires accounting for both contributions.</p>
 
     <h2>What I did</h2>
     <ul class="bullets">
-      <li>Measured heat capacity from 2 to 400 K on aluminum-added CoCrFeNi, CoCrFeMnNi and NbTa₀.₅TiZr.</li>
-      <li>Checked phases and chemical order with X-ray diffraction, electron microscopy and ⁵⁷Fe Mössbauer spectroscopy.</li>
-      <li>Ran spin-polarized DFT to separate the magnetic and electronic contributions.</li>
-      <li>Computed phonons and ran molecular dynamics with a MACE machine-learned force field to simulate the heat capacity.</li>
-      <li>Wrote the processing code that turns raw calorimeter files into entropy with uncertainty.</li>
+      <li>Measured heat capacity from 2 to 400 K for CoCrFeNi, CoCrFeMnNi and NbTa₀.₅TiZr alloys with and without added aluminum.</li>
+      <li>Characterized phases and chemical order with X-ray diffraction, electron microscopy and ⁵⁷Fe Mössbauer spectroscopy.</li>
+      <li>Used spin-polarized DFT to estimate electronic and magnetic contributions.</li>
+      <li>Ran phonon calculations and molecular dynamics with a MACE force field to compare with the heat capacity measurements.</li>
+      <li>Wrote code to calculate entropy and its uncertainty from raw calorimetry data.</li>
     </ul>
     <div class="chips"><span>PPMS calorimetry</span><span>Mössbauer</span><span>XRD</span><span>SEM</span><span>VASP</span><span>MACE</span><span>phonopy</span><span>Python</span><span>Arc melting</span></div>
 
@@ -279,7 +279,7 @@
     <h2>Publication</h2>
     <p><a href="https://doi.org/10.1016/j.actamat.2026.122808" target="_blank" rel="noreferrer"><strong>The entropy of “high-entropy” alloys of transition metals with aluminum.</strong></a> K. Hunady, I. Elmasri, B. Fultz. <i>Acta Materialia</i> 321, 122808 (2026).</p>
 
-    <div class="next-links"><a class="btn" href="instrument.html">Next: the Mössbauer spectrometer</a><a class="btn" href="automation.html">Research tooling</a><a class="btn" href="index.html#research">Research</a></div>
+    <div class="next-links"><a class="btn" href="instrument.html">Mössbauer spectrometer</a><a class="btn" href="automation.html">Research automation</a><a class="btn" href="index.html#research">All research</a></div>
 
   </div>
 </main>
@@ -296,6 +296,6 @@
 
 <script src="assets/js/site.js?v=20261117065748"></script>
 <script src="assets/js/md.js?v=20261116081401"></script>
-<script src="assets/js/hea.js?v=20261117121500"></script>
+<script src="assets/js/hea.js?v=d8cbf1848531"></script>
 </body>
 </html>

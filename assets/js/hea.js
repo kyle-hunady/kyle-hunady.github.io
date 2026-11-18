@@ -57,7 +57,7 @@
       d.save(); d.translate(10, (T + h.h - B) / 2); d.rotate(-Math.PI / 2); d.fillText('S_cfg  (kB / atom)', 0, 0); d.restore();
       var W = Math.pow(k, COLS * ROWS);
       out.textContent = k + (k === 1 ? ' element' : ' elements') + '  ·  S_cfg = kB ln ' + k + ' = ' +
-        Math.log(k).toFixed(2) + ' kB/atom  ·  this patch alone has ' +
+        Math.log(k).toFixed(2) + ' kB/atom  ·  ' +
         (k === 1 ? '1 arrangement' : '~10^' + Math.round(COLS * ROWS * Math.log10(k)) + ' arrangements');
     }
     n.addEventListener('input', function () { fill(); draw(); });
@@ -88,7 +88,7 @@
       ], { xmin: 0, xmax: TMAX, ymin: lo, ymax: hi, xticks: [0, 500, 1000, 1500, 2000],
            yticks: [Math.round(lo), 0, Math.round(dH)], xlabel: 'temperature (K)', ylabel: 'G  (meV / atom)',
            marks: Tx < TMAX ? [{ x: Tx, label: 'solid solution wins above ' + Math.round(Tx) + ' K', color: GOLD }] : [] });
-      out.textContent = 'entropy advantage of the solid solution ' + Sss.toFixed(2) + ' kB/atom  (' +
+      out.textContent = 'Entropy difference for the solid solution ' + Sss.toFixed(2) + ' kB/atom  (' +
         Math.log(k).toFixed(2) + ' mixing ' + (dSv >= 0 ? '+ ' : '− ') + Math.abs(dSv).toFixed(2) + ' vibrational)  ·  ' +
         (Tx < TMAX ? 'crossover ' + Math.round(Tx) + ' K' : 'no crossover below 2000 K');
     }
@@ -414,7 +414,7 @@
         { xmin: 0, xmax: 1, ymin: 0.9, ymax: 1.7, xticks: [0, 0.5, 1], yticks: [1.05, 1.31, 1.61],
           xlabel: 'degree of B2 order', ylabel: 'S_cfg  (kB / atom)',
           marks: [{ y: Math.log(5), label: 'random: kB ln 5', color: 'rgba(127,167,201,0.8)' }, { y: 1.31, label: 'AlCoCrFeNi, from XRD', color: 'rgba(201,138,127,0.9)' }] });
-      out.textContent = 'order ' + e.toFixed(2) + '  ·  S_cfg ' + scfg(e).toFixed(2) + ' kB/atom  ·  B2 {100} superlattice peak at ' + Math.round(100 * I) + ' % of its fully ordered height';
+      out.textContent = 'Order parameter ' + e.toFixed(2) + '  ·  S_cfg ' + scfg(e).toFixed(2) + ' kB/atom  ·  B2 {100} superlattice peak at ' + Math.round(100 * I) + '% of the fully ordered peak height';
     }
     eta.addEventListener('input', draw); onResize(draw); draw();
   }
@@ -440,7 +440,7 @@
         { xmin: 0, xmax: 1, ymin: 0, ymax: 0.75, xticks: [0, 0.5, 1], yticks: [0, 0.35, 0.69],
           xlabel: 'fraction gold', ylabel: 'S per site  (kB)', marks: [{ y: Math.log(2), label: 'kB ln 2', color: 'rgba(127,167,201,0.8)' }] });
       var W = lnC(N, k) / Math.LN10;
-      out.textContent = k + ' gold of ' + N + '  ·  ' + (k === 0 || k === N ? 'exactly 1 arrangement' :
+      out.textContent = k + ' gold sites out of ' + N + '  ·  ' + (k === 0 || k === N ? 'exactly 1 arrangement' :
         (W < 6 ? Math.round(Math.pow(10, W)).toLocaleString() : '~10^' + W.toFixed(1)) + ' arrangements') +
         '  ·  S = kB ln W = ' + (lnC(N, k) / N).toFixed(2) + ' kB per site';
     }
@@ -477,8 +477,8 @@
         if (d < best) { best = d; pick = i; }
       });
       J.temps.forEach(function (t, k) {
-        caps[k].innerHTML = '<b>' + t.T + ' K</b>run averaged ' + t.T_mean + ' K · atoms swing ' + t.rms_A.toFixed(2) +
-          ' Å rms · a niobium atom moves at ' + t.v_rms_Nb + ' m/s';
+        caps[k].innerHTML = '<b>' + t.T + ' K</b>Average simulation temperature ' + t.T_mean + ' K · RMS displacement ' + t.rms_A.toFixed(2) +
+          ' Å · Niobium RMS speed ' + t.v_rms_Nb + ' m/s';
       });
       function frameIndex() { var p = F % (2 * NF - 2); return p < NF ? p : 2 * NF - 2 - p; }
       function drawCell(k, f) {
@@ -527,14 +527,14 @@
         // scale bar: 0.1 angstrom
         var bx = 10, by = g.h - 10; c.strokeStyle = INK; c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + 0.1 * sc, by); c.stroke();
         c.fillStyle = INK; c.textAlign = 'left'; c.fillText('0.1 Å', bx, by - 5);
-        c.textAlign = 'right'; c.fillText('same scale in all three', g.w - 8, 14);
+        c.textAlign = 'right'; c.fillText('Same scale in all three panels', g.w - 8, 14);
         c.textAlign = 'left'; c.fillText('rms ' + t.rms_A.toFixed(2) + ' Å', ox + t.rms_A * sc * 0.72 + 4, oy - t.rms_A * sc * 0.72 - 2);
       }
       function draw() {
         var f = frameIndex();
         for (var k = 0; k < 3; k++) { drawCell(k, f); drawPath(k, f); }
         out.textContent = 't = ' + (f * J.frame_fs / 1000).toFixed(2) + ' ps of a ' + ((NF - 1) * J.frame_fs / 1000).toFixed(1) +
-          ' ps stretch  ·  motion in the cells drawn ' + ex.value + '× true size  ·  ringed atom = the niobium traced below';
+          ' ps  ·  Motion magnified ' + ex.value + '× true size  ·  ringed atom = the niobium traced below';
       }
       function frame() {
         if (running && visible && ++tick % 2 === 0) { F++; draw(); }
@@ -553,8 +553,8 @@
         cv.addEventListener('pointerup', function () { drag = null; });
       });
       ex.addEventListener('change', draw);
-      play.addEventListener('click', function () { running = !running; play.textContent = running ? 'pause' : 'play'; });
-      play.textContent = running ? 'pause' : 'play';
+      play.addEventListener('click', function () { running = !running; play.textContent = running ? 'Pause' : 'Play'; });
+      play.textContent = running ? 'Pause' : 'Play';
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(root);
       onResize(draw); draw(); requestAnimationFrame(frame);
     });
@@ -662,10 +662,10 @@
       }
       c.fillStyle = INK; c.textAlign = 'center';
       [0, 2, 4, 6, 8].forEach(function (v) { c.fillText(v, L + v / fmax * (g.w - L - R), g.h - B + 13); });
-      c.fillText('vibration frequency (THz, trillions of swings per second)', (L + g.w - R) / 2, g.h - 2);
-      c.save(); c.translate(12, (Tp + g.h - B) / 2); c.rotate(-Math.PI / 2); c.fillText('how many', 0, 0); c.restore();
-      out.textContent = T + ' K  ·  these ' + F.length + ' vibrations of the 160-atom cell carry S_vib = ' + (S / 160).toFixed(2) +
-        ' kB per atom  ·  brighter bar = more entropy per vibration';
+      c.fillText('vibration frequency (THz, trillion cycles per second)', (L + g.w - R) / 2, g.h - 2);
+      c.save(); c.translate(12, (Tp + g.h - B) / 2); c.rotate(-Math.PI / 2); c.fillText('Number of modes', 0, 0); c.restore();
+      out.textContent = T + ' K  ·  the ' + F.length + ' modes in the 160-atom cell give S_vib = ' + (S / 160).toFixed(2) +
+        ' kB per atom  ·  Brighter bars show more entropy per mode';
     }
     function draw() { still(); nudge(); springs(); modes(); }
     function frame() { if (visible) { t += 1 / 60; modes(); } requestAnimationFrame(frame); }

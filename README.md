@@ -8,7 +8,7 @@ index.html            home: hero, about, research (two image-led blocks), projec
 instrument.html       project page: the Mössbauer spectrometer (schematic, spectrum + ray figures, gallery)
 entropy.html          project page: alloy entropy (Debye entropy figure, gallery)
 automation.html       project page: research automation, figures drawn from measured numbers
-art.html              art gallery (resin lamp, paper, cyanotypes); its card's lamp thumb flickers on when hovered
+art.html              art gallery (resin lamp, paper, cyanotypes)
 latte.html            the café: latte gallery, linked only from the footer cup
 404.html              not-found page (GitHub Pages serves it automatically)
 about|research|projects.html   noindex redirects into index.html, kept for old inbound links

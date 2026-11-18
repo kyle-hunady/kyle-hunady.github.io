@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kyle café · latte log</title>
-<meta name="description" content="Latte art I have poured and photographed since August 2025, newest first.">
+<title>Latte log · Kyle Hunady</title>
+<meta name="description" content="Photos of my latte art since August 2025, newest first.">
 <link rel="canonical" href="https://kyle-hunady.github.io/latte.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/latte.html">
-<meta property="og:title" content="Kyle café · latte log">
-<meta property="og:description" content="Latte art I have poured and photographed since August 2025, newest first.">
+<meta property="og:title" content="Latte log · Kyle Hunady">
+<meta property="og:description" content="Photos of my latte art since August 2025, newest first.">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261118131221">
+<link rel="stylesheet" href="assets/css/site.css?v=29a93633dfe0">
 </head>
 <body class="cafe">
 
@@ -45,22 +45,21 @@
 </nav> <header class="page__head">
   <div class="container header__container">
     <div class="cafe-cup" aria-hidden="true"><svg><use href="#i-cup"/></svg></div>
-    <p class="header__eyebrow">Kyle café</p>
     <h1>The latte log</h1>
-    <p class="header__line">I started pouring latte art in August 2025. These are the cups I photographed, newest first.</p>
+    <p class="header__line">I started practicing latte art in August 2025. The newest photos are first.</p>
   </div>
 </header>
 
 <section id="gallery">
-  <div class="container"><a href="index.html" class="back-link"><svg><use href="#i-arrow-left"/></svg>Back home</a> <div class="latte-top"> <p class="latte-badge" id="latte-badge"></p> <button class="btn" id="latte-shuffle" type="button">Shuffle the cups</button></div>
-    <p class="latte-badge" id="cafe-months-label">Cups per month</p>
-    <div class="cafe-months" id="cafe-months" role="img" aria-label="Cups photographed per month"></div>
+  <div class="container"><a href="index.html" class="back-link"><svg><use href="#i-arrow-left"/></svg>Home</a> <div class="latte-top"> <p class="latte-badge" id="latte-badge"></p> <button class="btn" id="latte-shuffle" type="button">Shuffle photos</button></div>
+    <p class="latte-badge" id="cafe-months-label">Photos by month</p>
+    <div class="cafe-months" id="cafe-months" role="img" aria-label="Latte photos by month"></div>
 
     <div class="latte-grid" id="latte-grid"></div>
   </div>
 </section>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged view"><div class="lightbox-card"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous cup">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next cup">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close">&#10005;</button></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Latte photo"><div class="lightbox-card"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous photo">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next photo">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close photo">&#10005;</button></div>
     </div>
   </div>
 </div>
@@ -91,7 +90,7 @@
   // the date range and the grid can never drift apart.
   const dates = (typeof LATTE_DATES !== 'undefined') ? LATTE_DATES : {};
   const all = Object.keys(dates).map(Number).sort((a, b) => a - b);
-  if (!all.length) { badge.textContent = 'No photos yet'; return; }
+  if (!all.length) { badge.textContent = 'No latte photos yet.'; return; }
 
   const pad = (n) => String(n).padStart(3, '0');
   // Dates arrive as 'May 08, 2026'; show them as 'May 8, 2026'.
@@ -113,9 +112,9 @@
   if (idx.length) {
     const lo = Math.min(...idx), hi = Math.max(...idx), peak = Math.max(...Object.values(counts));
     const name = (k) => `${MON[k % 12]} ${Math.floor(k / 12)}`;
-    document.getElementById('cafe-months-label').textContent = `Cups per month, ${name(lo)} to ${name(hi)}`;
+    document.getElementById('cafe-months-label').textContent = `Latte photos by month, ${name(lo)} to ${name(hi)}`;
     const mbox = document.getElementById('cafe-months');
-    mbox.setAttribute('aria-label', `Bar chart of cups photographed per month, ${name(lo)} to ${name(hi)}. Busiest month: ${peak} cups.`);
+    mbox.setAttribute('aria-label', `Bar chart of latte photos by month, ${name(lo)} to ${name(hi)}. The highest count was ${peak} in one month.`);
     for (let k = lo; k <= hi; k++) {
       const c = counts[k] || 0;
       const col = document.createElement('div'); col.className = 'cafe-month';
@@ -137,11 +136,11 @@
       const cell = document.createElement('button');
       cell.className = 'latte-cell';
       cell.type = 'button';
-      cell.setAttribute('aria-label', `Enlarge cup ${n}, ${day(n)}`);
+      cell.setAttribute('aria-label', `Open latte photo ${n}, ${day(n)}`);
 
       const img = document.createElement('img');
       img.src = `${BASE}${pad(n)}.${EXT}`;
-      img.alt = `Latte ${n}, ${day(n)}`;
+      img.alt = `Latte art from ${day(n)} (photo ${n})`;
       img.loading = i < 6 ? 'eager' : 'lazy';
       img.decoding = 'async';
       cell.appendChild(img);
@@ -162,7 +161,7 @@
     current = (i + order.length) % order.length;
     const n = order[current];
     lbImg.src = `${BASE}${pad(n)}.${EXT}`;
-    lbImg.alt = `Latte ${n}, ${day(n)}`;
+    lbImg.alt = `Latte art from ${day(n)} (photo ${n})`;
     lbCap.textContent = label(n);
   }
 

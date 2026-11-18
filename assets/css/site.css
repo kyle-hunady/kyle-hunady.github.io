@@ -972,20 +972,7 @@ img.rounded { border-radius: 0.4rem; }
 .fig--light #f8-table tr.on td { background: #f0ebfa; font-weight: 600; }
 .fig--light #f8-table th, .fig--light #f8-table td { color: var(--paper-ink); border-bottom: 1px solid #dedbd2; background: transparent; }
 
-/* art.html + its card: the lamp thumb sits dark and flickers on when hovered;
-   the gallery hangs a little crooked and straightens under the pointer. */
-.project__thumb--lamp img { filter: brightness(0.32) saturate(0.5); transition: filter 0.6s ease; }
-a.project--lamp:hover .project__thumb--lamp img,
-a.project--lamp:focus-visible .project__thumb--lamp img { animation: lamp-on 0.9s linear forwards; }
-@keyframes lamp-on {
-  0%   { filter: brightness(0.32) saturate(0.5); }
-  8%   { filter: brightness(1.15) saturate(1.1); }
-  14%  { filter: brightness(0.4) saturate(0.6); }
-  26%  { filter: brightness(1.1) saturate(1.1); }
-  32%  { filter: brightness(0.7) saturate(0.8); }
-  100% { filter: brightness(1.08) saturate(1.15); }
-}
-@media (hover: none) { .project__thumb--lamp img { filter: none; } }
+/* Art gallery layout. */
 .gallery--wonky { display: block; columns: 3 13rem; column-gap: 1.1rem; }
 .gallery--wonky figure { break-inside: avoid; margin: 0 0 1.4rem; transform: rotate(-1.4deg); transition: transform 0.35s ease; }
 .gallery--wonky figure:nth-child(2n) { transform: rotate(1.1deg) translateY(4px); }
@@ -998,6 +985,5 @@ a.project--lamp:focus-visible .project__thumb--lamp img { animation: lamp-on 0.9
 .ilove:nth-of-type(2n) { transform: rotate(0.8deg); }
 .art__note { font-size: 0.75rem; color: var(--faint); margin-top: 0.4rem; }
 @media (prefers-reduced-motion: reduce) {
-  a.project--lamp:hover .project__thumb--lamp img, a.project--lamp:focus-visible .project__thumb--lamp img { animation: none; filter: none; }
   .gallery--wonky figure { transition: none; }
 }

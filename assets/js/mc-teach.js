@@ -61,7 +61,7 @@
         seen[nm] = 1;
       });
       tr.push({ x: T.v, y: r.total, xaxis: "x" + s, yaxis: "y" + s, type: "scatter", mode: "lines",
-        line: { color: INK, width: 2 }, name: "what the instrument sees (sum)", legendgroup: "sum", showlegend: i === 0,
+        line: { color: INK, width: 2 }, name: "combined spectrum", legendgroup: "sum", showlegend: i === 0,
         hovertemplate: "%{x:.2f} mm/s<extra>sum</extra>" });
       L["xaxis" + s].range = [-10.5, 10.5];
       L["xaxis" + s].title = { text: "velocity (mm/s)", font: { size: 10 } };
@@ -83,7 +83,7 @@
           line: { color: q[2], width: 0.8 }, fillcolor: rgba(q[2], 0.18), name: q[1], showlegend: false,
           hovertemplate: q[1] + "<extra></extra>" });
       });
-      var spec = [[c.y0, "mixture, no smear", "#8a8f87", 2.2], [c.y_ours, "our head (1.8 % stretch)", C_OURS, 1.8]];
+      var spec = [[c.y0, "mixture before broadening", "#8a8f87", 2.2], [c.y_ours, "current design (1.8% stretch)", C_OURS, 1.8]];
       spec.forEach(function (q, k) {
         tr.push({ x: T.v, y: q[0], xaxis: "x" + s, yaxis: "y" + s, type: "scatter", mode: "lines", line: { color: q[2], width: q[3] },
           name: q[1], legendgroup: q[1], showlegend: i === 0, hovertemplate: "%{x:.2f} mm/s<extra>" + q[1] + "</extra>" });
@@ -91,7 +91,7 @@
       L["xaxis" + s].range = sext ? [-10.5, 10.5] : [-1.6, 3.4];
       L["xaxis" + s].title = { text: "velocity (mm/s)", font: { size: 10 } };
       var o = c.rows[0], h = c.rows[1];
-      ann.push(title(i, 0, "<b>" + na + " + " + nb + "</b> · time ×" + o.time.toFixed(2) + " (ours), ×" + h.time.toFixed(1) + " (8 mm)"));
+      ann.push(title(i, 0, "<b>" + na + " + " + nb + "</b> · time ×" + o.time.toFixed(2) + " (current), ×" + h.time.toFixed(1) + " (8 mm)"));
     });
     L.annotations = ann; L.showlegend = true;
     L.legend = { orientation: "h", y: -0.12, yanchor: "top", x: 0, font: { size: 10 } };
@@ -141,7 +141,7 @@
       ctx.fillStyle = "#4a4f48"; ctx.textAlign = "center"; ctx.fillText("velocity (mm/s)", px + pw / 2, H - 6);
       [-10, -5, 0, 5, 10].forEach(function (t) { ctx.fillText(t, px + pw * (t + 11) / 22, H - 22); });
       ctx.save(); ctx.translate(px - 8, 10 + ph2 / 2); ctx.rotate(-Math.PI / 2); ctx.fillText("counts", 0, 0); ctx.restore();
-      out.textContent = "Sweeps so far: " + Math.floor(sweeps) + ". The noise shrinks as 1/√(counts), so halving it takes four times as long.";
+      out.textContent = "Sweeps completed: " + Math.floor(sweeps) + ". Halving the relative counting noise takes four times as many counts.";
       if (sweeps > 2000) reset();
     }
     reset();

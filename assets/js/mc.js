@@ -68,7 +68,7 @@
         hovertemplate: "θ %{x:.2f}°: %{y:.2f} %<extra></extra>" },
       { type: "scatter", mode: "lines", x: [P.mean_deg, P.mean_deg], y: [0, Math.max.apply(null, y) * 1.08],
         line: { color: INK, dash: "dash", width: 1.5 }, name: "mean θ = " + P.mean_deg.toFixed(1) + "°", hoverinfo: "skip" }
-    ], base({ xaxis: ax("θ, angle off the source axis (°)", { range: [0, 25] }), yaxis: ax("share of detected photons (%)"),
+    ], base({ xaxis: ax("angle from the source axis (°)", { range: [0, 25] }), yaxis: ax("share of detected photons (%)"),
               showlegend: true, legend: { x: 0.98, xanchor: "right", y: 0.98, bgcolor: "rgba(255,255,255,0.7)" },
               bargap: 0 }), CFG);
   }
@@ -102,17 +102,17 @@
     var z = K.map(function (r) { return r.map(function (x) { return x > 0 ? Math.sqrt(x) : null; }); });
     Plotly.newPlot(el, [
       { type: "heatmap", x: v, y: v, z: z, colorscale: [[0, "#fff4e6"], [0.35, "#f59f00"], [1, "#7a2e00"]],
-        zmin: 0, zmax: 0.55, showscale: true, colorbar: { title: { text: "√weight", side: "right" }, thickness: 10, len: 0.8 },
-        name: "smearing kernel (Monte Carlo)", hovertemplate: "recorded at %{y:.1f} mm/s ← true line at %{x:.2f} mm/s<extra></extra>" },
+        zmin: 0, zmax: 0.55, showscale: true, colorbar: { title: { text: "square root of weight", side: "right" }, thickness: 10, len: 0.8 },
+        name: "smearing kernel (Monte Carlo)", hovertemplate: "True: %{x:.2f} mm/s<br>Recorded: %{y:.1f} mm/s<extra></extra>" },
       { type: "scatter", mode: "lines", x: [-11, 11], y: [-11, 11], line: { color: "#1f78b4", dash: "dot", width: 1.5 },
-        name: "no smear (θ = 0)", hoverinfo: "skip" }
+        name: "no broadening (θ = 0)", hoverinfo: "skip" }
     ], base({ xaxis: ax("true line position (mm/s)", { range: [7.0, 10.0] }),
-              yaxis: ax("drive velocity where it is recorded (mm/s)", { range: [7.0, 10.0], scaleanchor: "x" }),
+              yaxis: ax("recorded velocity (mm/s)", { range: [7.0, 10.0], scaleanchor: "x" }),
               showlegend: true, legend: { x: 0.02, y: 0.98, bgcolor: "rgba(255,255,255,0.75)" },
               margin: { l: 60, r: 10, t: 10, b: 46 } }), CFG);
     el.on("plotly_hover", function (e) {
       var p = e.points[0]; if (!p || p.data.type !== "heatmap" || p.z == null) return;
-      out(el, "A line at <b>" + p.x.toFixed(2) + " mm/s</b> puts weight " + (p.z * p.z).toFixed(3) +
+      out(el, "A line at <b>" + p.x.toFixed(2) + " mm/s</b> contributes a weight of " + (p.z * p.z).toFixed(3) +
           " at <b>" + p.y.toFixed(2) + " mm/s</b>. Rows sum to 1.");
     });
   }
@@ -121,9 +121,9 @@
   function spectra(elFull, elZoom, D) {
     var S = D.spec, keys = ["ver1", "ver2", "ver3pb"], label = { ver1: "ver1", ver2: "ver2 (in use)", ver3pb: "ver3" };
     function tr(zoom) {
-      var t = [{ x: S.v, y: S.expected, type: "scatter", mode: "lines", name: "input sextet, no smear",
+      var t = [{ x: S.v, y: S.expected, type: "scatter", mode: "lines", name: "input sextet",
                  line: { color: "#9aa0a6", width: 1.2 }, fill: "tozeroy", fillcolor: "rgba(154,160,166,0.18)",
-                 hovertemplate: "%{x:.2f} mm/s<extra>no smear</extra>" }];
+                 hovertemplate: "%{x:.2f} mm/s<extra>input sextet</extra>" }];
       keys.forEach(function (k) {
         t.push({ x: S.v, y: S[k], type: "scatter", mode: "lines", name: label[k] + " (Monte Carlo)",
                  line: { color: D.num[k].color, width: k === "ver2" ? 3.5 : 2, dash: k === "ver3pb" ? "dot" : "solid" },
