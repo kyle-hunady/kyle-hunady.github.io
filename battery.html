@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Battery materials · Kyle Hunady</title>
+<meta name="description" content="Kyle Hunady's undergraduate battery work in Gleb Yushin's lab at Georgia Tech: a cheap Li2OHCl solid electrolyte read through impedance spectroscopy, and soap bubbles that make NMC cathodes charge faster.">
+<link rel="canonical" href="https://kyle-hunady.github.io/battery.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/battery.html">
+<meta property="og:title" content="Battery materials · Kyle Hunady">
+<meta property="og:description" content="A cheap Li2OHCl solid electrolyte read through impedance spectroscopy, and soap bubbles that make NMC cathodes charge faster. Georgia Tech, 2019 to 2022.">
+<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/site.css?v=20261118124809">
+<style>
+  .fig + p, p + .fig, .fig + h3 { margin-top: 1.4rem; }
+  .fig--light img { border-radius: .3rem; }
+  .eis-plot { height: 17rem; }
+  .refs { font-size: .9rem; color: var(--muted); padding-left: 1.2rem; }
+  .refs li { margin: .35rem 0; }
+  .elements { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin: 1rem 0 1.2rem; }
+  .elements div { background: var(--surface); border: 1px solid var(--rule); border-radius: .6rem; padding: .7rem .8rem; font-family: var(--sans); font-size: .88rem; line-height: 1.5; color: var(--muted); }
+  .elements b { display: block; color: var(--accent); font-weight: 500; margin-bottom: .2rem; }
+  @media (max-width: 640px) { .elements { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8"/><path d="M16.5 5.3a3.4 3.4 0 0 1 0 6.4"/><path d="M18 14.6c2.2.6 3.5 2.4 3.5 5.4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+<nav aria-label="Sections">
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
+</nav>
+
+<header class="page__head">
+  <div class="container header__container">
+    <p class="header__eyebrow">Battery materials · Georgia Tech, 2019 to 2022</p>
+    <h1>Solid electrolytes and Li-ion cathodes</h1>
+    <p class="header__line">Two undergraduate projects in Gleb Yushin's lab: a solid electrolyte made from two cheap salts, and soap bubbles that help thick cathodes charge faster.</p>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="container">
+    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
+
+    <ol class="parts">
+      <li><a href="#sse"><b>I. The electrolyte</b><span>Li<sub>2</sub>OHCl, made by melting two salts</span></a></li>
+      <li><a href="#eis"><b>II. Reading it with impedance</b><span>Nyquist plots, circuit models, and where the resistance hides</span></a></li>
+      <li><a href="#cathode"><b>III. The cathode</b><span>Shampoo surfactant as a pore maker</span></a></li>
+    </ol>
+
+    <h2 class="part" id="sse"><span>I</span>A solid electrolyte made from two cheap salts</h2>
+    <p>Most lithium-ion batteries use a liquid electrolyte, and that liquid can catch fire. A solid electrolyte removes the fire risk, but most solid electrolytes are expensive to make. Many need long firing at high temperature, and some need special presses to make a dense pellet.</p>
+    <p>Li<sub>2</sub>OHCl is easier. You melt lithium hydroxide and lithium chloride together and let the melt cool. Both salts are cheap, and the compound melts below 300 °C, so it can be cast like solder (<a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">Song 2020</a>). A cold press turns the powder into a pellet above 90% of full density (<a href="https://doi.org/10.1021/jacs.5b11851" target="_blank" rel="noreferrer">Hood 2016</a>).</p>
+    <p>Lithium ions move through it slowly at room temperature. Between about 35 and 60 °C the crystal changes shape, from orthorhombic to cubic, and conduction gets much easier (<a href="https://doi.org/10.1002/aenm.201700971" target="_blank" rel="noreferrer">Song 2018</a>; <a href="https://doi.org/10.1002/anie.201604554" target="_blank" rel="noreferrer">Li 2016</a>). At 110 °C, Song measured more than 10<sup>−4</sup> S/cm. It also has to be kept dry, because moisture changes what you end up making.</p>
+    <p>I worked on this with Ah-Young Song. Her papers showed that the hydrogen in each OH group spins in place, and that this rotation helps the lithium ions move. I made the powder. In an argon glovebox I melted the salts by induction heating, cast the melt, and ground it. I sealed the powder in a zirconia jar under vacuum and ball-milled it outside the glovebox. The new milling route raised conductivity about tenfold.</p>
+
+    <figure class="fig fig--light">
+      <img src="assets/img/gt-lirap-process.jpg" alt="Process drawing. Inside an argon glovebox: dried LiOH and LiCl heated to 650 °C in a graphite crucible by an induction coil, the melt cast onto a graphite plate, cooled, and ground in a mortar, then poured into a zirconia jar and sealed under vacuum. Outside, the jar spins on a planetary ball mill opposite a counterweight." width="1400" height="1050" loading="lazy">
+      <figcaption><b>How I made the powder.</b> Everything up to the sealed jar happens under argon, because the salts pick up water from air. The sealed jar then goes on a planetary ball mill in the open lab.</figcaption>
+    </figure>
+
+    <p>I pressed the milled powder into pellets three ways: cold, hot at 80 °C, and sintered at 150 °C. Each pellet went between two lithium disks, and I measured it from room temperature to 110 °C. The plots on this page are recomputed from those 2020 files.</p>
+
+    <figure class="fig fig--light" style="max-width:44rem">
+      <img src="assets/img/gt-lirap-sigma.png" alt="Conductivity on a log scale against inverse temperature for three pellets. All three rise from about 1e-7 S/cm at 22 °C to between 1.5e-5 and 4e-5 S/cm at 110 °C. The hot-pressed pellet sits about two times higher from 22 to 80 °C." width="1408" height="968" loading="lazy">
+      <figcaption><b>All three pellets went from about 10<sup>−7</sup> S/cm at room temperature to a few times 10<sup>−5</sup> S/cm at 110 °C.</b> They gained 20 to 30 times between 22 and 60 °C, across the shape change. The hot-pressed pellet was about twice as good below 80 °C; above that the routes give about the same result. These numbers use the whole cell's resistance, contacts included, so the electrolyte itself does at least this well. Part II splits that resistance up.</figcaption>
+    </figure>
+
+    <p>Back then we treated Li<sub>2</sub>OHCl as a pellet material, and pellets still work. The lab's larger result came after I left. They melted the electrolyte and let it soak into a finished electrode, the way liquid electrolyte fills a normal cell, so nothing had to be pressed. With a tuned composition, Li<sub>1.9</sub>OHCl<sub>0.9</sub>, infiltrated at about 300 °C, a full cell kept over 80% of its capacity after 100 cycles and still ran at 60 °C (<a href="https://doi.org/10.1038/s41563-021-00943-2" target="_blank" rel="noreferrer">Xiao 2021</a>). Part II shows why that matters: in my pellets, most of the resistance sat between the grains and at the contacts.</p>
+
+    <h2 class="part" id="eis"><span>II</span>Reading a pellet with impedance spectroscopy</h2>
+    <p>You cannot just put a battery tester across a pellet and read its resistance. The pellet is a stack of things in series: the inside of each crystal grain, the boundaries between grains, and the two places where it touches the electrodes. Each has its own resistance, and a plain DC measurement adds them all up.</p>
+    <p>Impedance spectroscopy pulls them apart by timing. You apply a small AC voltage (100 to 500 mV in these runs) and sweep its frequency, here from 1 MHz down to 1 Hz. At each frequency you record how much current flows and how far it lags the voltage. That gives a complex impedance Z = Z′ + jZ″. A Nyquist plot puts Z′ on the horizontal axis and −Z″ on the vertical axis, with one point per frequency. High frequencies land on the left.</p>
+    <p>The reason this separates things is that each region acts like a resistor in parallel with a capacitor. A resistor and capacitor in parallel draw a semicircle. Its width is the resistance R, and its peak sits at the frequency f = 1/(2πRC). So two regions with similar resistance but very different capacitance show up as two separate arcs. The capacitance also tells you what you are looking at. In the class talk I gave on this in 2021, the rule of thumb was about a picofarad for grain interiors, about a nanofarad for grain boundaries, and much larger, diffusive behavior at the electrodes.</p>
+
+    <div class="elements">
+      <div><b>R, a resistor</b>A single point on the real axis. It shifts the whole plot to the right. Wires and very fast processes look like this.</div>
+      <div><b>R ‖ C, a semicircle</b>A perfect half circle of width R. Each region of the pellet that both resists and stores charge gives one.</div>
+      <div><b>CPE, a "leaky" capacitor</b>Real materials are not uniform, so an arc is a spread of slightly different RC pieces. A constant phase element, Z = 1/(Q(jω)<sup>n</sup>), captures that with one number: n = 1 is an ideal capacitor and a full semicircle, and lower n flattens the arc.</div>
+      <div><b>Warburg, diffusion</b>When ions have to diffuse to or from an interface, the plot turns into a straight line at 45° at low frequency. It is a CPE with n = 0.5.</div>
+    </div>
+
+    <p>The electrodes matter as much as the sample. Lithium disks let lithium ions cross into the pellet, so the low-frequency end closes back onto the real axis, and the last arc measures how hard that crossing is. Steel or gold disks block lithium, so charge piles up at the surface and the plot shoots almost straight up instead. Try both below.</p>
+
+    <div class="fig" id="eis-toy">
+      <canvas class="eis-plot plot" aria-label="Nyquist plot of a model circuit: a resistor, a grain-boundary arc, and an electrode term, redrawn as the controls change"></canvas>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>grain boundaries <input class="t-rgb" type="range" min="200" max="3000" step="50" value="1200"></label>
+        <label>CPE n <input class="t-n" type="range" min="0.5" max="1" step="0.01" value="0.9"></label>
+        <label>contact <input class="t-rct" type="range" min="0" max="3000" step="50" value="1200"></label>
+        <label>electrodes <select class="t-el"><option value="li">lithium disks</option><option value="liw">lithium + diffusion</option><option value="ss">steel disks (block Li)</option></select></label>
+      </div>
+      <p class="cap"><span class="tag-model">model</span><b>Each circle on the curve is one decade of frequency, from 1 MHz on the left to 0.1 Hz.</b> The circuit is 200 Ω in series, then grain boundaries (a resistor in parallel with a 9 nF CPE), then the electrode. Drop n and the grain-boundary arc flattens. Switch to steel disks and the closed contact arc becomes a near-vertical line.</p>
+    </div>
+
+    <p>Here is the sintered pellet at six temperatures. Above 60 °C there is one large arc and a small tail. The large arc peaks at a few kilohertz, and its peak frequency and width give about 7 nF, which is the grain-boundary range. The small tail at tens of hertz comes out in the microfarads, so it belongs to the lithium contact. At room temperature everything is about a hundred times larger, and a small extra arc appears near 1 MHz, probably the grain interiors coming into view.</p>
+
+    <figure class="fig fig--light">
+      <img src="assets/img/gt-eis-nyquist.png" alt="Two Nyquist plots of the sintered pellet. Left, 60 to 110 °C on a kilo-ohm scale: one large arc and a small low-frequency tail that both shrink as temperature rises. Right, 22 and 40 °C on a scale a hundred times larger." width="2094" height="767" loading="lazy">
+      <figcaption><b>Heating shrinks every arc, but the grain-boundary arc stays the biggest piece.</b> Squares mark 1 MHz, 10 kHz, 100 Hz and 1 Hz on each curve.</figcaption>
+    </figure>
+
+    <p>To put numbers on each piece, I fit the spectra with a circuit: a series resistor R₀, then a resistor in parallel with a CPE for the grain boundaries, then a second resistor and CPE for the contact. The hot-pressed pellet at 100 °C fits it to within half a percent.</p>
+
+    <figure class="fig fig--light">
+      <img src="assets/img/gt-eis-fit.png" alt="Nyquist plot of the hot-pressed pellet at 100 °C with a circuit fit. A series resistance of 214 ohms, a grain-boundary arc of 668 ohms at about 9 nF with n = 0.91, and a lopsided low-frequency arc of 1260 ohms with n = 0.44." width="1691" height="593" loading="lazy">
+      <figcaption><b>Of the 2.1 kΩ total, 0.2 kΩ is in front of every arc, 0.7 kΩ is grain boundaries, and 1.3 kΩ is the lithium contact.</b> The contact arc has n = 0.44, close to the 0.5 of pure diffusion, so it likely mixes charge transfer with some diffusion.</figcaption>
+    </figure>
+
+    <p>Turned back into conductivity, that is three different numbers for the same pellet at 100 °C. Counting only R₀, the electrolyte conducts at least 2.6 × 10<sup>−4</sup> S/cm, in line with Song's published values. Adding the grain boundaries drops it to 6.4 × 10<sup>−5</sup> S/cm. Adding the lithium contacts drops it to 2.6 × 10<sup>−5</sup> S/cm, the value in the first plot. So the crystals were never the problem. The resistance lived between them and at the edges, which is exactly what melting the electrolyte into an electrode gets around.</p>
+
+    <h2 class="part" id="cathode"><span>III</span>Soap bubbles for faster-charging cathodes</h2>
+    <p>The cathode in many electric-car batteries is a layer of nickel-manganese-cobalt oxide (NMC) on aluminum foil. You mix NMC powder with a binder and carbon into a paste, spread it on the foil, and dry it. A thicker coating stores more energy per cell. But lithium has to travel through the whole thickness, and the time that takes grows with the thickness squared. Doubling the thickness can cost up to four times in charging speed (<a href="#ref-kim">Kim 2023</a>).</p>
+    <p>The fix is to give the ions straight paths into the coating. Doyoub Kim, the graduate student I worked with, did this with a laser that drills cone-shaped channels through the finished electrode. In his thesis, channels 100 µm apart doubled a thick cathode's capacity at a 1-hour charge rate and quadrupled it at a 30-minute rate (<a href="#ref-kim">Kim 2023</a>). Lasers are slow and expensive on a production line, though.</p>
+    <p>My project tried a cheaper way to make pores: bubbles. I added sodium lauryl sulfate (SLS), the foaming agent in most shampoos, with a little water to the slurry, mixed it, cast it, and dried it at high temperature. The bubbles leave holes when the coating dries. I varied how much SLS went in (0.4 or 0.75 g), the mixing time (1 to 4 minutes), the mixer speed (400 to 1600 rpm) and the drying temperature (300 to 500 °C). Then I counted the pores in electron-microscope images with an ImageJ script, built half-cells in a glovebox, and discharged them at different rates. The best recipe was 0.75 g of SLS, mixed for 1 minute at 1200 rpm and dried at 300 °C.</p>
+
+    <figure class="fig fig--light">
+      <img src="assets/img/gt-nmc-sls.png" alt="Two rows. Top: SEM of a pristine NMC coating with a crack running across it, beside discharge curves at 0.1C, 1C and 3C reaching about 200, 175 and 147 mAh/g. Bottom: SEM of an SLS coating covered in round pores, beside discharge curves reaching about 205, 200 and 178 mAh/g." width="1462" height="1122" loading="lazy">
+      <figcaption><b>The pores raised capacity at a 20-minute discharge (3C) from about 150 to about 175 mAh/g, or 17%.</b> At slow rates the two coatings hold about the same, since there is time for lithium to reach the whole layer either way. Discharge curves are voltage against capacity in mAh/g at 0.1C (black), 1C (blue) and 3C (pink). SEM images at 50×; the scale bar is 1 mm. The pristine coating also cracked as it dried.</figcaption>
+    </figure>
+
+    <p>The bubbles were cheap and would scale, since they only add one step to mixing. The trouble was consistency. The same recipe did not always give the same pores, so the gain varied from batch to batch. My next step would have been to change the ratio of NMC, carbon and binder to make the foam more repeatable. The group later presented a scalable aqueous electrode process for fast charging at an ECS meeting, with me as a coauthor.</p>
+
+    <h2 id="sources">Sources</h2>
+    <ol class="refs">
+      <li>A.-Y. Song et al., Protons enhance conductivities in lithium halide hydroxide/lithium oxyhalide solid electrolytes by forming rotating hydroxy groups. <i>Advanced Energy Materials</i> 8, 1700971 (2018). <a href="https://doi.org/10.1002/aenm.201700971" target="_blank" rel="noreferrer">doi</a></li>
+      <li>A.-Y. Song et al., Understanding Li-ion dynamics in lithium hydroxychloride (Li<sub>2</sub>OHCl) solid state electrolyte via addressing the role of protons. <i>Advanced Energy Materials</i> 10, 1903480 (2020). <a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">doi</a></li>
+      <li>Z. D. Hood et al., Li<sub>2</sub>OHCl crystalline electrolyte for stable metallic lithium anodes. <i>Journal of the American Chemical Society</i> 138, 1768 (2016). <a href="https://doi.org/10.1021/jacs.5b11851" target="_blank" rel="noreferrer">doi</a></li>
+      <li>Y. Li et al., Fluorine-doped antiperovskite electrolyte for all-solid-state lithium-ion batteries. <i>Angewandte Chemie</i> 55, 9965 (2016). <a href="https://doi.org/10.1002/anie.201604554" target="_blank" rel="noreferrer">doi</a></li>
+      <li>Y. Xiao et al., Electrolyte melt infiltration for scalable manufacturing of inorganic all-solid-state lithium-ion batteries. <i>Nature Materials</i> 20, 984 (2021). <a href="https://doi.org/10.1038/s41563-021-00943-2" target="_blank" rel="noreferrer">doi</a></li>
+      <li id="ref-kim">D. Kim, <i>Enhancing ion transport in thick Li-ion battery electrodes by pore engineering</i>. PhD thesis, Georgia Institute of Technology (2023).</li>
+      <li>D. Kim, A. Magasinski, K. Hunady et al., Scalable aqueous battery electrode processing strategy to improve high C-rate capability of Li-ion battery electrodes. <i>ECS Meeting Abstracts</i> MA2023-01, 603 (2023). <a href="https://doi.org/10.1149/MA2023-012603mtgabs" target="_blank" rel="noreferrer">doi</a></li>
+      <li>K. Hunady, The story of solid sulfide electrolytes viewed through impedance spectroscopy. Class talk, MSE 7140, Georgia Tech (Fall 2021).</li>
+      <li>K. Hunady, Boosting Li-ion battery performance using shampoo. Talk, Yushin group, Georgia Tech (November 2021).</li>
+    </ol>
+    <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-links"><a href="index.html">Home</a><a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer">GitHub</a><a href="latte.html" class="cup" title="The latte log"><svg><use href="#i-cup"/></svg>Latte log</a></div>
+  <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
+</footer>
+
+<script src="assets/js/site.js?v=20261117065748"></script>
+<script>
+(function () {
+  const root = document.getElementById('eis-toy'); if (!root) return;
+  const cv = root.querySelector('canvas'), out = root.querySelector('.fig-out');
+  const q = s => root.querySelector(s);
+  const R0 = 200, Cgb = 9e-9, Qct = 2e-6, nct = 0.85, Qdl = 5e-6, ndl = 0.92, sigW = 600;
+  // complex helpers
+  const C = (re, im) => ({ re, im });
+  const add = (a, b) => C(a.re + b.re, a.im + b.im);
+  const div = (a, b) => { const d = b.re * b.re + b.im * b.im; return C((a.re * b.re + a.im * b.im) / d, (a.im * b.re - a.re * b.im) / d); };
+  const jwn = (w, n) => { const m = Math.pow(w, n), ph = n * Math.PI / 2; return C(m * Math.cos(ph), m * Math.sin(ph)); };
+  const rq = (w, R, Q, n) => { if (R <= 0) return C(0, 0); const y = jwn(w, n); return div(C(R, 0), C(1 + R * Q * y.re, R * Q * y.im)); };
+  const cpe = (w, Q, n) => { const y = jwn(w, n); return div(C(1, 0), C(Q * y.re, Q * y.im)); };
+  function Z(w, p) {
+    // Q chosen so the effective capacitance stays ~9 nF as n changes: C = (Q R^(1-n))^(1/n)
+    const Qgb = Math.pow(Cgb, p.n) / Math.pow(p.rgb, 1 - p.n);
+    let z = add(C(R0, 0), rq(w, p.rgb, Qgb, p.n));
+    if (p.el === 'ss') return add(z, cpe(w, Qdl, ndl));
+    z = add(z, rq(w, p.rct, Qct, nct));
+    if (p.el === 'liw') { const s = sigW / Math.sqrt(w); z = add(z, C(s, -s)); }
+    return z;
+  }
+  function css(v, fb) { const s = getComputedStyle(document.documentElement).getPropertyValue(v).trim(); return s || fb; }
+  function draw() {
+    const p = { rgb: +q('.t-rgb').value, n: +q('.t-n').value, rct: +q('.t-rct').value, el: q('.t-el').value };
+    q('.t-rct').disabled = p.el === 'ss';
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+    if (!W || !H) return;
+    cv.width = W * dpr; cv.height = H * dpr; const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+    const fs = [], pts = [];
+    for (let e = 6; e >= -1; e -= 0.02) fs.push(Math.pow(10, e));
+    fs.forEach(f => pts.push(Z(2 * Math.PI * f, p)));
+    // fixed scale so changes are visible: 0..6 kOhm wide, equal aspect
+    const pad = { l: 46, r: 12, t: 10, b: 34 }, pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    const xmax = 6000, scale = pw / xmax, ymax = ph / scale;
+    const X = v => pad.l + v * scale, Y = v => pad.t + ph - v * scale;
+    const ink = css('--muted', '#999'), rule = css('--rule', '#333'), acc = css('--accent', '#D9B26F'), wht = css('--white', '#eee');
+    g.strokeStyle = rule; g.lineWidth = 1; g.font = '11px ' + css('--sans', 'sans-serif'); g.fillStyle = ink;
+    for (let x = 0; x <= xmax; x += 1000) { g.beginPath(); g.moveTo(X(x), pad.t); g.lineTo(X(x), pad.t + ph); g.stroke(); g.fillText((x / 1000) + '', X(x) - 3, pad.t + ph + 14); }
+    for (let y = 0; y <= ymax; y += 1000) { g.beginPath(); g.moveTo(pad.l, Y(y)); g.lineTo(pad.l + pw, Y(y)); g.stroke(); g.fillText((y / 1000) + '', pad.l - 16, Y(y) + 4); }
+    g.fillText("Z′ (kΩ)", pad.l + pw / 2 - 16, H - 4);
+    g.save(); g.translate(12, pad.t + ph / 2 + 18); g.rotate(-Math.PI / 2); g.fillText("−Z″ (kΩ)", 0, 0); g.restore();
+    g.save(); g.beginPath(); g.rect(pad.l, pad.t, pw, ph); g.clip();
+    g.strokeStyle = acc; g.lineWidth = 2; g.beginPath();
+    pts.forEach((z, i) => { const x = X(z.re), y = Y(-z.im); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+    g.fillStyle = wht;
+    for (let e = 6; e >= -1; e--) { const z = Z(2 * Math.PI * Math.pow(10, e), p); g.beginPath(); g.arc(X(z.re), Y(-z.im), 3, 0, 2 * Math.PI); g.fill(); }
+    g.restore();
+    const fpk = 1 / (2 * Math.PI * p.rgb * Cgb);
+    const fk = fpk >= 1e3 ? (fpk / 1e3).toFixed(0) + ' kHz' : fpk.toFixed(0) + ' Hz';
+    out.textContent = 'grain-boundary arc: ' + p.rgb + ' Ω wide, peak near ' + fk +
+      (p.el === 'ss' ? ' · steel blocks Li, so the low-frequency end climbs instead of closing'
+        : p.el === 'liw' ? ' · diffusion adds a 45° tail after the contact arc'
+        : ' · contact arc: ' + p.rct + ' Ω, peak near ' + (1 / (2 * Math.PI * p.rct * 2e-6)).toFixed(0) + ' Hz');
+  }
+  root.querySelectorAll('input,select').forEach(el => el.addEventListener('input', draw));
+  root.querySelector('select').addEventListener('change', draw);
+  window.addEventListener('resize', draw);
+  draw();
+})();
+</script>
+</body>
+</html>
