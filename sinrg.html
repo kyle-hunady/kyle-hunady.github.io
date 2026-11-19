@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading rocks with gamma rays · Kyle Hunady</title>
+<meta name="description" content="An accessible guide to a small Mössbauer and X-ray fluorescence instrument head for planetary surfaces: how the two techniques work, what they can tell you on Mars, the Moon and asteroids, and the models behind each part.">
+<link rel="canonical" href="https://kyle-hunady.github.io/sinrg.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyle-hunady.github.io/sinrg.html">
+<meta property="og:title" content="Reading rocks with gamma rays · Kyle Hunady">
+<meta property="og:description" content="An accessible guide to a small Mössbauer and X-ray fluorescence instrument head for planetary surfaces: how the two techniques work, what they can tell you on Mars, the Moon and asteroids, and the models behind each part.">
+<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v=20261118203614">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8"/><path d="M16.5 5.3a3.4 3.4 0 0 1 0 6.4"/><path d="M18 14.6c2.2.6 3.5 2.4 3.5 5.4"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3.2 9.3h3.6V21H3.2zM10 9.3h3.45v1.6h.05c.48-.9 1.72-1.85 3.55-1.85 3.8 0 4.5 2.45 4.5 5.65V21h-3.6v-5.5c0-1.3-.02-3-1.85-3-1.85 0-2.13 1.42-2.13 2.9V21H10z"/></symbol>
+  <symbol id="i-scholar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 8.6 12 13.7l10.2-5.1z"/><path d="M5.9 10.8v4.4c0 1.9 2.7 3.3 6.1 3.3s6.1-1.4 6.1-3.3v-4.4"/><path d="M21.6 9v5"/></symbol>
+  <symbol id="i-orcid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M8.4 10.2v6.1"/><circle cx="8.4" cy="7.6" r="0.9" fill="currentColor" stroke="none"/><path d="M12.3 16.3v-6.1h2.1a3.05 3.05 0 0 1 0 6.1z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.29-1.71-1.29-1.71-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+<nav aria-label="Sections">
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
+</nav>
+
+<header class="page__head">
+  <div class="container header__container">
+    <p class="header__eyebrow">Planetary instrumentation · Caltech and JPL</p>
+    <h1>Reading rocks with gamma rays</h1>
+    <p class="header__line">A small instrument head that, pressed against a rock, tells you which elements it holds and what its iron is doing.</p>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="container">
+    <a href="index.html#research" class="back-link"><svg><use href="#i-arrow-left"/></svg>All research</a>
+
+
+    <div class="callout tldr"><div>SiNRG is a lab prototype that combines two measurements in one head: <b>X-ray fluorescence</b>, which lists the elements in a rock, and <b>Mössbauer spectroscopy</b>, which tells you which minerals hold the iron and how oxidized it is. A Mössbauer spectrometer on the Mars rovers found minerals that formed in water. Ours adds the element measurement, swaps the voice-coil drive for a 7 g piezo and lets you trade speed against sharpness by moving the source. I measured the drive, debugged the counting electronics and built the models that predict how each part shapes the spectrum. The models show the central trade: moving the source closer collects <b>8× the counts</b> but widens the outer iron line from 0.31 to 0.73 mm/s (Section VI).</div></div>
+
+    <figure class="fig fig--light hero-photo"><img src="assets/img/gallery/sinrg/open-head-detector.jpg" alt="The open instrument head on the bench, seen from above" width="1600" height="900"><figcaption>The prototype head with its lid off, set up for an X-ray fluorescence run.</figcaption></figure>
+
+    <div class="facts">
+      <div class="fact"><b>⁵⁷Fe</b><span>Backscatter Mössbauer: no sample preparation</span></div>
+      <div class="fact"><b>+ XRF</b><span>Elements from the same head and detector</span></div>
+      <div class="fact"><b>7 g</b><span>Piezo drive, about 7× lighter than the flight voice coil</span></div>
+      <div class="fact"><b>2023–2026</b><span>NASA PICASSO, Caltech and JPL</span></div>
+    </div>
+
+    <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
+      <li><a href="#questions"><b>I. Two questions about a rock</b><span>Elements, and what the iron is doing</span></a></li>
+      <li><a href="#xrf"><b>II. X-ray fluorescence</b><span>Every element answers in its own color</span></a></li>
+      <li><a href="#mossbauer"><b>III. Mössbauer spectroscopy</b><span>A nucleus tuned by a moving source</span></a></li>
+      <li><a href="#uses"><b>IV. Where it helps</b><span>Mars, the Moon and asteroids</span></a></li>
+      <li><a href="#hardware"><b>V. The instrument</b><span>Drive, source, detector, electronics</span></a></li>
+      <li><a href="#models"><b>VI. A model for each part</b><span>What sets the speed and the sharpness</span></a></li>
+      <li><a href="#status"><b>VII. Status</b><span>What works, what I did, what's next</span></a></li>
+    </ol></div>
+
+    <h2 class="part" id="questions"><span>I</span>An element map can’t tell you how a rock formed</h2>
+    <p class="lead-line">An element map tells you what a rock is made of. It can't tell you how the rock formed.</p>
+    <div class="duo">
+      <div><b>Which elements?</b><p>X-ray fluorescence (XRF). Each element gives off X-rays at its own energies when you excite it. Iron answers at 6.4 keV, calcium at 3.7 keV and strontium at 14.2 keV.</p></div>
+      <div><b>Which iron minerals?</b><p>Mössbauer spectroscopy. An iron nucleus feels the atoms around it. Iron in olivine, in rust and in a magnet each leave a different fingerprint.</p></div>
+    </div>
+    <p>Two rocks can hold the same amount of iron and tell opposite stories. In one, the iron sits in olivine, which crystallizes from magma. In the other, it sits in goethite or jarosite, which form in water. Both give the same XRF spectrum. Mössbauer separates them. On Mars, Spirit used it to find goethite in the Columbia Hills [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>], and Opportunity found jarosite at Meridiani Planum [<a href="https://doi.org/10.1126/science.1104653">Klingelhöfer et al. 2004</a>].</p>
+
+    <h2 class="part" id="xrf"><span>II</span>X-ray fluorescence names the elements</h2>
+    <p class="lead-line">Knock out an inner electron, and the atom announces itself with an X-ray.</p>
+    <p>Our XRF source is ²⁴¹Am, which gives off X-rays and a 59.5 keV gamma ray. When one of them knocks an electron out of an atom’s innermost shell, an outer electron drops into the gap and the atom emits an X-ray. Its energy depends on the charge of the nucleus, so each element has its own lines. Counting photons at each energy gives a spectrum. The peak positions name the elements and the peak areas give their amounts.</p>
+    <div class="fig fig--light">
+      <canvas id="fx" class="story" aria-label="Schematic detector spectrum: with the americium source, element peaks for potassium, calcium, titanium, manganese, iron, nickel, strontium and zirconium; with the cobalt source, the 14.4 keV Mössbauer line and the 6.4 keV iron X-ray"></canvas>
+      <div class="fig-controls"><span class="seg" id="fx-src"></span></div>
+      <p class="cap"><span class="tag-model">schematic</span><b>One detector, two kinds of signal.</b> With ²⁴¹Am the detector records element lines. With ⁵⁷Co it records the 14.4 keV gamma rays used for Mössbauer and the 6.4 keV iron X-rays given off after a nucleus absorbs one. The shaded bands are the energy windows the electronics count. Line positions come from X-ray tables. Peak heights are illustrative for a basalt.</p>
+    </div>
+    <p>A few things set how well XRF works. The excitation has to be more energetic than the electron’s binding energy, so heavier elements need harder X-rays. Light elements give off soft X-rays that the rock and the air reabsorb, which makes sodium and magnesium hard to measure. The rest of the rock also absorbs and re-excites lines, so turning peak areas into concentrations takes a physics model of the whole sample. We use PIQUANT, the quantification code written for the PIXL instrument on Perseverance, and check it against a certified glass standard.</p>
+
+    <h2 class="part" id="mossbauer"><span>III</span>Mössbauer spectroscopy reads what the iron is doing</h2>
+    <p class="lead-line">A nucleus absorbs only a gamma ray tuned to it, and you tune it by moving the source a few millimeters per second.</p>
+    <h3>1. A nucleus absorbs only its own photon</h3>
+    <p>The source is radioactive ⁵⁷Co. It decays into an excited ⁵⁷Fe nucleus, which can emit a 14.4 keV gamma ray. Another ⁵⁷Fe nucleus in the rock absorbs that gamma ray only if the energy matches its own transition to about one part in three trillion. A free atom would recoil and lose more energy than that. In a crystal, a large share of the nuclei emit and absorb without any recoil, because the whole lattice takes up the kick. That is the Mössbauer effect. Only about 2% of natural iron is ⁵⁷Fe, but that is enough.</p>
+    <div class="fig fig--light">
+      <canvas id="f1" class="story" aria-label="Decay scheme of cobalt-57, and a gamma ray absorbed by an iron nucleus with the same energy gap or passing one with a shifted gap"></canvas>
+      <div class="fig-controls"><span class="seg" id="f1-env"></span></div>
+      <p class="cap"><span class="tag-model">schematic</span>The lower plot puts the emission and absorption lines on one energy axis. A shift of 0.4 mm/s, typical between iron minerals, moves the absorption line by 19 neV, about four line widths.</p>
+    </div>
+
+    <h3>2. Move the source to tune the energy</h3>
+    <p>The atoms around an iron nucleus shift its levels by tens of billionths of an electronvolt. To scan across those shifts, a drive moves the source toward and away from the rock. A speed of 1 mm/s shifts the gamma ray by 48 neV through the Doppler effect. The electronics sort each detected photon by the source velocity at that moment. Whenever the velocity matches a transition in the rock, the rock sends more photons back toward the detector and a peak grows.</p>
+    <div class="fig fig--light">
+      <canvas id="f3" class="story" aria-label="A source on a drive moving toward a sample, its displacement and velocity over one cycle, and a spectrum of counts per velocity channel that grows only under a moving red marker"></canvas>
+      <div class="fig-controls"><button type="button" class="btn btn--light" id="f3-play">Pause</button><button type="button" class="btn btn--light" id="f3-reset">Restart</button><span class="seg" id="f3-samp"></span><span class="seg" id="f3-speed"></span></div>
+      <p class="cap"><span class="tag-model">simulated</span>The red marker shows which velocity bin is receiving counts. Peaks rise out of the counting noise after about ten passes. The animation runs about 150 times slower than the drive.</p>
+    </div>
+
+    <h3>3. The neighbors write a fingerprint</h3>
+    <p>Three numbers describe most spectra. The <i>isomer shift</i> (IS) moves the whole pattern and tracks the oxidation state: Fe²⁺ sits near 1.1 mm/s, Fe³⁺ near 0.4 mm/s. An uneven electric field around the nucleus splits the line in two, a <i>doublet</i>, and the gap, the <i>quadrupole splitting</i> (QS), reports the shape of the site. A magnetic field splits it into six, a <i>sextet</i>, and its spread gives the <i>hyperfine field</i> (B<sub>hf</sub>). Iron oxides that are magnetic at room temperature show sextets. Most iron silicates show doublets.</p>
+
+    <h3>What it depends on</h3>
+    <ul class="bullets">
+      <li><b>How many iron nuclei the photons reach.</b> More iron gives a stronger signal, up to a point where the top layer absorbs everything.</li>
+      <li><b>How stiffly the iron is held.</b> The recoil-free share drops as the rock warms. A rock at Mars daytime temperatures gives a little more signal than one at room temperature.</li>
+      <li><b>How sharp the source line is and how steady the drive is.</b> Any wobble in the velocity smears every line.</li>
+      <li><b>The source strength.</b> ⁵⁷Co has a half-life of 272 days. Spirit’s spectra took one to two hours early in the mission and about 48 hours some 17 months later [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>].</li>
+    </ul>
+
+    <h3>Why both in one head</h3>
+    <p>One silicon drift detector records the element X-rays, the 14.4 keV gamma rays and the 6.4 keV iron X-rays. The last two come from different depths, because the rock absorbs the softer 6.4 keV X-rays faster. If the two Mössbauer spectra disagree, the rock has a coating or a weathering rind. The MER team used this two-depth trick on Mars [<a href="https://doi.org/10.1029/2007JE003022">Fleischer et al. 2008</a>].</p>
+    <div class="fig fig--light">
+      <canvas id="fd" class="story" aria-label="Cross-section of a rock showing how deep the 14.4 keV and 6.4 keV signals reach, for basalt, lunar highland soil and a hematite-rich rock"></canvas>
+      <div class="fig-controls"><span class="seg" id="fd-mat"></span></div>
+      <p class="cap"><span class="tag-model">model</span><b>Each signal looks to a different depth.</b> Bars show the depth that holds 95% of each signal, computed from X-ray attenuation for our head’s angles. Both signals come from less than a millimeter, so a thin dust layer matters. In an iron-rich rock both stay shallow.</p>
+    </div>
+
+    <h2 class="part" id="uses"><span>IV</span>Mössbauer found water on Mars</h2>
+    <p class="lead-line">Mössbauer reads the iron in a rock whether it’s crystalline, glassy or made of grains too small for X-ray diffraction.</p>
+    <h3>Mars: water, and what kind</h3>
+    <p>The MIMOS II spectrometers on Spirit and Opportunity returned spectra from 2004 to 2012. They found jarosite, which forms in acidic water, goethite, which holds hydroxide in its structure, and magnesium-iron carbonate at Comanche that was first fitted as pyroxene [<a href="https://doi.org/10.1126/science.1189667">Morris et al. 2010</a>]. They also confirmed an iron meteorite, Heat Shield Rock, from the metal in it [<a href="https://doi.org/10.1029/2007JE002990">Schröder et al. 2008</a>]. Perseverance carries no Mössbauer spectrometer. At Cheyava Falls, its X-ray instrument could measure the iron, phosphorus and sulfur but not whether the iron was Fe²⁺ or Fe³⁺ [<a href="https://doi.org/10.1038/s41586-025-09413-0">Hurowitz et al. 2025</a>].</p>
+    <div class="fig fig--light">
+      <canvas id="f4" class="story" aria-label="Four Mössbauer spectra from Mars with their published fits. Olivine dominates at Adirondack, pyroxene at Bounce Rock, hematite at Berry Bowl and goethite at Clovis."></canvas>
+      <p class="cap"><span class="tag-data">archived data</span><b>Four rocks on Mars, four different iron minerals.</b> Dots are counts from NASA’s Planetary Data System (MER Mössbauer summed spectra). The black curves rebuild each published fit, and the colored areas mark the main mineral. Phase assignments from <a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a> and <a href="https://doi.org/10.1029/2006JE002791">Morris et al. 2006b</a>.</p>
+    </div>
+
+    <h3>Pairs an element map can’t separate</h3>
+    <div class="fig fig--light">
+      <canvas id="fm" class="story" aria-label="Model spectra of mineral pairs with the same elements: bulk magnetite versus nanophase oxide, ilmenite versus pyroxene, jarosite versus hematite"></canvas>
+      <div class="fig-controls"><span class="seg" id="fm-pair"></span></div>
+      <p class="cap"><span class="tag-model">model</span><b>Same elements, different spectra.</b> Spectra built from Mars-temperature parameters in <a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>, with lines 0.28 mm/s wide (FWHM). Arrows mark the isomer shift (IS), the quadrupole splitting (QS) and the hyperfine field (B<sub>hf</sub>). Tiny magnetic grains flip their magnetization faster than the nucleus can measure it, so the six lines of bulk magnetite collapse into a doublet. That nanophase oxide is common in Mars dust and invisible to X-ray diffraction.</p>
+          <div class="tablewrap"><table class="mini">
+        <thead><tr><th>Mineral</th><th>IS (mm/s)<br><small>oxidation state</small></th><th>QS (mm/s)<br><small>site shape</small></th><th>B<sub>hf</sub> (T)<br><small>magnetic field</small></th></tr></thead>
+        <tbody><tr><td>Magnetite, tetrahedral Fe³⁺</td><td>0.31</td><td>0.06</td><td>50.1</td></tr><tr><td>Magnetite, octahedral Fe²·⁵⁺</td><td>0.64</td><td>0</td><td>46.9</td></tr><tr><td>Nanophase Fe³⁺ oxide</td><td>0.37</td><td>0.91</td><td>none</td></tr><tr><td>Ilmenite</td><td>1.07</td><td>0.80</td><td>none</td></tr><tr><td>Pyroxene</td><td>1.16</td><td>2.15</td><td>none</td></tr><tr><td>Jarosite</td><td>0.36</td><td>1.22</td><td>none</td></tr><tr><td>Hematite</td><td>0.37</td><td>−0.16</td><td>51.7</td></tr></tbody>
+      </table></div>
+</div>
+
+    <h3>The Moon: where to make oxygen</h3>
+    <p>Heating lunar soil with hydrogen pulls oxygen out of its iron oxides as water. The yield tracks the amount of Fe²⁺, and ilmenite (FeTiO₃) gives it up more easily than pyroxene or olivine [<a href="https://doi.org/10.1029/96JE02726">Allen et al. 1996</a>]. Ilmenite and titanium-bearing pyroxene carry the same elements, so XRF can’t say which one you have. Mössbauer separates them by the gap in their doublets and gives the share of the iron in each. The O₂ yield measured in reduction tests is a few weight percent [<a href="https://doi.org/10.1016/j.pss.2019.104751">Sargeant et al. 2020</a>].</p>
+
+    <h3>Asteroids and meteorites</h3>
+    <p>In meteorites, Mössbauer splits the iron among olivine, pyroxene, metal and iron sulfide, and it sees how much has rusted. Those shares help classify a meteorite. No Mössbauer spectrometer has worked on an asteroid yet. A MIMOS II flew on the Phobos-Grunt mission, which never left Earth orbit.</p>
+
+    <div class="fig fig--light"><div class="tablewrap"><table class="mini">
+      <thead><tr><th>Question</th><th>What XRF gives</th><th>What Mössbauer adds</th></tr></thead>
+      <tbody>
+        <tr><td>Did this rock form in water?</td><td>Sulfur, iron, calcium</td><td>Jarosite, goethite or carbonate, and their share of the iron</td></tr>
+        <tr><td>How oxidized is the surface?</td><td>Total iron</td><td>Fe³⁺ / total Fe</td></tr>
+        <tr><td>Is this good oxygen ore?</td><td>Iron and titanium</td><td>Ilmenite versus pyroxene</td></tr>
+        <tr><td>Is the dust magnetic, and how fine?</td><td>Iron content</td><td>Sextet versus doublet</td></tr>
+        <tr><td>Is it a meteorite?</td><td>Nickel, iron</td><td>Metal and iron sulfide</td></tr>
+      </tbody>
+    </table></div></div>
+
+    <h2 class="part" id="hardware"><span>V</span>A backscatter head measures a rock as it is</h2>
+    <p class="lead-line">A backscatter head: source and detector sit on the same side, so it measures a rock as it is.</p>
+    <div class="fig"><svg class="schem" viewBox="0 0 640 230" role="img" aria-label="Schematic of a backscatter Mössbauer spectrometer">
+  <rect x="20" y="40" width="110" height="46" rx="6" fill="none" stroke="#8A6A3E"/>
+  <text x="75" y="60" text-anchor="middle" class="lbl">piezo drive</text><text x="75" y="76" text-anchor="middle">moves the source</text>
+  <path d="M130 63h40" stroke="#8A6A3E"/><path d="M150 52l8 11-8 11" fill="none" stroke="#8A6A3E"/><path d="M168 52l-8 11 8 11" fill="none" stroke="#8A6A3E"/>
+  <circle cx="200" cy="63" r="16" fill="#D9B26F" opacity="0.9"/>
+  <text x="200" y="104" text-anchor="middle" class="lbl">⁵⁷Co source</text><text x="200" y="120" text-anchor="middle">14.4 keV gamma rays</text>
+  <rect x="300" y="160" width="300" height="46" fill="rgba(201,138,127,0.18)" stroke="rgba(201,138,127,0.6)"/>
+  <text x="450" y="188" text-anchor="middle" class="lbl">sample (rock or soil, no preparation)</text>
+  <path d="M214 74 L420 160" stroke="#F2F3F0" stroke-opacity="0.45" stroke-dasharray="4 4"/>
+  <path d="M440 160 L500 80" stroke="#D9B26F" stroke-width="2"/><path d="M460 160 L560 90" stroke="#D9B26F" stroke-width="2"/>
+  <rect x="470" y="40" width="130" height="40" rx="6" fill="none" stroke="#7FA7C9"/>
+  <text x="535" y="58" text-anchor="middle" class="lbl">detector</text><text x="535" y="73" text-anchor="middle">counts returning photons</text>
+  <text x="320" y="110" text-anchor="start">resonant re-emission + X-ray fluorescence</text>
+  <text x="20" y="160">source moves a few mm/s each way</text><text x="20" y="176">counts are grouped by velocity</text>
+</svg>
+      <p class="cap"><span class="tag-model">schematic</span><b>Backscatter geometry.</b> The source and detector sit on the same side of the sample. That lets the head take a measurement directly on rock or soil. In a typical transmission setup, a thin prepared sample sits between the source and detector. Relative sizes and distances are illustrative.</p></div>
+    <figure class="fig fig--light"><img src="assets/img/mc/pipe_rays_on_photo.jpg" alt="Top-down photo of the real head with simulated photon paths drawn from the source, through the aperture, to the sample and back to the detector" width="763" height="586" loading="lazy"><figcaption><span class="tag-model">simulated paths on a photo</span><b>The real head, with simulated photons drawn on it.</b> Paths come from a run of one million 14.4 keV photons, traced from the source through the aperture to the sample and drawn back onto the photo. The <a href="montecarlo.html">Monte Carlo write-up</a> shows how the geometry was measured from this photo.</figcaption></figure>
+    <div class="gallery">
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/drive-and-source.jpg" data-caption="The source holder at the end of the drive, behind the lead aperture." aria-label="Enlarge: The source holder at the end of the drive, behind the lead aperture."><img src="assets/img/gallery/sinrg/drive-and-source-t.jpg" alt="The source holder at the end of the drive, behind the lead aperture" width="720" height="405" loading="lazy" decoding="async"></button><figcaption>The source holder at the end of the drive.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/aperture.jpg" data-caption="A lead and copper aperture. Its opening sets the range of photon angles, which matters later." aria-label="Enlarge: A lead and copper aperture. Its opening sets the range of photon angles, which matters later."><img src="assets/img/gallery/sinrg/aperture-t.jpg" alt="A lead and copper aperture held in a gloved hand" width="720" height="405" loading="lazy" decoding="async"></button><figcaption>A lead and copper aperture.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/jarosite-at-head.jpg" data-caption="A jarosite rock in front of the head." aria-label="Enlarge: A jarosite rock in front of the head."><img src="assets/img/gallery/sinrg/jarosite-at-head-t.jpg" alt="A jarosite rock in front of the instrument head" width="720" height="405" loading="lazy" decoding="async"></button><figcaption>A jarosite rock in front of the head.</figcaption></figure>
+    </div>
+
+    <h3>The drive</h3>
+    <p>MIMOS II moved its source with a 50 g voice coil, like a small loudspeaker. Our head uses a 7 g amplified piezo actuator. The piezo stack inside it grows by a fraction of a micrometer when you apply a voltage, and an oval steel frame turns that into a larger motion. A piezo is compact, but its motion depends on its history, drifts as it warms and can ring. Earlier piezo Mössbauer drives handled this in different ways. A 1974 design locked the drive frequency [<a href="https://doi.org/10.1016/0029-554x(74)90048-2">Schmidt et al. 1974</a>], and a 2002 miniature instrument ran an open-loop sine wave and got distorted spectra outside a few frequency bands [<a href="https://doi.org/10.1023/a:1021270407263">Casas et al. 2002</a>].</p>
+    <figure class="fig fig--light"><img src="assets/img/gallery/sinrg/piezo-drive-magnified.gif" alt="The piezo flexure drive filmed in slow motion. Left, the real motion, which is barely visible. Right, the same motion magnified forty times: the top beam of the frame bows up and down." width="1126" height="446" loading="lazy"><figcaption><span class="tag-data">video, motion magnified</span><b>The drive in slow motion.</b> Left: the motion as filmed, about one pixel. Right: the same motion magnified 40×. The top beam of the frame bows each cycle while the base stays put. The dashed line marks a fixed height. I averaged 1,112 slow-motion frames into four phases of the cycle, measured how each part of the image moved, and redrew the frames with that motion scaled up.</figcaption></figure>
+    <p>Our drive runs a 4,096-point waveform 30 times a second. A strain gauge on the actuator records what it actually did, and a learning loop compares that with the target after every pass and adjusts the next waveform. It settles in about 20 passes. The same actuator can then run different velocity ranges and waveform shapes.</p>
+
+    <h3 id="electronics">From detector pulse to spectrum</h3>
+    <p>A silicon drift detector turns each photon into a voltage pulse whose height is proportional to its energy. A Teensy microcontroller sorts the pulses into energy windows (14.4 keV, 6.4 keV or an XRF line) and a multichannel scaler bins them by the phase of the drive cycle. Thousands of cycles add up to a spectrum.</p>
+
+    <h2 class="part" id="models"><span>VI</span>Each part adds counts or blurs lines</h2>
+    <p class="lead-line">Every part of the head either adds counts or blurs lines, and a model of each tells you which.</p>
+    <div class="models">
+      <div><b>Source</b><p>Activity decays with a 272-day half-life. A decay chart for each source predicts the count rate, so a run that comes in low points to something else.</p></div>
+      <div><b>Drive</b><p>A laser vibrometer measures the real velocity. Its departure from the target was 0.11 mm/s RMS and repeated cycle to cycle, so it can be mapped and corrected.</p></div>
+      <div><b>Geometry</b><p>A Monte Carlo photon tracer follows each gamma ray to the rock and back. It predicts both the count rate and the line broadening from photon angles.</p></div>
+      <div><b>Detector and electronics</b><p>Energy windows and dead time decide which counts land in the spectrum. I traced the firmware to confirm how it bins photons by drive phase.</p></div>
+      <div><b>Sample</b><p>Attenuation sets the sampling depth. A Debye model of the recoil-free fraction corrects mineral shares for temperature.</p></div>
+      <div><b>XRF</b><p>PIQUANT models the whole sample to turn peak areas into concentrations, checked against a certified glass standard.</p></div>
+    </div>
+
+    <h3>Geometry: why lines broaden</h3>
+    <p>Only the part of the source velocity along a photon’s path shifts its energy. A photon leaving at angle θ to the drive axis sees v cos θ, so a line that belongs at v<sub>0</sub> shows up at v<sub>0</sub>/cos θ. Photons leave over a range of angles, so lines smear outward, most of all far from zero velocity. Moving the source closer to the aperture lets in more photons and more angles: you count faster and see blurrier lines.</p>
+    <div class="fig fig--light">
+      <canvas id="f5" class="story" aria-label="Side view of a source behind an aperture with rays at angle theta, the Monte Carlo angle distributions for the source 30 mm and 8 mm back, and an iron sextet through each"></canvas>
+      <div class="fig-controls"><label>Photon angle (θ) <input type="range" id="f5-th" min="0" max="35" step="1" value="12"></label><span class="seg" id="f5-sb"></span><span class="seg" id="f5-zoom"></span></div>
+      <p class="cap"><span class="tag-model">simulated</span><b>Speed versus sharpness.</b> Move the slider to change the photon angle on the left. The upper right shows how often detected photons arrive at each angle. The lower right starts from an iron sextet (gray). Its outermost line widens from 0.28 to 0.31 mm/s with the source 30 mm back (blue) and to 0.73 mm/s at 8 mm (purple), where the head collects eight times as many counts.</p>
+    </div>
+
+    <h3>Geometry: comparing three heads</h3>
+    <div class="fig fig--light">
+      <canvas id="f9" class="story" aria-label="Three instrument heads side by side in 3-D with translucent collimators and detected rays colored by angle"></canvas>
+      <p class="cap"><span class="tag-model">simulated</span><b>Three versions of the head at the same scale.</b> Each ray is a detected photon, colored by its angle to the drive axis. The model predicts that moving the source about 12 mm back in the next design keeps today’s line sharpness and doubles the count rate. The <a href="montecarlo.html">Monte Carlo write-up</a> builds this from a photo of the head.</p>
+    </div>
+    <p>Checked against our backscatter spectra, the angle model accounts for about half of the extra line width we measure in backscatter compared with transmission. The rest is still open. Candidates are the drive, the source line and the detector.</p>
+
+    <h2 class="part" id="status"><span>VII</span>The prototype works, and the write-up is under way</h2>
+    <p>The three-year project under NASA’s PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations) closed with a review in November 2026. With one detector, the assembled prototype recorded backscatter Mössbauer spectra of iron minerals, including a five-mineral Mars soil simulant, and XRF spectra of trace elements in a glass standard. We also ran the drive at 60 °C. We’re writing up the combined Mössbauer and XRF results with our JPL collaborators.</p>
+
+    <h3>What I did</h3>
+    <ul class="bullets">
+      <li>Measured the piezo drive’s velocity with a laser vibrometer and compared candidate feedback sensors.</li>
+      <li>Traced and debugged the counting electronics that sort detector pulses by drive phase.</li>
+      <li>Wrote the photon-transport model and measured the assembled head from photographs to feed it (<a href="montecarlo.html">Monte Carlo write-up</a>).</li>
+      <li>Checked the model against the prototype’s backscatter spectra.</li>
+    </ul>
+    <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>XRF (PIQUANT)</span></div>
+
+    <h3>On the bench</h3>
+    <div class="gallery">
+      <figure><button type="button" data-full="assets/img/gallery/instrument/drive-scale-comparison.jpg" data-caption="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g drive flown in MIMOS II, and the 7 g piezo used here." aria-label="Enlarge: Drives drawn to scale: a 4.5 kg lab transducer, the 50 g drive flown in MIMOS II, and the 7 g piezo used here."><img class="fit-contain" src="assets/img/gallery/instrument/drive-scale-comparison-t.jpg" alt="Drives drawn to scale: a 4.5 kg lab transducer, the 50 g MIMOS II drive and the 7 g piezo" width="720" height="581" loading="lazy" decoding="async"></button><figcaption>Drives to scale: 4.5 kg lab transducer, 50 g MIMOS II drive [<a href="https://doi.org/10.1007/978-94-011-4548-0_39">Klingelhöfer et al. 1999</a>], 7 g piezo.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/prototype-head-3d-printed.jpg" data-caption="An early prototype head with a 3D-printed frame." aria-label="Enlarge: An early prototype head with a 3D-printed frame."><img src="assets/img/gallery/sinrg/prototype-head-3d-printed-t.jpg" alt="An early prototype head with a 3D-printed frame" width="720" height="405" loading="lazy" decoding="async"></button><figcaption>An early prototype with a 3D-printed frame.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/jarosite-open-head.jpg" data-caption="A jarosite rock beside the open head." aria-label="Enlarge: A jarosite rock beside the open head."><img src="assets/img/gallery/sinrg/jarosite-open-head-t.jpg" alt="A jarosite rock beside the open head" width="720" height="405" loading="lazy" decoding="async"></button><figcaption>A jarosite rock beside the open head.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/rock-to-powder.jpg" data-caption="A rock, its ground powder, and the powder on tape for a transmission reference." aria-label="Enlarge: A rock, its ground powder, and the powder on tape for a transmission reference."><img src="assets/img/gallery/sinrg/rock-to-powder-t.jpg" alt="A rock, its ground powder in a mortar, and the powder on tape" width="405" height="720" loading="lazy" decoding="async"></button><figcaption>Rock, powder, and powder on tape for a reference.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/mars-simulant-sealed.jpg" data-caption="A Mars soil simulant sealed in Kapton film." aria-label="Enlarge: A Mars soil simulant sealed in Kapton film."><img src="assets/img/gallery/sinrg/mars-simulant-sealed-t.jpg" alt="A Mars soil simulant sealed in Kapton film, held in a gloved hand" width="405" height="720" loading="lazy" decoding="async"></button><figcaption>Mars soil simulant sealed in Kapton.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/glass-standard.jpg" data-caption="A certified glass standard at the head for XRF." aria-label="Enlarge: A certified glass standard at the head for XRF."><img src="assets/img/gallery/sinrg/glass-standard-t.jpg" alt="A certified glass standard on a stand at the head, inside lead shielding" width="405" height="720" loading="lazy" decoding="async"></button><figcaption>A certified glass standard for XRF.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/lead-castle.jpg" data-caption="The head inside its lead shielding during a transmission reference run." aria-label="Enlarge: The head inside its lead shielding during a transmission reference run."><img src="assets/img/gallery/sinrg/lead-castle-t.jpg" alt="The head inside a lead-brick shield" width="405" height="720" loading="lazy" decoding="async"></button><figcaption>Inside the lead shielding.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/gas-detector-window.jpg" data-caption="The window of the gas-filled detector used for reference spectra." aria-label="Enlarge: The window of the gas-filled detector used for reference spectra."><img src="assets/img/gallery/sinrg/gas-detector-window-t.jpg" alt="The round window of a gas-filled detector" width="405" height="720" loading="lazy" decoding="async"></button><figcaption>The gas-filled reference detector.</figcaption></figure>
+      <figure><button type="button" data-full="assets/img/gallery/sinrg/thermal-test.jpg" data-caption="The setup for running the drive at 60 °C." aria-label="Enlarge: The setup for running the drive at 60 °C."><img src="assets/img/gallery/sinrg/thermal-test-t.jpg" alt="The heated drive test setup" width="720" height="671" loading="lazy" decoding="async"></button><figcaption>Running the drive at 60 °C.</figcaption></figure>
+    </div>
+
+    <div class="next-links"><a class="btn" href="montecarlo.html">Monte Carlo model</a><a class="btn" href="entropy.html">Alloy entropy</a><a class="btn" href="index.html#research">All research</a></div>
+  </div>
+</main>
+
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image"><div class="lightbox-card lightbox-card--wide"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous image">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next image">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close">&#10005;</button></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-links"><a href="index.html">Home</a><a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer">GitHub</a><a href="latte.html" class="cup" title="The latte log"><svg><use href="#i-cup"/></svg>Latte log</a></div>
+  <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
+</footer>
+
+<script src="assets/js/site.js?v=20261117065748"></script>
+<script src="assets/js/md.js?v=20261116081401"></script>
+<script src="assets/js/figs.js?v=bf0a2b56d5e5"></script>
+<script src="assets/js/mc-story-data.js?v=20261118170000"></script>
+<script src="assets/js/mc-story.js?v=20261118164001" data-mc="assets/data/mc.json?v=20261116204832"></script>
+<script src="assets/js/sinrg.js?v=20261118204054"></script>
+</body>
+</html>

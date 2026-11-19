@@ -5,7 +5,8 @@ Push to `main` and GitHub Pages serves it at <https://kyle-hunady.github.io>.
 
 ```
 index.html            home: hero, about, research (two image-led blocks), projects, outreach, contact
-instrument.html       project page: the Mössbauer spectrometer (schematic, spectrum + ray figures, gallery)
+sinrg.html            project page: SiNRG Mössbauer + XRF head (physics primer, applications, subsystem models; figures from sinrg.js + mc-story.js)
+instrument.html       noindex redirect to sinrg.html (old inbound links)
 entropy.html          project page: alloy entropy (Debye entropy figure, gallery)
 automation.html       project page: research automation, figures drawn from measured numbers
 art.html              art gallery (resin lamp, paper, cyanotypes)

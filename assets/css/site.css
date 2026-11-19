@@ -1015,3 +1015,15 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .pub__cover--text.pub__cover--logo { color: #1B3A6B; background: rgba(237,235,228,0.92); font-size: 0.68rem; letter-spacing: 0.1em; }
 .pub__cover--draft { background: transparent; box-shadow: none; border: 1px dashed rgba(242,243,240,0.22);
   font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.08em; color: var(--faint); }
+
+/* sinrg.html: two-question cards, subsystem model cards, hero photo */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 1rem 0; }
+.duo > div, .models > div { background: var(--surface); border: 1px solid var(--rule); border-radius: 0.6rem; padding: 0.85rem 1rem; }
+.duo b, .models b { color: var(--accent); font-weight: 500; font-family: var(--mono); font-size: 0.9rem; }
+.duo p, .models p { margin: 0.35rem 0 0; font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+.models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin: 1rem 0 1.4rem; }
+.hero-photo { padding: 0; overflow: hidden; }
+.hero-photo img { border-radius: 0.6rem 0.6rem 0 0; }
+.hero-photo figcaption { padding: 0.6rem 0.9rem 0.8rem; }
+@media (max-width: 760px) { .models { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .duo, .models { grid-template-columns: 1fr; } }
