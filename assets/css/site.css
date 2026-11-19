@@ -801,6 +801,9 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .term .t-cmd { color: var(--white); }
 .term .t-ok { color: var(--accent); }
 .term .t-miss { color: var(--rust); }
+.term--hero { border-color: var(--accent-deep); margin: 0.2rem 0 0.4rem; }
+.term--hero pre { font-size: 1rem; line-height: 1.5; padding: 1.1rem 1.2rem; }
+@media screen and (max-width: 520px) { .term--hero pre { font-size: 0.85rem; } }
 .papers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 .paper { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.9rem; background: var(--surface); border: 1px solid var(--rule);
          border-radius: 0.7rem; padding: 0.8rem; }

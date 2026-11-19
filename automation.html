@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A literature workflow with Claude Code · Kyle Hunady</title>
-<meta name="description" content="How I use Claude Code to find papers, check for open-access copies, and summarize what I can use. This example covers ten papers on controlling piezo actuators.">
+<meta name="description" content="How I use Claude Code to find papers and answer an engineering question from them. The example: GRCop-42 or GRCop-84 for a 3-D printed rocket combustion-chamber liner.">
 <link rel="canonical" href="https://kyle-hunady.github.io/automation.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/automation.html">
 <meta property="og:title" content="A literature workflow with Claude Code">
-<meta property="og:description" content="How I use Claude Code to find papers and take notes, with ten papers on controlling piezo actuators as an example.">
+<meta property="og:description" content="How I use Claude Code to find papers and answer a question from them, with two NASA rocket-engine copper alloys as the example.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/proj-literature.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261118204126">
+<link rel="stylesheet" href="assets/css/site.css?v=20261119">
 <!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Literature workflow", "item": "https://kyle-hunady.github.io/automation.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -52,18 +52,56 @@
     <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Literature workflow</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Research tools</p>
     <h1>A literature workflow with Claude Code</h1>
-    <p class="header__line">I tell Claude what I'm looking for. It searches for papers, downloads the ones it can access, and drafts a note on what I can use from each.</p>
+    <p class="header__line">One command searches for papers, downloads the ones it can get, and writes an answer that cites every number. The papers it can't get come back to me as a short list.</p>
   </div>
 </header>
 
 <main id="main" class="page">
   <div class="container">
 
-    <p>I use a custom <code>/lit-fetch</code> command in Claude Code. Scripts on my computer download and check the papers, and I keep one library across my projects.</p>
-    <p>I tried this on a question from my <a href="instrument.html">spectrometer</a> work. The source in a Mössbauer spectrometer has to move at a precisely controlled velocity. Our group drives it with a piezo stack (Guzman et al., 2023). I wanted to see which methods from atomic force microscopy and other fields might help us control that motion.</p>
+    <div class="term term--hero" role="region" aria-label="The command">
+      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
+      <pre><span class="t-cmd">&gt; /lit-fetch how GRCop-42 and GRCop-84 compare for additively manufactured rocket combustion chambers</span></pre>
+    </div>
+    <p class="cap-under">The command I typed, word for word. Everything below came back from it.</p>
+
+    <h2>1 · The question</h2>
+    <p>GRCop-42 and GRCop-84 are NASA copper alloys made for the cooled inner walls of rocket engines. Which one should go in a 3-D printed combustion-chamber liner? I picked this question because it is a real design choice with good published data behind it.</p>
+
+    <h2>2 · What came back on its own</h2>
+    <div class="facts">
+      <div class="fact"><b>10</b><span>relevant papers found</span></div>
+      <div class="fact"><b>6</b><span>downloaded and read</span></div>
+      <div class="fact"><b>207</b><span>values plotted, each traced to a table, page or figure</span></div>
+      <div class="fact"><b>4</b><span>handed back to me</span></div>
+    </div>
+    <div class="callout"><div><b>GRCop-42.</b> GRCop-84 is stronger below about 600 °C, but the two are matched above that. GRCop-42 conducts 5 to 20 % more heat and prints about 20 % faster, and NASA moved to it for its printed chambers (<a href="https://doi.org/10.2514/6.2019-4228" target="_blank" rel="noreferrer">Gradl et al., 2019</a>).</div></div>
+    <figure class="fig fig--light" style="margin-top:1rem">
+      <img src="assets/img/lit-grcop-conductivity.png" alt="Thermal conductivity against temperature from 25 to 800 °C. Pure copper is highest, GRCop-42 next at about 350 W/(m K), and both GRCop-84 curves lower, around 285 to 317 W/(m K)." width="1266" height="670" loading="lazy">
+      <figcaption>Thermal conductivity of wrought alloys, read off NASA's published curves (Gradl et al., 2019, Fig. 1). GRCop-42 sits 13 to 20 % above standard GRCop-84. This is Figure 3 of the write-up.</figcaption>
+    </figure>
+    <p>The write-up has the full answer: an alloy-by-property table with test conditions, five figures, and a list of every plotted value with where it sits in its paper. It also says where the papers disagree and which gap is still open.</p>
+    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Read the GRCop write-up</a></div>
+
+    <h2>3 · The papers it couldn't get</h2>
+    <p>When a paper is paywalled or the publisher's site blocks scripts, Claude stops and hands me the DOI. It does not try to get around a login or a bot check.</p>
+    <ul>
+      <li><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a> (Journal of Materials Engineering and Performance, 2008). Paywalled. A second try through Caltech's subscription got it.</li>
+      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> (AIAA Propulsion and Energy Forum, 2021). Paywalled, and the publisher's site shows a bot check. This NASA hot-fire paper may fill the main gap in the answer.</li>
+      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> (Fusion Science and Technology). Listed as open access in MIT's repository, but the repository limited the download rate and the publisher's site shows a bot check.</li>
+      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications</a> (International Materials Reviews, 2020). Listed as open access, but the download link refused the request and the publisher's site shows a bot check.</li>
+    </ul>
+
+    <h2>4 · Feeding them back in</h2>
+    <p>I request the missing papers through the Caltech library and drop the PDFs into one folder. One command adds them to my library:</p>
+    <div class="term" role="region" aria-label="Ingest command">
+      <div class="term__bar"><i></i><i></i><i></i><span>terminal</span></div>
+      <pre><span class="t-cmd">$ python -m litfetch_tools.ingest_folder ~/Desktop/grcop --project .</span></pre>
+    </div>
+    <p>Then I ask the question again. Claude finds the new PDFs in the library, reads them, and writes the answer with them included. For this question, one of the four came in on the second try; the other three need a library request.</p>
 
     <h2>How it works</h2>
-    <div class="fig"><svg class="schem" viewBox="0 0 340 300" style="max-width:22rem;margin:0 auto;display:block" role="img" aria-label="The workflow searches for papers, checks my library, downloads available copies, extracts the text, and drafts notes. It lists DOIs for papers I need to get myself.">
+    <div class="fig"><svg class="schem" viewBox="0 0 340 300" style="max-width:22rem;margin:0 auto;display:block" role="img" aria-label="The workflow searches for papers, checks my library, downloads available copies, extracts the text, and drafts notes. It lists the DOIs of papers I need to get myself.">
   <g text-anchor="middle">
   <rect x="4" y="4" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="21">1 · Search</text><text x="130" y="36">OpenAlex</text>
   <rect x="4" y="56" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="73">2 · Check the library</text><text x="130" y="88">check for a saved copy</text>
@@ -72,7 +110,7 @@
   <rect x="4" y="212" width="252" height="40" rx="7" style="fill:var(--accent-dim);stroke:var(--accent-deep)"/><text class="lbl" x="130" y="229">5 · Draft a note</text><text x="130" y="244">how it relates to my project</text>
   <path d="M130 45v10M126 51l4 4 4-4M130 97v10M126 103l4 4 4-4M130 149v10M126 155l4 4 4-4M130 201v10M126 207l4 4 4-4" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/>
   <path d="M257 128h40v136M293 260l4 4 4-4" fill="none" style="stroke:#C98A7F" stroke-width="1.5"/>
-  <text x="170" y="286" style="fill:#C98A7F">I get the DOIs for 2 papers to download myself</text>
+  <text x="170" y="286" style="fill:#C98A7F">I get the DOIs of papers to fetch myself</text>
   </g></svg>
       <p class="cap">Claude runs the five steps. The branch shows where it sends me the DOIs for papers I need to retrieve myself.</p></div>
     <ol>
@@ -84,7 +122,40 @@
     </ol>
     <p>A script checks each PDF for expected terms to catch download mix-ups. The notes trace numbers back to a page, table, or figure, and a second script checks each new note. The summaries below flag when the evidence comes from a simulation or when I only have the abstract.</p>
 
-    <h2>The ten papers</h2>
+    <p>For a question like the GRCop one, Claude then records each value it uses with its paper, table or figure, and test condition. Where a paper only gives a plot, a script reads the curve from the PDF's vector drawing. The write-up plots only those records.</p>
+
+    <h2>The library</h2>
+    <p>As of November 2026, I use the same library of more than 2,000 papers across three projects.</p>
+    <div class="fig"><img src="assets/img/proj-literature.jpg" alt="First pages of 128 papers from the library" width="1252" height="772" loading="lazy" style="border-radius:.4rem">
+      <p class="cap">128 first pages from my library, November 2026.</p></div>
+
+    <details class="details">
+      <summary>Run summary for the GRCop question</summary>
+    <div class="term" role="region" aria-label="Run summary">
+      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
+      <pre><span class="t-cmd">&gt; /lit-fetch how GRCop-42 and GRCop-84 compare for additively manufactured rocket combustion chambers</span>
+
+● Searching OpenAlex, five queries.
+  └ GRCop-42 · GRCop-84 · GRCop additive · Cu-Cr-Nb additive manufacturing · Cu-Cr-Nb combustion chamber
+    10 candidates kept
+
+● Downloading, extracting and writing notes.
+  └ 6 papers read and summarized (two of the PDFs are accepted manuscripts)
+
+● Taking the numbers.
+  └ 34 values from tables, 7 from the text, 166 read off digitized figures
+
+● Done. 6 papers read, 4 handed back:
+    10.1007/s11665-007-9175-3       closed
+    10.2514/6.2021-3233             closed
+    10.1080/15361055.2022.2147765   listed open access, download failed
+    10.1080/09506608.2020.1821485   listed open access, download failed</pre>
+    </div>
+    </details>
+
+    <details class="details">
+      <summary>An earlier example: ten papers on piezo velocity control</summary>
+    <p>I tried this on a question from my <a href="instrument.html">spectrometer</a> work. The source in a Mössbauer spectrometer has to move at a precisely controlled velocity. Our group drives it with a piezo stack (Guzman et al., 2023). I wanted to see which methods from atomic force microscopy and other fields might help us control that motion.</p>
     <p>The search returned 160 candidates. Claude picked ten papers. Four were already in my library, four downloaded automatically, and two needed my help. One was behind a paywall, and the other needed a browser download. My notes record which parts Claude read, the evidence behind the key numbers, and what I can use in my project. The titles link to the papers.</p>
     <div class="papers">
       <article class="paper">
@@ -179,83 +250,9 @@
       </article>
     </div>
 
-    <h2>The library</h2>
-    <p>As of November 2026, I use the same library of more than 2,000 papers across three projects.</p>
-    <div class="fig"><img src="assets/img/proj-literature.jpg" alt="First pages of 128 papers from the library" width="1252" height="772" loading="lazy" style="border-radius:.4rem">
-      <p class="cap">128 first pages from my library, November 2026.</p></div>
-
-    <details class="details">
-      <summary>Claude Code transcript (abridged)</summary>
-    <div class="term" role="region" aria-label="Claude Code transcript">
-      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
-      <pre><span class="t-cmd">&gt; /lit-fetch 10 papers in the past 20 years that discuss velocity control with a piezo</span>
-
-● Reading the literature doctrine and the lit-fetch profile for this project.
-  └ profile: knowledge/literature/  ·  shared pool: on  ·  paywall flow: legal OA first, then hand back DOIs
-
-● Checking what the library already holds on piezo drives.
-  └ ls knowledge/literature | grep -E &quot;piezo|ilc|hysteresis|velocity&quot;
-    2006_leang-devasia_hysteresis-compensating-ilc-piezo-positioners.md
-    2008_fleming-leang_charge-drives-spm-positioning-stages.md
-    2023_guzman_miniaturized-piezoelectric-mossbauer-feedback.md
-    2023_yoon_velocity-modulator-portable-mossbauer-ilc.md
-    … 9 more piezo/drive synopses
-
-● Searching OpenAlex, 2006–2026, eight queries.
-  └ &quot;piezoelectric actuator velocity control&quot;
-    &quot;iterative learning control piezoelectric actuator&quot;
-    &quot;repetitive control piezoelectric nanopositioning&quot;
-    &quot;Mossbauer spectrometer drive velocity control&quot;
-    … 4 more; 160 unique DOIs after dedupe, ranked by citations, biased to open access
-
-● Pool check before any download.
-  └ python -m litfetch_engine.pool --find &lt;DOI&gt;  ×13
-    HIT   10.1016/j.mechatronics.2005.11.006   curated → 2006_leang-devasia_…
-    HIT   10.1016/j.ultramic.2008.05.004       curated → 2008_fleming-leang_…
-    HIT   10.1063/5.0157651                    curated → 2023_guzman_…
-    HIT   10.1038/s41598-023-46846-x           curated → 2023_yoon_…
-    MISS  9 others  (not in the pool, fetch it)
-
-● Acquire + tier-1 extract, nine candidates.
-  └ 10.1063/1.4803449           ok   Unpaywall (green, university repository)  pdfminer
-    10.1109/tie.2016.2569060    ok   Unpaywall (green, university repository)  pdfminer
-    10.1038/s41598-022-14332-5  ok   Unpaywall (gold, CC-BY)                   pdfminer
-    10.1038/s41598-026-55176-7  ok   Unpaywall (gold, accepted manuscript)     pdfminer
-    10.1109/tmech.2014.2326396  --   closed, no OA copy, no text-mining route for IEEE
-    10.1109/tmech.2020.2984367  --   OA, but the PDF link refuses a script → needs a browser
-    10.1109/tie.2019.2946554    --   OA copy is a landing page, not a PDF   (dropped from the 10)
-    10.1109/tmech.2020.2969222  --   OA copy is a landing page, not a PDF   (dropped from the 10)
-    10.3390/mi14112009          --   OA, but the PDF link refuses a script   (dropped from the 10)
-
-● Checking each download is the paper we wanted.
-  └ python ops/fetch_check.py &lt;DOI&gt; --expect &quot;piezo,hysteresis,triangular,…&quot;
-    4/4  every expected term present
-
-● Reading the extractions and writing synopses.
-  └ knowledge/literature/2013_watanabe_wide-area-scanner-hs-afm-rounded-triangle.md
-    knowledge/literature/2016_liu_robust-antiwindup-piezo-nanostage-tracking.md
-    knowledge/literature/2022_feng_robust-hinf-control-piezo-nanopositioning.md
-    knowledge/literature/2026_umeda-kodera_feedforward-piezo-nonlinearity-hs-afm.md
-    note: Feng 2022&#x27;s controller comparison is simulation on identified models, flagged in its synopsis
-
-● Mechanical check on the new synopses.
-  └ python ops/synopsis_check.py &lt;4 files&gt;
-<span class="t-ok">    ok    no NEW adversarial findings</span>
-
-● Write-back.
-  └ INDEX.md          +4 rows
-    BACKLOG.md        +2 rows under ⬇ Needs Kyle
-
-● Done. 10 papers: 4 already in the library, 4 fetched and curated, 2 handed back.
-
-  Two need a human. Wilcox &amp; Devasia 2014 is closed (library request):
-    10.1109/tmech.2014.2326396
-  Delibas &amp; Koc 2020 is open access but needs a browser click:
-    10.1109/tmech.2020.2984367</pre>
-    </div>
     </details>
 
-    <div class="next-links"><a class="btn" href="instrument.html">The spectrometer</a><a class="btn" href="index.html#projects">All projects</a></div>
+    <div class="next-links"><a class="btn" href="lit/grcop.html">The GRCop write-up</a><a class="btn" href="index.html#projects">All projects</a></div>
   </div>
 </main>
 

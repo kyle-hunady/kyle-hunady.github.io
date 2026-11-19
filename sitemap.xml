@@ -27,7 +27,7 @@
   </url>
   <url>
     <loc>https://kyle-hunady.github.io/automation.html</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -44,5 +44,10 @@
     <loc>https://kyle-hunady.github.io/art.html</loc>
     <lastmod>2026-11-16</lastmod>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kyle-hunady.github.io/lit/grcop.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <priority>0.6</priority>
   </url>
 </urlset>

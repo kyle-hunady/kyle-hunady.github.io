@@ -33,6 +33,14 @@ PAGES = {
     "latte.html": (None, "Latte log"),
 }
 
+# Standalone artifact pages (a report copied in whole, with its own styles, like a PDF): no site.css and no
+# trail, just one plain link back to the site page that presents it. Re-run after copying a rebuilt report in.
+# page -> (site page it belongs to, link text)
+ARTIFACTS = {
+    "lit/grcop.html": ("automation.html", "Kyle Hunady · Literature workflow"),
+}
+BACK_OPEN, BACK_CLOSE = "<!-- backlink -->", "<!-- /backlink -->"
+
 HTML_OPEN, HTML_CLOSE = "<!-- crumbs -->", "<!-- /crumbs -->"
 LD_OPEN, LD_CLOSE = "<!-- crumbs-ld -->", "<!-- /crumbs-ld -->"
 HEADER = '<div class="container header__container">'
@@ -84,6 +92,21 @@ def apply(page):
     print(f"{page:18s} {' / '.join(s[0] for s in steps)}{'' if n else '   (no back-link found)'}")
 
 
+def apply_artifact(page):
+    parent, text_ = ARTIFACTS[page]
+    path = ROOT / page
+    text = path.read_text(encoding="utf-8")
+    text = re.sub(re.escape(BACK_OPEN) + ".*?" + re.escape(BACK_CLOSE) + "\n?", "", text, flags=re.S)
+    href = "../" * page.count("/") + parent
+    link = (f'{BACK_OPEN}<div style="font:14px/1.4 system-ui,sans-serif;padding:10px 30px;border-bottom:1px solid #e2e6ea">'
+            f'<a href="{href}" style="color:#1a4e8a;text-decoration:none">&larr; {text_}</a></div>{BACK_CLOSE}\n')
+    text, n = re.subn(r"(<body[^>]*>\n?)", lambda m: m.group(1) + link, text, count=1)
+    if not n:
+        raise SystemExit(f"{page}: no <body> tag")
+    path.write_text(text, encoding="utf-8", newline="")
+    print(f"{page:18s} back link -> {href}")
+
+
 if __name__ == "__main__":
-    for page in sys.argv[1:] or PAGES:
-        apply(page)
+    for page in sys.argv[1:] or [*PAGES, *ARTIFACTS]:
+        apply_artifact(page) if page in ARTIFACTS else apply(page)
