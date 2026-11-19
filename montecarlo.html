@@ -18,9 +18,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261118141140">
+<link rel="stylesheet" href="assets/css/site.css?v=20261118204126">
 <meta name="report-waive" content="M1: section I animates the spectrum building up on a timer-driven canvas, which the audit does not detect, and the photon paths are 3-D rays the reader can turn; S1: section II draws its generic head with the rays at both knob values before any number, as a side view because the head is generic, and the real heads are drawn in 3-D with their collimators and rays in sections III and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
-</head>
+<!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Spectrometer modeling", "item": "https://kyle-hunady.github.io/montecarlo.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -52,6 +52,7 @@
 
 <header class="page__head">
   <div class="container header__container">
+    <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Spectrometer modeling</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Instrument modeling · Caltech and JPL</p>
     <h1>Modeling a Mössbauer spectrometer</h1>
     <p class="header__line">We’re building a small spectrometer to identify iron minerals on other planets. I used a Monte Carlo model to find out how the layout of the source, collimator and detector affects how fast the instrument can measure a rock and how sharp its spectrum will be.</p>
@@ -60,7 +61,6 @@
 
 <main id="main" class="page">
   <div class="container">
-    <a href="index.html#projects" class="back-link"><svg><use href="#i-arrow-left"/></svg>All projects</a>
 
     <div class="callout abstract"><div>I wrote the photon simulation for a backscatter Mössbauer spectrometer that JPL and Caltech developed through NASA’s PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations). The model traces photons individually through each design, recording about 30,000 that reach the detector. The workflow uses published mineral spectra and dimensions I measured from a photo of the instrument. The angles of the detected photons tell us how much each design broadens the lines in a spectrum. The four Mars spectra come from NASA’s archive. The other spectra shown here are simulated.</div></div>
 
