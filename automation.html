@@ -16,7 +16,7 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261119055004">
+<link rel="stylesheet" href="assets/css/site.css?v=20261119e055004">
 <!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Literature workflow", "item": "https://kyle-hunady.github.io/automation.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -52,68 +52,71 @@
     <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Literature workflow</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Research tools</p>
     <h1>A literature workflow with Claude Code</h1>
-    <p class="header__line">One command finds the papers, reads the ones it can get, and writes a sourced answer.</p>
+    <p class="header__line">What I typed to Claude Code for one engineering question, and what came back each time.</p>
   </div>
 </header>
 
 <main id="main" class="page">
   <div class="container">
 
-    <div class="term term--hero" role="region" aria-label="The command">
+    <p class="turn"><b>1</b> · I type</p>
+    <div class="term term--hero" role="region" aria-label="What I typed">
       <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
       <pre><span class="t-cmd">&gt; /lit-fetch how GRCop-42 and GRCop-84 compare for additively manufactured rocket combustion chambers</span></pre>
     </div>
-    <p class="cap-under">The one command I typed. Everything below came back from it.</p>
-
-    <h2>1 · The question</h2>
-    <p>Which NASA copper alloy should line a 3-D printed rocket combustion chamber?</p>
-
-    <h2>2 · The first answer</h2>
-    <div class="facts">
-      <div class="fact"><b>10</b><span>papers found</span></div>
-      <div class="fact"><b>6</b><span>downloaded and read</span></div>
-      <div class="fact"><b>207</b><span>values plotted, each with its source</span></div>
-      <div class="fact"><b>4</b><span>handed back to me</span></div>
+    <p class="turn"><b>1</b> · Claude returns</p>
+    <div class="out">
+      <p>It searched for papers, read six, and wrote an answer. Its first line, shortened: GRCop-42 carries about half the Cr2Nb of GRCop-84, and NASA's own record says it trades some room-temperature strength for higher thermal conductivity, more ductility, easier powder atomization and faster laser powder bed fusion builds.</p>
+      <table class="ptable"><thead><tr><th>Paper</th><th>Authors</th><th>What it adds</th></tr></thead><tbody>
+        <tr><td><a href="https://doi.org/10.2514/6.2019-4228" target="_blank" rel="noreferrer">GRCop-42 Development and Hot-fire Testing Using Additive Manufacturing Powder Bed Fusion for Channel-cooled Combustion Chambers</a></td><td>Gradl et al., 2019</td><td>NASA's own side-by-side data on both alloys, and the first GRCop-42 hot-fire campaign.</td></tr>
+        <tr><td><a href="https://doi.org/10.1016/j.msea.2021.141690" target="_blank" rel="noreferrer">Fracture characteristics and heat treatment of laser powder bed fusion additively manufactured GRCop-84 copper</a></td><td>Seltzman &amp; Wukitch, 2021</td><td>Heat treatment moves printed GRCop-84 strength up or down.</td></tr>
+        <tr><td><a href="https://doi.org/10.1016/j.mtcomm.2023.106665" target="_blank" rel="noreferrer">Thermophysical properties of additively manufactured (AM) GRCop-42 and GRCop-84</a></td><td>Chen et al., 2023</td><td>Thermal conductivity and expansion of printed parts from eight vendors.</td></tr>
+        <tr><td><a href="https://doi.org/10.1016/j.addlet.2024.100224" target="_blank" rel="noreferrer">GRCop-42: Comparison between laser powder bed fusion and laser powder direct energy deposition</a></td><td>Demeneghi et al., 2024</td><td>The same alloy prints to different properties by two laser processes.</td></tr>
+        <tr><td><a href="https://doi.org/10.1016/j.engfailanal.2025.109710" target="_blank" rel="noreferrer">Additively manufactured GRCop-42 copper-alloy combustion chamber failure analysis: The role of build interruptions</a></td><td>Demeneghi et al., 2025</td><td>A printed chamber split at build-interruption lines; the authors blame process control, not the alloy.</td></tr>
+        <tr><td><a href="https://doi.org/10.1007/s11837-025-07787-0" target="_blank" rel="noreferrer">Multi-Scale Mechanical Characterization of Additively Manufactured GRCop-42 and GRCop-84 Alloys</a></td><td>Mahtabi et al., 2025</td><td>Room-temperature strength of printed parts of both alloys.</td></tr>
+      </tbody></table>
+      <p>It couldn't get these and handed me the DOIs:</p>
+      <table class="ptable"><thead><tr><th>Paper</th><th>Authors</th><th>Why it wanted it</th></tr></thead><tbody>
+        <tr><td><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a></td><td>de Groh et al., 2008</td><td>Closed access. Wanted for GRCop-84 against other rocket copper alloys.</td></tr>
+        <tr><td><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a></td><td>Teasley et al., 2021</td><td>Closed access. Wanted for NASA hot-fire data on printed chambers.</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a></td><td>Seltzman &amp; Wukitch, 2023</td><td>Listed as open access, but the download failed. Wanted for the alloys' microstructure.</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a></td><td>Minneci et al., 2020</td><td>Listed as open access, but the download failed. Wanted as an independent review.</td></tr>
+      </tbody></table>
+      <p class="note">Paper summaries: written by /lit-fetch in this turn. Report: a text-only write-up, built at the end of this turn.</p>
     </div>
-    <div class="callout"><div><b>GRCop-42.</b> GRCop-84 is stronger below about 600 °C, the two are matched above that, and GRCop-42 conducts 5 to 20 % more heat.</div></div>
-    <figure class="fig fig--light" style="margin-top:1rem">
-      <img src="assets/img/lit-grcop-conductivity.png" alt="Thermal conductivity against temperature from 25 to 800 °C. Pure copper is highest, GRCop-42 next at about 350 W/(m K), and both GRCop-84 curves lower, around 285 to 317 W/(m K)." width="1266" height="670" loading="lazy">
-      <figcaption>Thermal conductivity of the wrought alloys, read off NASA's published curves (Gradl et al., 2019).</figcaption>
-    </figure>
-    <div class="next-links" style="margin-top:1rem"><a class="btn" href="lit/grcop-v1.html">Version 1 write-up</a></div>
 
-    <h2>3 · The papers it read</h2>
-    <ol>
-      <li><a href="https://doi.org/10.2514/6.2019-4228" target="_blank" rel="noreferrer">GRCop-42 Development and Hot-fire Testing Using Additive Manufacturing Powder Bed Fusion for Channel-cooled Combustion Chambers</a> <span class="paper__meta">Gradl et al., 2019</span></li>
-      <li><a href="https://doi.org/10.1016/j.msea.2021.141690" target="_blank" rel="noreferrer">Fracture characteristics and heat treatment of laser powder bed fusion additively manufactured GRCop-84 copper</a> <span class="paper__meta">Seltzman &amp; Wukitch, 2021</span></li>
-      <li><a href="https://doi.org/10.1016/j.mtcomm.2023.106665" target="_blank" rel="noreferrer">Thermophysical properties of additively manufactured (AM) GRCop-42 and GRCop-84</a> <span class="paper__meta">Chen et al., 2023</span></li>
-      <li><a href="https://doi.org/10.1016/j.addlet.2024.100224" target="_blank" rel="noreferrer">GRCop-42: Comparison between laser powder bed fusion and laser powder direct energy deposition</a> <span class="paper__meta">Demeneghi et al., 2024</span></li>
-      <li><a href="https://doi.org/10.1016/j.engfailanal.2025.109710" target="_blank" rel="noreferrer">Additively manufactured GRCop-42 copper-alloy combustion chamber failure analysis: The role of build interruptions</a> <span class="paper__meta">Demeneghi et al., 2025</span></li>
-      <li><a href="https://doi.org/10.1007/s11837-025-07787-0" target="_blank" rel="noreferrer">Multi-Scale Mechanical Characterization of Additively Manufactured GRCop-42 and GRCop-84 Alloys</a> <span class="paper__meta">Mahtabi et al., 2025</span></li>
-    </ol>
-
-    <h2>4 · The papers it couldn't get</h2>
-    <p>Claude stops at a paywall or bot check and hands me the DOI.</p>
-    <ol>
-      <li><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a> <span class="paper__meta">paywalled; got it on a second try through Caltech</span></li>
-      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> <span class="paper__meta">paywalled, bot check; I downloaded it</span></li>
-      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> <span class="paper__meta">open copy rate-limited, bot check; I downloaded it</span></li>
-      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a> <span class="paper__meta">download refused, bot check; I downloaded it</span></li>
-    </ol>
-
-    <h2>5 · Feeding them back in</h2>
-    <p>I saved the four PDFs to one folder and told Claude:</p>
-    <div class="term term--hero" role="region" aria-label="Second command">
+    <p class="turn"><b>2</b> · I type</p>
+    <div class="term term--hero" role="region" aria-label="What I typed">
       <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
-      <pre><span class="t-cmd">&gt; I've downloaded the four papers you couldn't get into Desktop/papers. Ingest them and rebuild the report.</span></pre>
+      <pre><span class="t-cmd">&gt; these are supposed to be abstract/intro style. why is that not default? with figures, digitization, etc.</span></pre>
     </div>
-    <div class="facts" style="margin-top:1rem">
-      <div class="fact"><b>6 → 10</b><span>papers read</span></div>
-      <div class="fact"><b>4 → 0</b><span>papers handed back</span></div>
-      <div class="fact"><b>207 → 207</b><span>values plotted (the new papers add text, not new data points)</span></div>
+    <p class="turn"><b>2</b> · Claude returns</p>
+    <div class="out">
+      <p>It rebuilt the report as a short article, with each plotted value taken from a table, the text, or a digitized figure in one of the papers.</p>
+      <p><img src="assets/img/lit-grcop-conductivity.png" alt="Thermal conductivity against temperature from 25 to 800 °C. Pure copper is highest, GRCop-42 next at about 350 W/(m K), and both GRCop-84 curves lower, around 285 to 317 W/(m K)." width="1266" height="670" loading="lazy"></p>
+      <p>One of its figures: thermal conductivity of the wrought alloys, read off NASA's curves (Gradl et al., 2019). <a href="lit/grcop-v1.html">Version 1 report</a></p>
+      <p class="note">Report and figure: made in this turn. Added afterwards for this page: a decision-style title, a property table, and inline definitions.</p>
     </div>
-    <div class="callout"><div><b>What changed.</b> Version 1 found no hot-fire test of both alloys. Version 2 found one: NASA fired printed liners of both in 2021, but says the two can't be compared because the GRCop-84 liners came out smoother. The verdict stands and the gap is still open.</div></div>
-    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Version 2 write-up</a><a class="btn" href="lit/grcop-v1.html">Version 1</a></div>
+
+    <p class="turn"><b>3</b> · I do</p>
+    <p class="you-do">I downloaded three of the papers into ~/Desktop/papers.</p>
+    <p class="turn"><b>3</b> · I type</p>
+    <div class="term term--hero" role="region" aria-label="What I typed">
+      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
+      <pre><span class="t-cmd">&gt; i downloaded the 3 papers, feed them in (desktop/papers)</span></pre>
+    </div>
+    <p class="turn"><b>3</b> · Claude returns</p>
+    <div class="out">
+      <p class="note">ran: python -m litfetch_tools.ingest_folder ~/Desktop/papers --project .</p>
+      <table class="ptable"><thead><tr><th>Paper</th><th>Authors</th><th>What it adds</th></tr></thead><tbody>
+        <tr><td><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a></td><td>Teasley et al., 2021</td><td>Fired printed liners of both alloys, but says the two can't be compared.</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a></td><td>Seltzman &amp; Wukitch, 2023</td><td>Printing gives GRCop-42 finer precipitates, but heat treatment erases that edge.</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a></td><td>Minneci et al., 2020</td><td>An independent review with the same split, and it calls the data thin.</td></tr>
+        <tr><td><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a></td><td>de Groh et al., 2008</td><td>GRCop-84 keeps its properties through a brazing heat cycle.</td></tr>
+      </tbody></table>
+      <p>What changed: version 1 found no hot-fire test of both alloys. NASA did fire printed liners of both in 2021, but says they can't be compared because the GRCop-84 liners came out smoother. The verdict, GRCop-42, stands. <a href="lit/grcop.html">Version 2 report</a></p>
+      <p class="note">Paper summaries and version 2 report: made in this turn. The de Groh paper came through Caltech's subscription earlier, while the page edits were made.</p>
+    </div>
 
     <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>

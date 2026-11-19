@@ -807,6 +807,27 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .term--hero { border-color: var(--accent-deep); margin: 0.2rem 0 0.4rem; }
 .term--hero pre { font-size: 1rem; line-height: 1.5; padding: 1.1rem 1.2rem; }
 @media screen and (max-width: 520px) { .term--hero pre { font-size: 0.85rem; } }
+/* automation.html: a chat transcript, turn by turn. You-type = .term--hero, Claude-returns = .out */
+.turn { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin: 2.2rem 0 0.45rem; }
+.turn + .turn { margin-top: 0; }
+.turn b { color: var(--accent); font-weight: 500; }
+.out { background: var(--surface); border: 1px solid var(--rule); border-radius: 0.7rem; padding: 1rem 1.1rem; font-size: 0.92rem; }
+.out p { margin: 0 0 0.7rem; }
+.out > :last-child { margin-bottom: 0; }
+.out .note { color: var(--faint); font-family: var(--mono); font-size: 0.72rem; line-height: 1.5; }
+.out img { display: block; width: 100%; height: auto; border-radius: 0.4rem; background: var(--paper); }
+.you-do { color: var(--white); margin: 0; }
+.ptable { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.84rem; margin: 0.2rem 0 0.9rem; }
+.ptable td:first-child { width: 44%; }
+.ptable th { text-align: left; color: var(--faint); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--rule); padding: 0.3rem 0.45rem; }
+.ptable td { vertical-align: top; padding: 0.5rem 0.45rem; border-bottom: 1px solid var(--rule); color: var(--muted); line-height: 1.45; }
+.ptable td:first-child a { color: var(--white); }
+.ptable td:nth-child(2) { width: 16%; color: var(--faint); font-family: var(--mono); font-size: 0.72rem; }
+@media screen and (max-width: 640px) {
+  .ptable thead { display: none; }
+  .ptable tr { display: block; padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
+  .ptable td, .ptable td:first-child, .ptable td:nth-child(2) { display: block; width: auto; border: 0; padding: 0.1rem 0; }
+}
 .papers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 .paper { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.9rem; background: var(--surface); border: 1px solid var(--rule);
          border-radius: 0.7rem; padding: 0.8rem; }
