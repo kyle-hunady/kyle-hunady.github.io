@@ -68,7 +68,7 @@
     <h2>1 · The question</h2>
     <p>Which NASA copper alloy should line a 3-D printed rocket combustion chamber?</p>
 
-    <h2>2 · The answer it wrote</h2>
+    <h2>2 · The first answer</h2>
     <div class="facts">
       <div class="fact"><b>10</b><span>papers found</span></div>
       <div class="fact"><b>6</b><span>downloaded and read</span></div>
@@ -80,7 +80,7 @@
       <img src="assets/img/lit-grcop-conductivity.png" alt="Thermal conductivity against temperature from 25 to 800 °C. Pure copper is highest, GRCop-42 next at about 350 W/(m K), and both GRCop-84 curves lower, around 285 to 317 W/(m K)." width="1266" height="670" loading="lazy">
       <figcaption>Thermal conductivity of the wrought alloys, read off NASA's published curves (Gradl et al., 2019).</figcaption>
     </figure>
-    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Read the full write-up</a></div>
+    <div class="next-links" style="margin-top:1rem"><a class="btn" href="lit/grcop-v1.html">Version 1 write-up</a></div>
 
     <h2>3 · The papers it read</h2>
     <ol>
@@ -96,17 +96,24 @@
     <p>Claude stops at a paywall or bot check and hands me the DOI.</p>
     <ol>
       <li><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a> <span class="paper__meta">paywalled; got it on a second try through Caltech</span></li>
-      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> <span class="paper__meta">paywalled, bot check</span></li>
-      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> <span class="paper__meta">open copy rate-limited, bot check</span></li>
-      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a> <span class="paper__meta">download refused, bot check</span></li>
+      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> <span class="paper__meta">paywalled, bot check; I downloaded it</span></li>
+      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> <span class="paper__meta">open copy rate-limited, bot check; I downloaded it</span></li>
+      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a> <span class="paper__meta">download refused, bot check; I downloaded it</span></li>
     </ol>
 
     <h2>5 · Feeding them back in</h2>
-    <p>I get the PDFs through the Caltech library, add them to my library, and ask the question again.</p>
+    <p>I put the PDFs in one folder and ran:</p>
     <div class="term" role="region" aria-label="Ingest command">
       <div class="term__bar"><i></i><i></i><i></i><span>terminal</span></div>
-      <pre><span class="t-cmd">$ python -m litfetch_tools.ingest_folder ~/Desktop/grcop --project .</span></pre>
+      <pre><span class="t-cmd">$ python -m litfetch_tools.ingest_folder ~/Desktop/papers --project .</span></pre>
     </div>
+    <div class="facts" style="margin-top:1rem">
+      <div class="fact"><b>6 → 10</b><span>papers read</span></div>
+      <div class="fact"><b>4 → 0</b><span>papers handed back</span></div>
+      <div class="fact"><b>207 → 207</b><span>values plotted (the new papers add text, not new data points)</span></div>
+    </div>
+    <div class="callout"><div><b>What changed.</b> Version 1 found no hot-fire test of both alloys. Version 2 found one: NASA fired printed liners of both in 2021, but says the two can't be compared because the GRCop-84 liners came out smoother. The verdict stands and the gap is still open.</div></div>
+    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Version 2 write-up</a><a class="btn" href="lit/grcop-v1.html">Version 1</a></div>
 
     <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>

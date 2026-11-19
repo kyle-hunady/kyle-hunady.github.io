@@ -38,6 +38,7 @@ PAGES = {
 # page -> (site page it belongs to, link text)
 ARTIFACTS = {
     "lit/grcop.html": ("automation.html", "Kyle Hunady · Literature workflow"),
+    "lit/grcop-v1.html": ("automation.html", "Kyle Hunady · Literature workflow (version 1)"),
 }
 BACK_OPEN, BACK_CLOSE = "<!-- backlink -->", "<!-- /backlink -->"
 
