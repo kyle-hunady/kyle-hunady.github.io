@@ -1,6 +1,6 @@
 /* EIS primer figures for battery.html: simulated Nyquist plots of ideal circuits.
    #eis-rc   series R_s + (R || C), apex at omega = 1/RC marked
-   #eis-cell Li | electrolyte | Li: R_b + (R_gb || C_gb) + (R_ct || C_dl)
+   #eis-cell Li | electrolyte | steel: R_b + (R_gb || CPE_gb) + ((R_ct + W) || CPE_dl) + CPE_ss
    Equal aspect on both axes. Model curves are lines; dots mark each decade of frequency. */
 (function () {
   'use strict';
@@ -128,46 +128,67 @@
     draw();
   }
 
-  /* ---------- figure b: Li | electrolyte | Li ---------- */
+  /* ---------- figure b: Li | Li2OHCl | stainless steel ----------
+     Kyle recalls his cells as Li | electrolyte | SS (2026-11-19). One raw folder in
+     lab/data/gamry/... (BM102 12H) is labelled "LiSym", so the configuration of that set is uncertain. */
   function figCell() {
     const root = document.getElementById('eis-cell'); if (!root) return;
     const cv = root.querySelector('canvas'), out = root.querySelector('.fig-out');
-    const iB = root.querySelector('.b-rb'), iG = root.querySelector('.b-rgb'), iT = root.querySelector('.b-rct');
-    const Cgb = 1e-9, Cdl = 1e-6;
+    const iG = root.querySelector('.b-rgb'), iT = root.querySelector('.b-rct'),
+      iN = root.querySelector('.b-n'), iW = root.querySelector('.b-w');
+    const Rb = 300, Cgb = 1e-9, Cdl = 1e-6, Qss = 1e-4;
     root.state = {};
+    // R || CPE, with Q set so the effective capacitance stays at C as n changes
+    function rq(w, R, C, n) {
+      if (R <= 0) return [0, 0];
+      const Q = Math.pow(C, n) / Math.pow(R, 1 - n), m = Q * Math.pow(w, n), ph = n * Math.PI / 2;
+      const yr = 1 / R + m * Math.cos(ph), yi = m * Math.sin(ph), d = yr * yr + yi * yi;
+      return [yr / d, -yi / d];
+    }
+    // Li side: (R_ct + W) || CPE_dl  (Randles)
+    function randles(w, R, C, n, sw) {
+      if (R <= 0 && sw <= 0) return [0, 0];
+      const Q = Math.pow(C, n) / Math.pow(Math.max(R, 1), 1 - n), m = Q * Math.pow(w, n), ph = n * Math.PI / 2;
+      const zr = R + sw / Math.sqrt(w), zi = -sw / Math.sqrt(w), dz = zr * zr + zi * zi;
+      const yr = zr / dz + m * Math.cos(ph), yi = -zi / dz + m * Math.sin(ph), d = yr * yr + yi * yi;
+      return [yr / d, -yi / d];
+    }
+    // steel side: blocking, the double layer only charges, Z = 1/(Q (jw)^n)
+    function cpe(w, Q, n) { const m = Q * Math.pow(w, n), ph = n * Math.PI / 2; return [Math.cos(ph) / m, -Math.sin(ph) / m]; }
     function draw() {
-      const Rb = +iB.value, Rgb = +iG.value, Rct = +iT.value;
-      const parts = f => { const w = 2 * Math.PI * f; return [rc(w, Rgb, Cgb), rc(w, Rct, Cdl)]; };
-      const Zf = f => { const [a, b] = parts(f); return [Rb + a[0] + b[0], a[1] + b[1]]; };
+      const Rgb = +iG.value, Rct = +iT.value, n = +iN.value, sw = +iW.value;
+      // [grain boundary, Li side with W, Li side without W, steel side]
+      const parts = f => { const w = 2 * Math.PI * f; return [rq(w, Rgb, Cgb, n), randles(w, Rct, Cdl, n, sw), randles(w, Rct, Cdl, n, 0), cpe(w, Qss, n)]; };
+      const Zf = f => { const [a, b, , c] = parts(f); return [Rb + a[0] + b[0] + c[0], a[1] + b[1] + c[1]]; };
       const fG = Rgb > 0 ? 1 / (2 * Math.PI * Rgb * Cgb) : 0, fT = Rct > 0 ? 1 / (2 * Math.PI * Rct * Cdl) : 0;
-      Object.assign(root.state, { Rb, Rgb, Rct, fG, fT, total: Rb + Rgb + Rct });
+      const zLow = Zf(0.1);
+      Object.assign(root.state, { Rb, Rgb, Rct, n, sw, fG, fT, z01Hz: zLow });
       const a = axes(cv, 6000, 1500); if (!a) return;
       const { g, X, Y } = a, acc = css('--accent', '#D9B26F'), steel = css('--steel', '#7FA7C9'),
-        wht = css('--white', '#eee'), ink = css('--muted', '#999');
+        rust = css('--rust', '#C98A7F'), wht = css('--white', '#eee');
       clip(a);
-      // color each segment by which element supplies most of -Z''
+      // color each segment by the part of the cell that supplies most of -Z'' at that frequency
       g.lineWidth = 2;
       for (let i = 1; i < sweep.length; i++) {
-        const f = sweep[i], z0 = Zf(sweep[i - 1]), z1 = Zf(f), [pg, pt] = parts(f);
-        g.strokeStyle = -pg[1] >= -pt[1] ? steel : acc;
+        const f = sweep[i], z0 = Zf(sweep[i - 1]), z1 = Zf(f), [pg, pt, p0, ps] = parts(f);
+        const im = [-pg[1], -pt[1], -ps[1]], k = im.indexOf(Math.max(...im));
+        g.strokeStyle = k === 0 ? steel : k === 2 ? wht : (-pt[1] + p0[1] > -p0[1] ? rust : acc);
         g.beginPath(); g.moveTo(X(z0[0]), Y(-z0[1])); g.lineTo(X(z1[0]), Y(-z1[1])); g.stroke();
       }
       const lbl = [[X(Rb), Y(0) - 12], [X(Rb + Rgb / 2), Y(Rgb / 2) - 10], [X(Rb + Rgb + Rct / 2), Y(Rct / 2) - 10]];
       decades(a, Zf, lbl.concat(lbl.map(p => [p[0] + 30, p[1]]), lbl.map(p => [p[0] - 30, p[1]])));
-      // R_b intercept
       g.strokeStyle = wht; g.lineWidth = 1.5; g.beginPath(); g.arc(X(Rb), Y(0), 6, 0, 2 * Math.PI); g.stroke();
       g.fillStyle = wht; g.font = '11px ' + css('--sans', 'sans-serif'); g.textAlign = 'center';
       sub(g, 'R', 'b', X(Rb), Y(0) - 12);
       if (Rgb > 0) { g.fillStyle = steel; g.fillText('grain boundaries', X(Rb + Rgb / 2), Y(Rgb / 2) - 10); }
-      if (Rct > 0) { g.fillStyle = acc; g.fillText('Li interfaces', X(Rb + Rgb + Rct / 2), Y(Rct / 2) - 10); }
+      if (Rct > 0) { g.fillStyle = acc; g.fillText('Li interface', X(Rb + Rgb + Rct / 2), Y(Rct / 2) - 10); }
       g.textAlign = 'left';
       g.restore();
-      out.textContent = 'Bulk resistance ' + Rb + ' Ω.' +
-        (Rgb > 0 ? ' Grain-boundary arc ' + Rgb + ' Ω, top at ' + fmtF(fG) + '.' : ' No grain-boundary arc.') +
-        (Rct > 0 ? ' Interface arc ' + Rct + ' Ω, top at ' + fmtF(fT) + '.' : ' No interface arc.') +
-        ' Total ' + (Rb + Rgb + Rct) + ' Ω.';
+      out.textContent = 'R_gb = ' + Rgb + ' Ω' + (Rgb > 0 ? ' (top near ' + fmtF(fG) + ')' : '') +
+        ', R_ct = ' + Rct + ' Ω' + (Rct > 0 ? ' (top near ' + fmtF(fT) + ')' : '') +
+        ', n = ' + n.toFixed(2) + ', σ_W = ' + sw + ' Ω·s^−½. The steel side keeps −Z″ rising below a few hertz.';
     }
-    [iB, iG, iT].forEach(el => el.addEventListener('input', draw));
+    [iG, iT, iN, iW].forEach(el => el.addEventListener('input', draw));
     window.addEventListener('resize', draw);
     draw();
   }

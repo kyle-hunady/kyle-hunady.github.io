@@ -34,6 +34,20 @@
   .ckt text.lb { fill: var(--muted); font-size: 12px; }
   .ckt .gb { stroke: var(--steel); } .ckt text.gb { fill: var(--steel); }
   .ckt .ct { stroke: var(--accent); } .ckt text.ct { fill: var(--accent); }
+  .cell { display: block; width: 100%; max-width: 40rem; height: auto; margin: 0 auto 1rem; color: var(--white); }
+  .cell .li { fill: rgba(217, 178, 111, 0.10); stroke: var(--muted); }
+  .cell .ss { fill: rgba(242, 243, 240, 0.14); stroke: var(--muted); }
+  .cell .grain { fill: rgba(242, 243, 240, 0.05); stroke: var(--muted); }
+  .cell .gbl { fill: none; stroke: var(--steel); stroke-width: 2; }
+  .cell .dl { stroke: var(--accent); stroke-width: 3; } .cell .dlss { stroke: var(--white); stroke-width: 3; }
+  .cell .w { fill: rgba(201, 138, 127, 0.25); stroke: none; }
+  .cell .pm { fill: var(--muted); font: 11px var(--sans); text-anchor: middle; }
+  .cell .ion { fill: none; stroke: var(--white); stroke-width: 1.5; stroke-dasharray: 5 3; }
+  .cell .lead { fill: none; stroke: var(--muted); stroke-width: .8; stroke-dasharray: 2 2; }
+  .cell .t { fill: var(--white); font: 12px var(--sans); text-anchor: middle; }
+  .cell .gbt { fill: var(--steel); } .cell .ctt { fill: var(--accent); } .cell .wt { fill: var(--rust); } .cell .sst { fill: var(--white); }
+  .ckt rect.w { stroke: var(--rust); fill: none; } .ckt text.w { fill: var(--rust); font-size: 12px; }
+  .ckt .sst { stroke: var(--white); } .ckt text.sst { fill: var(--white); stroke: none; }
   @media (max-width: 640px) { .eis-pair { grid-template-columns: 1fr; } .ckt { max-width: 18rem; margin: 0 auto; } }
 </style>
 <!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Battery materials", "item": "https://kyle-hunady.github.io/battery.html"}]}</script><!-- /crumbs-ld --></head>
@@ -89,7 +103,7 @@
       <figcaption><b>How I made the powder.</b> I handled the salts under argon to keep them dry. Once the powder was sealed in the jar, I could run the planetary ball mill outside the glovebox.</figcaption>
     </figure>
 
-    <p>I prepared pellets from the milled powder by cold pressing, hot pressing at 80 °C or sintering at 150 °C. I placed each pellet between two lithium disks and measured its impedance from room temperature to 110 °C. I made these plots from the original 2020 data.</p>
+    <p>I prepared pellets from the milled powder by cold pressing, hot pressing at 80 °C or sintering at 150 °C. I placed each pellet between a lithium disk and a stainless steel disk and measured its impedance from room temperature to 110 °C. I made these plots from the original 2020 data.</p>
 
     <figure class="fig fig--light" style="max-width:44rem">
       <img src="assets/img/gt-lirap-sigma.png" alt="Conductivity on a log scale against inverse temperature for three pellets. All three rise from about 1e-7 S/cm at 22 °C to between 1.5e-5 and 4e-5 S/cm at 110 °C. The hot-pressed pellet sits about two times higher from 22 to 80 °C." width="1408" height="968" loading="lazy">
@@ -124,34 +138,57 @@
       <p class="cap"><span class="tag-model">model</span><b>An R ‖ C pair draws a semicircle of width R, starting at R<sub>s</sub>.</b> Frequency falls from left to right. Dots mark each tenfold step, and the ring marks the top of the arc, where ω = 1/RC. R<sub>s</sub> is 100 Ω. C runs from 1 nF to 1 µF.</p>
     </div>
 
-    <p>In a pellet pressed between two lithium disks, lithium ions meet three kinds of resistance in a row. They move through the grains of the electrolyte (R<sub>b</sub>), cross the boundaries between grains (R<sub>gb</sub>), and transfer between the electrolyte and the lithium metal at each disk (R<sub>ct</sub>). The grain boundaries and the interfaces also store charge, so each acts as an R ‖ C pair. The interface capacitance C<sub>dl</sub> comes from the charged double layer at the metal surface and is much larger than C<sub>gb</sub>, so its arc appears at lower frequency. The grains also have an arc, but it often sits above 1 MHz, so the measured curve starts at R<sub>b</sub> on the real axis.</p>
+    <p>Take a pellet pressed between a lithium disk and a stainless steel disk. Lithium ions leave the lithium (R<sub>ct</sub>), move through the grains (R<sub>b</sub>) and cross the boundaries between grains (R<sub>gb</sub>). The grain boundaries and the lithium interface also store charge, so each acts as an R ‖ C pair. The interface capacitance C<sub>dl</sub> comes from the charged double layer at the metal surface and is much larger than C<sub>gb</sub>, so its arc appears at lower frequency. The grains also have an arc, but it often sits above 1 MHz, so the measured curve starts at R<sub>b</sub> on the real axis. Steel does not take up lithium, so at the steel face the double layer only charges. That side acts as a capacitor in series, and the low-frequency end of the curve rises almost vertically.</p>
+    <p>Measured arcs are usually flatter than semicircles. Rough interfaces and grains of different sizes spread out the time constants, and a constant phase element, Z = 1/(Q(jω)<sup>n</sup>), models that spread with n below 1. Next to the lithium face, Li<sup>+</sup> can also pile up or run short when current flows. Diffusion across that concentration gradient adds a Warburg impedance, Z<sub>W</sub> = σ<sub>W</sub>(1 − j)/√ω, which draws a 45° line at low frequency.</p>
 
     <div class="fig" id="eis-cell">
+      <svg class="cell" viewBox="0 0 600 240" role="img" aria-label="Cross-section of a Li | Li2OHCl | stainless steel cell. A lithium disk on the left, the pellet of grains and grain boundaries in the middle, a steel disk on the right. Lithium ions cross the left interface and move through the pellet, but cannot enter the steel, so charge piles up there as a double layer.">
+        <defs><marker id="ionhead" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor"/></marker></defs>
+        <rect class="li" x="100" y="40" width="70" height="120"/><rect class="ss" x="430" y="40" width="70" height="120"/>
+        <text class="t" x="135" y="104">Li</text><text class="t" x="465" y="98">steel</text><text class="t" x="465" y="114">(blocking)</text>
+        <rect class="grain" x="180" y="40" width="240" height="120"/>
+        <rect class="w" x="180" y="40" width="18" height="120"/>
+        <path class="gbl" d="M180 77.9 L210 75.8 L240 81.8 L270 74.9 L300 80.4 L330 78.4 L360 74.7 L390 80.1 L420 74.4 M180 119.2 L210 114.8 L240 115.1 L270 119.1 L300 123.9 L330 115.5 L360 116.7 L390 121.5 L420 125.4 M211.2 40.0 L210.0 76.9 M265.6 40.0 L260.2 75.0 M311.7 40.0 L309.2 79.4 M348.3 40.0 L343.7 75.6 M398.9 40.0 L402.7 77.7 M226.9 79.2 L227.9 115.0 M282.2 77.1 L280.7 121.7 M328.8 78.5 L323.5 115.6 M369.0 76.3 L365.4 118.8 M222.9 114.9 L222.0 160.0 M265.0 118.4 L266.1 160.0 M315.3 119.6 L312.8 160.0 M368.7 118.1 L371.1 160.0"/>
+        <path class="dl" d="M170 40V160"/><path class="dlss" d="M430 40V160"/>
+        <text class="pm" x="164" y="58">+</text><text class="pm" x="164" y="88">+</text><text class="pm" x="164" y="118">+</text><text class="pm" x="164" y="148">+</text><text class="pm" x="177" y="58">−</text><text class="pm" x="177" y="88">−</text><text class="pm" x="177" y="118">−</text><text class="pm" x="177" y="148">−</text><text class="pm" x="423" y="58">+</text><text class="pm" x="423" y="88">+</text><text class="pm" x="423" y="118">+</text><text class="pm" x="423" y="148">+</text><text class="pm" x="437" y="58">−</text><text class="pm" x="437" y="88">−</text><text class="pm" x="437" y="118">−</text><text class="pm" x="437" y="148">−</text>
+        <path class="ion" d="M150 104 L196 100 L238 108 L262 92 L300 98 L336 86 L372 96 L418 92" marker-end="url(#ionhead)"/>
+        <text class="t" x="300" y="24">Li<tspan dy="-5" font-size="9">+</tspan><tspan dy="5"> moves from the lithium into the pellet and stops at the steel</tspan></text>
+        <path class="lead" d="M352 60L372 188M268 92L282 188M168 150L110 188M190 160L215 220M436 150L480 208"/>
+        <text class="t" x="380" y="202">grains: R<tspan dy="3" font-size="9">b</tspan></text>
+        <text class="t gbt" x="300" y="202" style="text-anchor:end">boundaries: R<tspan dy="3" font-size="9">gb</tspan><tspan dy="-3"> ‖ CPE</tspan><tspan dy="3" font-size="9">gb</tspan></text>
+        <text class="t ctt" x="80" y="202">Li side: R<tspan dy="3" font-size="9">ct</tspan><tspan dy="-3"> ‖ CPE</tspan><tspan dy="3" font-size="9">dl</tspan></text>
+        <text class="t wt" x="222" y="234" style="text-anchor:start">diffusion layer: W</text>
+        <text class="t sst" x="500" y="222">steel side: CPE<tspan dy="3" font-size="9">ss</tspan></text>
+      </svg>
       <div class="eis-pair">
-        <svg class="ckt" viewBox="0 0 300 130" role="img" aria-label="Circuit for a lithium symmetric cell: bulk resistor R b, then R gb in parallel with C gb, then R ct in parallel with C dl">
-          <text class="lb" x="45" y="12">bulk</text><text class="lb gb" x="130" y="12">grain boundaries</text><text class="lb ct" x="235" y="12">Li interfaces</text>
-          <circle cx="6" cy="70" r="3"/><circle cx="294" cy="70" r="3"/>
-          <path d="M9 70H20l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H85M175 70H190M280 70H291"/>
-          <path class="gb" d="M85 45V95M85 45H105l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H175M85 95H126M126 83V107M134 83V107M134 95H175M175 45V95"/>
-          <path class="ct" d="M190 45V95M190 45H210l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H280M190 95H231M231 83V107M239 83V107M239 95H280M280 45V95"/>
+        <svg class="ckt" viewBox="0 0 380 130" role="img" aria-label="Circuit for a Li | electrolyte | steel cell: bulk resistor R b, then R gb in parallel with CPE gb, then R ct in series with Warburg W, in parallel with CPE dl, then a series CPE ss for the blocking steel side">
+          <text class="lb" x="45" y="12">grains</text><text class="lb gb" x="130" y="12">grain boundaries</text><text class="lb ct" x="255" y="12">Li side</text><text class="lb sst" x="350" y="12">steel</text>
+          <circle cx="6" cy="70" r="3"/><circle cx="374" cy="70" r="3"/>
+          <path d="M9 70H20l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H85M175 70H190M320 70H337M351 70H371"/>
+          <path class="gb" d="M85 45V95M85 45H105l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H175M85 95H123M123 83L129 95L123 107M131 83L137 95L131 107M131 95H175M175 45V95"/>
+          <path class="ct" d="M190 45V95M190 45H200l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H264M290 45H320M190 95H249M249 83L255 95L249 107M257 83L263 95L257 107M257 95H320M320 45V95"/>
+          <path class="sst" d="M337 58L343 70L337 82M345 58L351 70L345 82"/>
+          <rect class="w" x="264" y="36" width="26" height="18"/><text class="w" x="277" y="50">W</text>
           <text x="45" y="56">R<tspan dy="3" font-size="9">b</tspan></text>
           <text class="gb" x="130" y="31">R<tspan dy="3" font-size="9">gb</tspan></text>
-          <text class="gb" x="130" y="124">C<tspan dy="3" font-size="9">gb</tspan></text>
-          <text class="ct" x="235" y="31">R<tspan dy="3" font-size="9">ct</tspan></text>
-          <text class="ct" x="235" y="124">C<tspan dy="3" font-size="9">dl</tspan></text>
+          <text class="gb" x="130" y="124">CPE<tspan dy="3" font-size="9">gb</tspan></text>
+          <text class="ct" x="225" y="31">R<tspan dy="3" font-size="9">ct</tspan></text>
+          <text class="ct" x="256" y="124">CPE<tspan dy="3" font-size="9">dl</tspan></text>
+          <text class="sst" x="350" y="100">CPE<tspan dy="3" font-size="9">ss</tspan></text>
         </svg>
         <canvas class="plot eis-plot" aria-label="Simulated Nyquist plot of a Li | electrolyte | Li cell: an intercept, a grain-boundary arc and an interface arc, redrawn as the sliders change"></canvas>
       </div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="fig-controls">
-        <label><span>Bulk R<sub>b</sub></span><input class="b-rb" type="range" min="50" max="1500" step="50" value="300"></label>
         <label><span>Grain boundary R<sub>gb</sub></span><input class="b-rgb" type="range" min="0" max="1500" step="50" value="800"></label>
         <label><span>Li interface R<sub>ct</sub></span><input class="b-rct" type="range" min="0" max="3000" step="50" value="1200"></label>
+        <label><span>CPE exponent n</span><input class="b-n" type="range" min="0.6" max="1" step="0.01" value="0.85"></label>
+        <label><span>Warburg σ<sub>W</sub></span><input class="b-w" type="range" min="0" max="800" step="20" value="0"></label>
       </div>
-      <p class="cap"><span class="tag-model">model</span><b>Each ion process gives its own arc, in order of frequency.</b> The curve starts at R<sub>b</sub>, the grain-boundary arc (blue, C<sub>gb</sub> = 1 nF) comes next, and the interface arc (gold, C<sub>dl</sub> = 1 µF) comes last. R<sub>ct</sub> here combines both lithium disks. The line is colored by which element contributes most to −Z″ at that frequency.</p>
+      <p class="cap"><span class="tag-model">model</span><b>Each part of the cell gives its own feature, in order of frequency.</b> Colors match the cell drawing. The curve starts at R<sub>b</sub> = 300 Ω, then the grain-boundary arc (blue, about 1 nF), the lithium-interface arc (gold, about 1 µF) and the steel-side spike (gray). Lower n to flatten the arcs and tilt the spike. Raise σ<sub>W</sub> to add a diffusion tail (red).</p>
     </div>
 
-    <p>To get conductivity from a measured spectrum, I read R where the curve meets the real axis, either at R<sub>b</sub> or after one of the arcs, and used σ = L/(R·A), with L the pellet thickness and A its area.</p>
+    <p>My cells had lithium on one side and stainless steel on the other. To get conductivity, I read the bulk resistance from the high-frequency intercept or arc, and larger resistances where the curve returns toward the real axis after each arc, and used σ = L/(R·A), with L the pellet thickness and A its area. My fits below use R ‖ CPE pairs for the grain boundaries and the electrode contact, with no separate Warburg element.</p>
 
     <div class="elements">
       <div><b>Resistor (R)</b>A series resistor shifts the whole curve to the right by R. A wire or a process that is too fast to resolve can contribute to this shift.</div>
@@ -174,7 +211,7 @@
       <p class="cap"><span class="tag-model">model</span><b>Markers show tenfold steps in frequency, from 1 MHz on the left to 0.1 Hz.</b> The model combines a 200 Ω series resistor, a grain-boundary resistance in parallel with a CPE, and an electrode term. The grain-boundary element has an effective capacitance of 9 nF. Lower n to flatten its arc, or choose steel disks to see how blocking lithium changes the curve.</p>
     </div>
 
-    <p>I measured the sintered pellet at six temperatures. At 60 °C and above, the large arc peaks at a few kilohertz. Its width and peak frequency give a capacitance of about 7 nF, consistent with grain boundaries. The smaller tail appears at tens of hertz and gives a capacitance in the microfarad range, consistent with the lithium contact. At room temperature the resistance is about a hundred times larger, and a small extra arc near 1 MHz likely comes from grain interiors.</p>
+    <p>I measured the sintered pellet at six temperatures. At 60 °C and above, the large arc peaks at a few kilohertz. Its width and peak frequency give a capacitance of about 7 nF, consistent with grain boundaries. The smaller tail appears at tens of hertz and gives a capacitance in the microfarad range, consistent with an electrode contact. At room temperature the resistance is about a hundred times larger, and a small extra arc near 1 MHz likely comes from grain interiors.</p>
 
     <figure class="fig fig--light">
       <img src="assets/img/gt-eis-nyquist.png" alt="Two Nyquist plots of the sintered pellet. Left, 60 to 110 °C on a kilo-ohm scale: one large arc and a small low-frequency tail that both shrink as temperature rises. Right, 22 and 40 °C on a scale a hundred times larger." width="2094" height="767" loading="lazy">
@@ -185,10 +222,10 @@
 
     <figure class="fig fig--light">
       <img src="assets/img/gt-eis-fit.png" alt="Nyquist plot of the hot-pressed pellet at 100 °C with a circuit fit. A series resistance of 214 ohms, a grain-boundary arc of 668 ohms at about 9 nF with n = 0.91, and a lopsided low-frequency arc of 1260 ohms with n = 0.44." width="1691" height="593" loading="lazy">
-      <figcaption><b>The fit gives 0.2 kΩ of series resistance, 0.7 kΩ at the grain boundaries and 1.3 kΩ at the lithium contacts, out of about 2.1 kΩ total.</b> The contact arc has n = 0.44, close to the diffusion value of 0.5, which suggests diffusion contributes alongside charge transfer.</figcaption>
+      <figcaption><b>The fit gives 0.2 kΩ of series resistance, 0.7 kΩ at the grain boundaries and 1.3 kΩ at the electrode contacts, out of about 2.1 kΩ total.</b> The contact arc has n = 0.44, close to the diffusion value of 0.5, which suggests diffusion contributes alongside charge transfer.</figcaption>
     </figure>
 
-    <p>Using only R₀ gives a conductivity of at least 2.6 × 10<sup>−4</sup> S/cm at 100 °C, in line with Song’s published values. Including grain boundaries brings the estimate to 6.4 × 10<sup>−5</sup> S/cm. Including the lithium contacts gives 2.6 × 10<sup>−5</sup> S/cm, as shown in the first plot. In this pellet cell, grain boundaries and contacts accounted for most of the resistance.</p>
+    <p>Using only R₀ gives a conductivity of at least 2.6 × 10<sup>−4</sup> S/cm at 100 °C, in line with Song’s published values. Including grain boundaries brings the estimate to 6.4 × 10<sup>−5</sup> S/cm. Including the electrode contacts gives 2.6 × 10<sup>−5</sup> S/cm, as shown in the first plot. In this pellet cell, grain boundaries and contacts accounted for most of the resistance.</p>
 
     <h2 class="part" id="cathode"><span>III</span>Making porous cathodes with foam</h2>
     <p>Many electric-car batteries use a cathode made from nickel-manganese-cobalt oxide (NMC) mixed with carbon and binder and coated onto aluminum foil. A thicker coating can store more energy per cell, but it also lengthens the path lithium ions have to travel. Diffusion time scales with the square of distance, so doubling the coating thickness can make ion transport take four times as long (<a href="#ref-kim">Kim 2023</a>).</p>
@@ -224,7 +261,7 @@
 </footer>
 
 <script src="assets/js/site.js?v=20261117065748"></script>
-<script src="assets/js/eis-primer.js?v=20261119075940"></script>
+<script src="assets/js/eis-primer.js?v=20261119081726"></script>
 <script>
 (function () {
   const root = document.getElementById('eis-toy'); if (!root) return;
