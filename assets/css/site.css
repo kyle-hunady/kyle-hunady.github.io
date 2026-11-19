@@ -1071,3 +1071,20 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .vid2 figure { margin: 0; }
 .vid2 video { display: block; width: 100%; height: auto; border-radius: 0.4rem; background: #000; }
 @media (max-width: 640px) { .vid2 { grid-template-columns: 1fr; } }
+
+/* Publications run full width (2026-11-19): the 9rem label column of
+   .exp__item indented the whole list. The label now sits above it. */
+.pubs.exp__item { grid-template-columns: 1fr; gap: 0.6rem; }
+.pubs__label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* Education strip under About: Caltech "C" and Georgia Tech "GT" marks
+   (2026-11-19), taken from each school's own site. Round tiles in the
+   school's colour; the padding keeps the mark inside the circle. */
+.edu { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9rem 2.2rem; margin-top: 1.6rem; }
+.edu__item { display: flex; align-items: center; gap: 0.7rem; color: var(--muted); text-align: left; transition: var(--transition); }
+.edu__item img { width: 2.6rem; height: 2.6rem; border-radius: 50%; object-fit: contain; flex: none; }
+.edu__item img[src*="caltech"] { background: #F37324; padding: 0.32rem; }
+.edu__item img[src*="gatech"] { background: #003057; padding: 0.42rem 0.36rem 0.36rem; }
+.edu__item span { display: flex; flex-direction: column; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.03em; line-height: 1.45; }
+.edu__item b { color: var(--white); font-weight: 500; font-size: 0.78rem; }
+.edu__item:hover b { color: var(--accent); }
