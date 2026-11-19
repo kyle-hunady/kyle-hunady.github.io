@@ -601,14 +601,16 @@ button.btn { font-size: 0.8rem; }
 @media (max-width: 760px) {
   .fig-row--wide { grid-template-columns: 1fr; }
   .swaps, .kinds, .examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .parts { grid-template-columns: 1fr; }
 }
 
-.parts { list-style: none; padding: 0; margin: 1.6rem 0 0.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+.parts { list-style: none; padding: 0; margin: 1.6rem 0 0.5rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
 .parts a { display: block; text-decoration: none; border: 1px solid var(--rule); border-radius: 0.6rem; padding: 0.75rem 0.9rem; background: var(--surface); }
 .parts a:hover { border-color: var(--accent-deep); }
 .parts b { display: block; color: var(--accent); font-weight: 500; font-size: 0.85rem; }
 .parts span { display: block; font-family: var(--sans); color: var(--muted); font-size: 0.76rem; margin-top: 0.2rem; line-height: 1.4; }
+/* Phone: two columns. This override must sit AFTER the base rule, or the
+   3-column base wins and the third card runs off a 375 px screen. */
+@media (max-width: 760px) { .parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 h2.part { margin-top: 3.2rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); display: flex; align-items: baseline; gap: 0.8rem; }
 h2.part span { color: var(--accent); font-size: 0.8em; }
 .kinds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
