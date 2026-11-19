@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css?v=20261118141140">
-<meta name="report-waive" content="M1: section I animates the spectrum building up on a timer-driven canvas, which the audit does not detect, and the photon paths are 3-D rays the reader can turn; S1: section II draws its generic head with the rays at all three knob values before any number, as a side view because the head is generic, and the real head is drawn in 3-D with rays in sections IV and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
+<meta name="report-waive" content="M1: section I animates the spectrum building up on a timer-driven canvas, which the audit does not detect, and the photon paths are 3-D rays the reader can turn; S1: section II draws its generic head with the rays at both knob values before any number, as a side view because the head is generic, and the real heads are drawn in 3-D with their collimators and rays in sections III and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -69,8 +69,8 @@
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
       <li><a href="#read"><b>I. Reading iron minerals</b><span>How iron minerals show up in a spectrum</span></a></li>
       <li><a href="#trade"><b>II. Why spectral lines broaden</b><span>How the source position affects the spectrum</span></a></li>
-      <li><a href="#risk"><b>III. Can we still tell minerals apart?</b><span>How broadening affects four mineral pairs</span></a></li>
-      <li><a href="#pipeline"><b>IV. Modeling the current instrument</b><span>From a photo to a prediction of line broadening</span></a></li>
+      <li><a href="#pipeline"><b>III. Modeling the current instrument</b><span>From a photo to a 3-D model and a kernel</span></a></li>
+      <li><a href="#risk"><b>IV. Can we still tell minerals apart?</b><span>How broadening affects four mineral pairs</span></a></li>
       <li><a href="#heads"><b>V. Comparing three designs</b><span>ver1, ver2 and ver3 at the same scale</span></a></li>
       <li><a href="#next"><b>VI. Model limits and thesis work</b><span>Where the model helps and where it runs high</span></a></li>
     </ol></div>
@@ -120,7 +120,18 @@
       <p class="cap"><span class="tag-model">simulated</span>Move the slider to change the angle of the photon on the left. The red arrow shows the velocity component along its path. The upper-right plot shows how often photons at each angle reach the detector. The lower-right plot starts with an α-Fe sextet (gray) with lines 0.28 mm/s wide. Line 6 widens to 0.31 mm/s at 30 mm (blue) and 0.73 mm/s at 8 mm (purple). The 8 mm setting collects eight times as many counts. The dashed red line shows what happens at the selected angle alone.</p>
     </div>
 
-    <h2 class="part" id="risk"><span>III</span>Can we still tell minerals apart?</h2>
+    <h2 class="part" id="pipeline"><span>III</span>Modeling the current instrument</h2>
+    <p class="lead-line">In the simulation of the current instrument, detected photons span 0 to 22° off the drive axis, stretching the spectral lines by 1.8%.</p>
+    <p>I measured the assembled instrument from a photograph to capture the positions of the parts as built. This example uses the geometry from our September 2026 run on metallic iron (α-Fe), labeled ver2.</p>
+
+    <ol class="pipe">
+      <li><figure class="fig fig--light"><span class="pipe__n">1</span><img src="assets/img/mc/pipe_annotated.jpg" alt="Top-down photo of the head with clicked landmarks: sample edge S1–S2, aperture cup C1–C2, detector D1–D2, enclosure corners" width="763" height="586" loading="lazy"><figcaption><b>Measure the geometry.</b> I mark the sample edge (S), aperture cup (C), detector face (D) and enclosure corners (E). A known length on the enclosure sets the scale for calculating angles and distances.</figcaption></figure></li>
+      <li><figure class="fig fig--light"><span class="pipe__n">2</span><canvas id="f6a" class="story" aria-label="Photo of the head with simulated photon paths animated on it"></canvas><figcaption><span class="tag-model">simulated</span><b>Check the paths on the photo.</b> Paths from a run of one million photons are drawn back onto the photo. A misplaced landmark shows up at once as a beam that misses the sample.</figcaption></figure></li>
+      <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">3</span><canvas id="f6b" class="story" aria-label="3-D model of the same head: translucent lead collimator, the limiting opening, the source capsule and its active area, the detector housing and chip, with rays colored by their angle to the drive axis"></canvas><div class="fig-controls"><span class="seg" id="f6-head"></span></div><figcaption><span class="tag-model">simulated</span><b>Build the head in 3-D.</b> The lead collimator, source capsule and detector housing are drawn see-through so the parts that set the angles stay visible: the 8 mm active area of the source, the 7.8 mm limiting opening and the 7.7 mm detector chip. Each ray is colored by its angle to the drive axis. Gray rays are stopped by the opening. The switch changes the head in both the photo and the model.</figcaption></figure></li>
+      <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">4</span><canvas id="fk" class="story" aria-label="Histogram of the angle between each detected photon and the source axis, and the kernel matrix that maps each true line position to the recorded velocity"></canvas><figcaption><span class="tag-model">simulated</span><b>Turn the angles into a kernel.</b> The 33,430 detected photons averaged 9.7° off the source axis, with none past 22°, which gives a stretch of 1.8%. The bars use the same colors as the rays. On the right, each column starts at a true line position and shows where the drive would record it. The columns fan upward from the dashed diagonal because 1/cos θ is at least 1. The color is the square root of the weight so the faint tail shows. This matrix turns any input spectrum into the one the instrument would record.</figcaption></figure></li>
+    </ol>
+
+    <h2 class="part" id="risk"><span>IV</span>Can we still tell minerals apart?</h2>
     <p class="lead-line">With the current design, all four mineral pairs remained distinguishable in the simulation. The hardest pair needed 1.65× the counting time.</p>
     <div class="fig fig--light">
       <canvas id="f8" class="story" aria-label="A mineral's model spectrum before and after the smearing of our head or of the 8 mm setting, with a table of how far each mineral's outermost line moves"></canvas>
@@ -130,45 +141,26 @@
     </div>
     <p>Broadening spreads counts across more channels and can make a spectrum take longer to measure. When lines from different minerals overlap, fitting their fractions also gets harder. I tested both effects on four mineral pairs. The time factor tells you how much longer to count for the same precision. The percentage gives the fraction of the squared difference between the original spectra that remains after broadening.</p>
     <div class="fig fig--light">
-      <div id="mc-cases" class="plot plot--cases" role="img" aria-label="Four mineral pairs with and without smearing"></div>
+      <canvas id="fc" class="story" aria-label="Four mineral pairs, each mixture before and after our head's broadening"></canvas>
       <div class="tablewrap"><table class="mini">
         <thead><tr><th>pair (equal iron)<br><small>time factor · spectral difference retained</small></th><th>our head<br><small>1.8 % stretch</small></th><th>source 8 mm back<br><small>7.2 %</small></th></tr></thead>
         <tbody id="mc-cases-table"></tbody>
       </table></div>
-      <p class="cap"><span class="tag-model">simulated</span>Hematite and magnetite have outer lines around ±8 mm/s that broaden and overlap. With our current design, this pair needs 1.65× the counting time and retains 82% of its spectral difference. With the source 8 mm back, it needs 5.3× the time and retains 34%. The nearby doublets of olivine and pyroxene need only 1.09× the time in our design. Gray shows each original mixture. Orange shows what our instrument would record.</p>
+      <p class="cap"><span class="tag-model">simulated</span>Hematite and magnetite have outer lines around ±8 mm/s that broaden and overlap. With our current design, this pair needs 1.65× the counting time and retains 82% of its spectral difference. With the source 8 mm back, it needs 5.3× the time and retains 34%. The nearby doublets of olivine and pyroxene need only 1.09× the time in our design. Blue shows each mixture before broadening, purple shows what our instrument would record, and the shaded areas are the two minerals on their own.</p>
     </div>
-
-    <h2 class="part" id="pipeline"><span>IV</span>Modeling the current instrument</h2>
-    <p class="lead-line">In the simulation of the current instrument, detected photons span 0 to 22° off the drive axis, stretching the spectral lines by 1.8%.</p>
-    <p>I measured the assembled instrument from a photograph to capture the positions of the parts as built. This example uses the geometry from our September 2026 run on metallic iron (α-Fe), labeled ver2.</p>
-
-    <ol class="pipe">
-      <li><figure class="fig fig--light"><span class="pipe__n">1</span><img src="assets/img/mc/pipe_annotated.jpg" alt="Top-down photo of the head with clicked landmarks: sample edge S1–S2, aperture cup C1–C2, detector D1–D2, enclosure corners" width="763" height="586" loading="lazy"><figcaption><b>Measure the geometry.</b> I mark the sample edge (S), aperture cup (C), detector face (D) and enclosure corners (E). A known length on the enclosure sets the scale for calculating angles and distances.</figcaption></figure></li>
-      <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">2</span><div class="story-two"><canvas id="f6a" class="story" aria-label="Photo of the head with simulated photon paths animated on it"></canvas><canvas id="f6b" class="story" aria-label="3-D model of the same head with rays colored by their angle to the drive axis; drag to rotate"></canvas></div><div class="fig-controls"><span class="seg" id="f6-head"></span></div><figcaption><span class="tag-model">simulated</span><b>Trace the photons.</b> On the left, paths from a run of one million photons are drawn over the photo. Orange shows photons leaving the source, and purple shows photons traveling from the sample to the detector. The overlay makes it easy to see if a misplaced landmark sends the beam away from the sample. On the right, the color of each path shows its angle from the drive axis. Drag to rotate or scroll to zoom.</figcaption></figure></li>
-      <li><figure class="fig fig--light"><span class="pipe__n">3</span><div id="mc-theta" class="plot" role="img" aria-label="Histogram of the angle between each detected photon and the source axis"></div><figcaption><span class="tag-model">simulated</span><b>Measure the angles.</b> The 33,430 detected photons averaged 9.7° off the source axis, with none past 22°. The histogram gives a stretch of 1.8% through ⟨1/cos θ⟩ − 1.</figcaption></figure></li>
-      <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">4</span><div id="mc-kernel" class="plot plot--square" role="img" aria-label="Kernel matrix: where a line at each true velocity is recorded"></div><div class="fig-out" aria-live="polite"></div><figcaption><span class="tag-model">simulated</span><b>Predict the line broadening.</b> Each column starts at a true line position and shows where the drive would record it. The dotted diagonal shows the position without broadening. At positive velocities, each column fans upward because 1/cos θ is at least 1. The plot uses the square root of the weight to make the faint tail visible. This matrix transforms an input spectrum into the one the instrument would record. Double-click to see the full plot.</figcaption></figure></li>
-    </ol>
 
     <h2 class="part" id="heads"><span>V</span>Comparing three designs</h2>
     <p class="lead-line">The model predicts that moving the source about 12 mm back in ver3 preserves the current 1.8% stretch and doubles the count rate.</p>
     <p>I took ver1 from the original drawing, ver2 from the photo above, and ver3 from the CAD file for the next design. As drawn, ver3 collects 8.3× as many counts as ver2 and stretches the lines by 7.7%. Moving the source 12.1 mm back along its axis brings the stretch down to 1.8% while preserving a twofold gain in count rate.</p>
 
     <div class="fig fig--light">
-      <div id="mc-heads" class="plot plot--heads" role="img" aria-label="ver1, ver2 and ver3 heads side by side in 3-D with detected rays"></div>
-      <div class="fig-row fig-row--3 head-nums">
-        <p style="color:#7b5ea7"><b>ver1 · 2.9×</b><span>stretch 4.5 % · source 20.5 mm behind the opening</span></p>
-        <p style="color:#d95f02"><b>ver2 · 1×</b><span>stretch 1.8 % · 19.7 mm · the head in use</span></p>
-        <p style="color:#1f78b4"><b>ver3 · 2.0×</b><span>stretch 1.8 % · 19.9 mm (12.1 mm further back than drawn)</span></p>
-      </div>
-      <p class="cap"><span class="tag-model">simulated</span>All three designs are shown from the same angle and at the same scale. The lead collimator is gray, and a black ring marks the aperture. Red is the 8 mm diameter source, and blue is the 7.7 mm diameter detector chip. Orange shows 45 detected photon paths per design. The count rate compares detected 14.4 keV photons per source decay with ver2 as the baseline.</p>
+      <canvas id="f9" class="story" aria-label="ver1 (2.9× counts, 4.5% stretch), ver2 (1×, 1.8%) and ver3 (2.0×, 1.8%) heads side by side in 3-D with translucent collimators and detected rays colored by angle"></canvas>
+      <p class="cap"><span class="tag-model">simulated</span>All three designs turn together and sit at the same scale. The source sits 20.5 mm behind the opening in ver1, 19.7 mm in ver2 and 19.9 mm in ver3 once it is moved 12.1 mm back from where the CAD file puts it. The lead collimator, source capsule and detector housing are see-through, and the black ring marks the limiting opening. Orange is the 8 mm active area of the source and teal is the 7.7 mm detector chip. Each design shows 45 detected photon paths, colored by their angle to the drive axis, so ver1’s wider spread of angles shows up as more purple. The count rate compares detected 14.4 keV photons per source decay, with ver2 as the baseline.</p>
     </div>
 
     <div class="fig fig--light">
-      <div class="fig-row fig-row--wide">
-        <div id="mc-spec-full" class="plot" role="img" aria-label="Simulated hematite spectrum through each head"></div>
-        <div id="mc-spec-zoom" class="plot" role="img" aria-label="Close-up of the outermost line"></div>
-      </div>
-      <p class="cap"><span class="tag-model">simulated</span>The left plot compares the original hematite sextet (gray) with the spectra predicted for all three designs. The right plot zooms in on line 6. In ver1, it falls below half its original height and is 2.9× as wide. The ver2 and ver3 curves overlap, so the model predicts the same resolution at twice the count rate.</p>
+      <canvas id="f10" class="story" aria-label="Simulated hematite spectrum through each head, with the outermost line enlarged"></canvas>
+      <p class="cap"><span class="tag-model">simulated</span>The left plot compares the original hematite sextet (blue) with the spectra predicted for all three designs. The right plot enlarges line 6, the shaded band on the left. In ver1, it falls below half its original height and is 2.9× as wide. The ver2 and ver3 curves overlap, so the model predicts the same resolution at twice the count rate.</p>
     </div>
 
     <h2 class="part" id="next"><span>VI</span>Model limits and thesis work</h2>
@@ -207,10 +199,7 @@
 </footer>
 
 <script src="assets/js/site.js?v=20261117065748"></script>
-<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
-<script src="assets/js/mc.js?v=ab8354557145" data-mc="assets/data/mc.json?v=20261116204832"></script>
-<script src="assets/js/mc-teach.js?v=ba16551ae60a" data-x="assets/data/mc.json?v=20261116204832"></script>
 <script src="assets/js/mc-story-data.js?v=20261118170000"></script>
-<script src="assets/js/mc-story.js?v=790ce515a927"></script>
+<script src="assets/js/mc-story.js?v=20261118164001" data-mc="assets/data/mc.json?v=20261116204832"></script>
 </body>
 </html>

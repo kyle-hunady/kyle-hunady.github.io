@@ -575,106 +575,212 @@ function seg(id, opts, onPick, init) {   // segmented button group
   }, 1.4);
 })();
 
+/* =============== 3-D renderer shared by frames 6 and 9 =============== *
+ * Translucent bodies (painter-sorted triangles), black opening ring, rays coloured by their angle to the drive axis.
+ * Left-drag rotates, right-drag pans, Ctrl+scroll zooms, double-click resets. It turns slowly until touched. */
+const V3 = {
+  add: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], sub: (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]],
+  mul: (a, s) => [a[0] * s, a[1] * s, a[2] * s], dot: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+  cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+  norm: a => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; },
+  basis(n) { const u = V3.norm(V3.cross(n, Math.abs(n[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0])); return [u, V3.cross(n, u)]; },
+};
+const HW = {   // body colours, the same on every 3-D figure
+  pb: ["#4a5568", 0.16], cap: ["#a0aec0", 0.30], src: [C.src, 0.92], chip: [C.det, 0.92], det: ["#90a4bf", 0.20],
+};
+function rgbOf(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+// surface of revolution of an (s, r) polyline about axis a through o; s runs along a
+function revolve(o, a, prof, closed = true, n = 36) {
+  const [u, v] = V3.basis(a), tris = [], rims = [];
+  const P = (s, r, f) => V3.add(o, V3.add(V3.mul(a, s), V3.add(V3.mul(u, r * Math.cos(f)), V3.mul(v, r * Math.sin(f)))));
+  const ne = closed ? prof.length : prof.length - 1;
+  for (let e = 0; e < ne; e++) {
+    const [s0, r0] = prof[e], [s1, r1] = prof[(e + 1) % prof.length];
+    for (let k = 0; k < n; k++) {
+      const f0 = 2 * Math.PI * k / n, f1 = 2 * Math.PI * (k + 1) / n;
+      const A = P(s0, r0, f0), B = P(s0, r0, f1), Cc = P(s1, r1, f1), D = P(s1, r1, f0);
+      if (r0 > 1e-6) tris.push([A, B, Cc]);
+      if (r1 > 1e-6) tris.push([A, Cc, D]);
+    }
+  }
+  return { tris, rims };
+}
+function edgesOf(tris, deg = 30) {   // crease + boundary edges: the outline a CAD viewer draws
+  const key = p => p.map(x => x.toFixed(2)).join(","), E = new Map(), cmax = Math.cos(deg * Math.PI / 180);
+  for (const t of tris) {
+    const nrm = V3.norm(V3.cross(V3.sub(t[1], t[0]), V3.sub(t[2], t[0])));
+    for (let i = 0; i < 3; i++) {
+      const a = t[i], b = t[(i + 1) % 3], ka = key(a), kb = key(b), k = ka < kb ? ka + "|" + kb : kb + "|" + ka;
+      const e = E.get(k); if (e) e.n.push(nrm); else E.set(k, { a, b, n: [nrm] });
+    }
+  }
+  const out = [];
+  for (const e of E.values()) if (e.n.length === 1 || Math.abs(V3.dot(e.n[0], e.n[1])) < cmax) out.push([e.a, e.b]);
+  return out;
+}
+function mkBody(tris, [col, op]) {
+  const c = [0, 0, 0]; for (const t of tris) for (const p of t) for (let i = 0; i < 3; i++) c[i] += p[i] / (3 * tris.length);
+  return { tris, edges: edgesOf(tris), col, op, c };
+}
+function body(geo, hw) { return mkBody(geo.tris, hw); }
+function circle(c, n, r, k = 72) { const [u, v] = V3.basis(n); return grid(0, 2 * Math.PI, k).map(f => V3.add(c, V3.add(V3.mul(u, r * Math.cos(f)), V3.mul(v, r * Math.sin(f))))); }
+
+function orbit(cv, home) {   // camera state + mouse handling for one canvas
+  const st = { yaw: home.yaw, pitch: home.pitch, zoom: 1, pan: [0, 0], drag: null, touched: false };
+  cv.addEventListener("contextmenu", e => e.preventDefault());
+  cv.addEventListener("pointerdown", e => { st.drag = [e.clientX, e.clientY, st.yaw, st.pitch, st.pan[0], st.pan[1], e.button]; st.touched = true; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", e => {
+    const g = st.drag; if (!g) return;
+    if (g[6] === 2 || e.shiftKey) st.pan = [g[4] + e.clientX - g[0], g[5] + e.clientY - g[1]];
+    else { st.yaw = g[2] + (e.clientX - g[0]) * 0.01; st.pitch = Math.max(-1.4, Math.min(1.4, g[3] + (e.clientY - g[1]) * 0.01)); }
+  });
+  cv.addEventListener("pointerup", () => { st.drag = null; });
+  cv.addEventListener("wheel", e => { if (!e.ctrlKey) return; e.preventDefault(); st.zoom = Math.max(0.5, Math.min(4, st.zoom * (e.deltaY < 0 ? 1.1 : 0.9))); }, { passive: false });
+  cv.addEventListener("dblclick", () => Object.assign(st, { yaw: home.yaw, pitch: home.pitch, zoom: 1, pan: [0, 0], touched: false }));
+  return st;
+}
+// draw one scene into the viewport vp = {x, y, w, h}; scene = {ctr, span, bodies, lines, rays, sampleZ, labels}
+function render3d(ctx, vp, st, sc) {
+  const cy = Math.cos(st.yaw), sy = Math.sin(st.yaw), cp = Math.cos(st.pitch), sp = Math.sin(st.pitch);
+  const scl = Math.min(vp.w, vp.h) / sc.span * st.zoom, cx0 = vp.x + vp.w / 2 + st.pan[0], cy0 = vp.y + vp.h / 2 + st.pan[1];
+  const rot = p => { const x = p[0] - sc.ctr[0], y = p[1] - sc.ctr[1], z = p[2] - sc.ctr[2];
+    const x1 = cy * x - sy * y, y1 = sy * x + cy * y; return [x1, cp * y1 - sp * z, sp * y1 + cp * z]; };
+  const pr = q => { const s = 160 / (160 + q[1]); return [cx0 + scl * q[0] * s, cy0 - scl * q[2] * s]; };
+  ctx.save(); ctx.beginPath(); ctx.rect(vp.x, vp.y, vp.w, vp.h); ctx.clip();
+  // sample plate with a 5 mm grid, always underneath
+  const L = sc.plate || 28, z = sc.sampleZ, X = sc.ctr[0];
+  const plate = [[X - L, -L, z], [X + L, -L, z], [X + L, L, z], [X - L, L, z]].map(p => pr(rot(p)));
+  ctx.fillStyle = "rgba(139,94,60,.13)"; ctx.beginPath(); plate.forEach((q, i) => i ? ctx.lineTo(...q) : ctx.moveTo(...q)); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = "rgba(139,94,60,.16)"; ctx.lineWidth = 0.7; ctx.beginPath();
+  for (let g = -L; g <= L + 1e-6; g += 5) {
+    ctx.moveTo(...pr(rot([X + g, -L, z]))); ctx.lineTo(...pr(rot([X + g, L, z])));
+    ctx.moveTo(...pr(rot([X - L, g, z]))); ctx.lineTo(...pr(rot([X + L, g, z])));
+  }
+  ctx.stroke();
+  // bodies far to near: one translucent fill each (triangles wound the same way, so they union) + crease edges
+  const drawBody = bd => {
+    const rgb = rgbOf(bd.col).join(","); ctx.beginPath();
+    for (const t of bd.tris) {
+      let A = pr(rot(t[0])), B = pr(rot(t[1])), Q = pr(rot(t[2]));
+      if ((B[0] - A[0]) * (Q[1] - A[1]) - (B[1] - A[1]) * (Q[0] - A[0]) < 0) { const x = B; B = Q; Q = x; }
+      ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.lineTo(Q[0], Q[1]); ctx.closePath();
+    }
+    ctx.fillStyle = `rgba(${rgb},${bd.op})`; ctx.fill("nonzero");
+    ctx.beginPath(); for (const [p, q] of bd.edges) { ctx.moveTo(...pr(rot(p))); ctx.lineTo(...pr(rot(q))); }
+    ctx.strokeStyle = `rgba(${rgb},${Math.min(0.9, bd.op * 2 + 0.25)})`; ctx.lineWidth = 0.8; ctx.stroke();
+  };
+  const bs = sc.bodies.map(bd => ({ bd, d: rot(bd.c)[1] })).sort((p, q) => q.d - p.d);
+  for (const { bd, d } of bs) if (d > 0) drawBody(bd);
+  for (const r of sc.rays) {
+    ctx.strokeStyle = r.blocked ? "rgba(150,150,150,.4)" : thetaCol(r.th); ctx.globalAlpha = r.blocked ? 1 : 0.6; ctx.lineWidth = 0.9;
+    ctx.beginPath(); r.pts.forEach((p, i) => { const q = pr(rot(p)); i ? ctx.lineTo(...q) : ctx.moveTo(...q); }); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  for (const l of sc.lines || []) { ctx.strokeStyle = l.col; ctx.lineWidth = l.lw; ctx.beginPath(); l.pts.forEach((p, i) => { const q = pr(rot(p)); i ? ctx.lineTo(...q) : ctx.moveTo(...q); }); ctx.stroke(); }
+  for (const { bd, d } of bs) if (d <= 0) drawBody(bd);
+  for (const [p, s, col] of sc.labels || []) { const q = pr(rot(p)); txt(ctx, s, q[0] + 8, q[1] - 6, { size: 11.5, w: 700, col, halo: true }); }
+  ctx.restore();
+}
+function legend3d(ctx, x, y, maxW) {   // one key for every 3-D figure on the page
+  const items = [["⁵⁷Co active area", HW.src[0], "patch"], ["source capsule", HW.cap[0], "patch"], ["Pb collimator", HW.pb[0], "patch"],
+    ["limiting opening", C.ink, "line"], ["detector chip", HW.chip[0], "patch"], ["detector housing", HW.det[0], "patch"]];
+  let X = x, Y = y; ctx.font = `400 11px ${FONT}`;
+  for (const [lab, col, kind] of items) {
+    const wd = 34 + ctx.measureText(lab).width;
+    if (X + wd > x + maxW) { X = x; Y += 17; }
+    if (kind === "patch") { ctx.fillStyle = col; ctx.globalAlpha = 0.55; ctx.fillRect(X, Y - 10, 14, 10); ctx.globalAlpha = 1; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(X, Y - 10, 14, 10); }
+    else { ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X, Y - 5); ctx.lineTo(X + 14, Y - 5); ctx.stroke(); }
+    txt(ctx, lab, X + 19, Y, { size: 11 }); X += wd;
+  }
+  return Y;
+}
+function thetaBar(ctx, x, y, w) {   // the ray colour key: blue at 0 deg to purple at 25 deg
+  for (let i = 0; i < w; i++) { ctx.fillStyle = thetaCol(25 * i / w); ctx.fillRect(x + i, y - 9, 1, 8); }
+  txt(ctx, "0°", x, y + 11, { size: 10.5, col: C.mute }); txt(ctx, "25°", x + w, y + 11, { size: 10.5, col: C.mute, align: "right" });
+  txt(ctx, "ray angle to the drive axis", x + w + 8, y - 1, { size: 11 });
+}
+
 /* =============== FRAME 6: our heads: the photo and the 3-D model =============== */
 (function () {
   if (!document.getElementById("f6a")) return;
-  let head = "fe_8mm", yaw = -0.75, pitch = 0.35, zoomK = 1, drag = null;
+  let head = "fe_8mm";
   const imgs = {};
   for (const k in SB.photos) { const im = new Image(); im.src = SB.photos[k].img; imgs[k] = im; }
   seg("f6-head", [["fe_8mm", "α-Fe run, Sep 2026"], ["hem", "hematite run, Nov 2026"]], v => { head = v; build(); }, "fe_8mm");
-  let rays = [], geo = null;
-  const add = (a, b) => a.map((x, i) => x + b[i]), sub = (a, b) => a.map((x, i) => x - b[i]), mul = (a, s) => a.map(x => x * s);
-  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], norm = a => mul(a, 1 / Math.hypot(...a));
-  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-  function basis(n) { const u = norm(cross(n, Math.abs(n[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0])); return [u, cross(n, u)]; }
-  function build() {   // toy rays through the real MC geometry: source disk -> aperture -> sample plane
+  let sc = null, G = null;
+  function build() {   // the real MC geometry + the ver2 hardware around it (Pb tube, capsule, H50 cap)
+    const { add, sub, mul, dot, norm } = V3;
     const c = SB.kernels[head].config, S = c.source_pos, F = c.focus_point || [0, 0, 0];
-    const n = norm(sub(F, S)), [u, v] = basis(n), zs = c.sample_offset || 0;
+    const n = norm(sub(F, S)), [u, v] = V3.basis(n), zs = c.sample_offset || 0;
     const stand = c.aperture_standoff != null ? c.aperture_standoff : Math.hypot(...sub(F, S)) - c.aperture_wd;
-    const A = add(S, mul(n, stand)), D = c.detectors[0].pos, dn = norm(sub(F, D)), [du, dv] = basis(dn);
-    geo = { S, n, u, v, A, D, dn, du, dv, zs, src: c.source_diameter / 2, ap: c.aperture_diameter / 2, det: (c.detector_diameter || 7.7) / 2 };
-    rays = []; seed = 99;
-    for (let k = 0; rays.length < 360 && k < 60000; k++) {
-      const rr = geo.src * Math.sqrt(rnd()), ph = 2 * Math.PI * rnd();
+    const A = add(S, mul(n, stand)), D = c.detectors[0].pos, dn = norm(sub(F, D)), ap = c.aperture_diameter / 2;
+    const src = c.source_diameter / 2, det = (c.detector_diameter || 7.7) / 2, back = mul(n, -1);
+    G = { S, A, D, n, src, ap, det, zs, stand };
+    const bodies = [
+      body(revolve(A, back, [[0, 8], [24, 8], [24, 10], [0, 10]]), HW.pb),            // Pb tube, bore Ø16, OD 20 x 24
+      body(revolve(A, back, [[0, ap], [2, ap], [2, 8], [0, 8]]), HW.pb),               // 2 mm Pb plate with the opening
+      body(revolve(S, back, [[-0.5, 4], [0, 4], [0, 7], [-0.5, 7]]), HW.cap),          // capsule lip
+      body(revolve(S, back, [[0, 0], [5.5, 0], [5.5, 7], [0, 7]]), HW.cap),            // capsule Ø14 x 6
+      body(revolve(S, back, [[5.5, 0], [13.5, 0], [13.5, 3], [5.5, 3]]), HW.cap),      // stem Ø6 x 8
+      body(revolve(add(S, mul(n, 0.05)), n, [[0, 0], [0, src]], false), HW.src),          // the 57Co active area
+      body(revolve(D, dn, [[0, 0], [0, det]], false), HW.chip),                         // detector chip
+      body(revolve(add(D, mul(dn, 1.75)), mul(dn, -1), [[0, 0], [9, 0], [9, 7], [0, 7]]), HW.det),   // H50 cap Ø14 x 9
+    ];
+    const rays = []; seed = 99;
+    for (let k = 0; rays.length < 300 && k < 60000; k++) {
+      const rr = src * Math.sqrt(rnd()), ph = 2 * Math.PI * rnd();
       const P = add(S, add(mul(u, rr * Math.cos(ph)), mul(v, rr * Math.sin(ph))));
-      const ct = 1 - rnd() * (1 - Math.cos(35 * Math.PI / 180)), st = Math.sqrt(1 - ct * ct), p2 = 2 * Math.PI * rnd();
-      const dir = add(mul(n, ct), add(mul(u, st * Math.cos(p2)), mul(v, st * Math.sin(p2))));
-      const t1 = dot(sub(A, P), n) / dot(dir, n), Q = add(P, mul(dir, t1));
+      const ct = 1 - rnd() * (1 - Math.cos(35 * Math.PI / 180)), sn = Math.sqrt(1 - ct * ct), p2 = 2 * Math.PI * rnd();
+      const dir = add(mul(n, ct), add(mul(u, sn * Math.cos(p2)), mul(v, sn * Math.sin(p2))));
+      const Q = add(P, mul(dir, dot(sub(A, P), n) / dot(dir, n)));
       const t2 = (zs - P[2]) / dir[2]; if (t2 <= 0) continue;
-      const Hh = add(P, mul(dir, t2)), th = Math.acos(ct) * 180 / Math.PI;
-      if (Math.hypot(...sub(Q, A)) > geo.ap) { if (rays.length % 5 === 0) rays.push({ P, E: Q, th, blocked: true }); continue; }
-      rays.push({ P, E: Hh, th, blocked: false });
+      const th = Math.acos(ct) * 180 / Math.PI;
+      if (Math.hypot(...sub(Q, A)) > ap) { if (rays.length % 5 === 0) rays.push({ pts: [P, Q], th, blocked: true }); continue; }
+      rays.push({ pts: [P, add(P, mul(dir, t2))], th });
     }
+    const axis = { pts: [add(S, mul(n, -22)), add(S, mul(n, stand + 14))], col: C.mute, lw: 0.8 };
+    sc = { ctr: [(S[0] + D[0]) / 2, 0, (S[2] + zs) / 2 + 2], span: 66, sampleZ: zs, bodies, rays,
+           lines: [{ pts: circle(A, n, ap), col: C.ink, lw: 2.2 }, axis],
+           labels: [[add(S, mul(n, -15)), "source on drive", C.src], [add(D, mul(dn, -11)), "detector", C.det], [[sc0x(S, D) + 18, -18, zs], "sample", C.sample]] };
   }
+  const sc0x = (S, D) => (S[0] + D[0]) / 2;
   build();
   // photo + the annotator's own MC ray paths
   canvas("f6a", 0.82, (d) => {
     const { ctx, w, h, t } = d, Ph = SB.photos[head], im = imgs[head];
-    const sc = Math.min(w / Ph.size[0], h / Ph.size[1]), ox = (w - Ph.size[0] * sc) / 2, oy = (h - Ph.size[1] * sc) / 2;
-    if (im.complete && im.naturalWidth) ctx.drawImage(im, ox, oy, Ph.size[0] * sc, Ph.size[1] * sc);
-    ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fillRect(ox, oy, Ph.size[0] * sc, Ph.size[1] * sc);
-    const X = p => [ox + p[0] * sc, oy + p[1] * sc];
+    const s = Math.min(w / Ph.size[0], h / Ph.size[1]), ox = (w - Ph.size[0] * s) / 2, oy = (h - Ph.size[1] * s) / 2;
+    if (im.complete && im.naturalWidth) ctx.drawImage(im, ox, oy, Ph.size[0] * s, Ph.size[1] * s);
+    ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fillRect(ox, oy, Ph.size[0] * s, Ph.size[1] * s);
+    const X = p => [ox + p[0] * s, oy + p[1] * s];
     ctx.lineWidth = 0.8;
     for (const p of Ph.lost.slice(0, 120)) { ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.beginPath(); ctx.moveTo(...X(p[0])); ctx.lineTo(...X(p[1])); ctx.stroke(); }
     for (const p of Ph.detected) { ctx.strokeStyle = "rgba(128,90,213,.28)"; ctx.beginPath(); ctx.moveTo(...X(p[0])); ctx.lineTo(...X(p[1])); ctx.lineTo(...X(p[2])); ctx.stroke(); }
     for (let i = 0; i < 26; i++) {   // photons in flight along detected paths
       const p = Ph.detected[(i * 37 + Math.floor(t / 1.4 + i / 26) * 11) % Ph.detected.length], k = ((t / 1.4 + i / 26) % 1);
-      const a = k < 0.5 ? X(p[0]) : X(p[1]), b = k < 0.5 ? X(p[1]) : X(p[2]), s = (k % 0.5) / 0.5;
-      ctx.fillStyle = k < 0.5 ? C.src : C.purple; ctx.beginPath(); ctx.arc(a[0] + s * (b[0] - a[0]), a[1] + s * (b[1] - a[1]), 3, 0, 7); ctx.fill();
+      const a = k < 0.5 ? X(p[0]) : X(p[1]), b = k < 0.5 ? X(p[1]) : X(p[2]), f = (k % 0.5) / 0.5;
+      ctx.fillStyle = k < 0.5 ? C.src : C.purple; ctx.beginPath(); ctx.arc(a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1]), 3, 0, 7); ctx.fill();
     }
-    const mean = j => [0, 1].map(c => Ph.detected.reduce((s, p) => s + p[j][c], 0) / Ph.detected.length);
+    const mean = j => [0, 1].map(c => Ph.detected.reduce((q, p) => q + p[j][c], 0) / Ph.detected.length);
     for (const [j, lab, col] of [[0, "source", C.src], [1, "sample", C.sample], [2, "detector", C.det]]) {
       const [x, y] = X(mean(j)); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill();
       txt(ctx, lab, x + 8, y - 6, { size: 12, w: 700, col, halo: true });
     }
-    txt(ctx, `photo + Monte Carlo paths (${Ph.mc.n_det} detected of ${(Ph.mc.n_launched / 1e6).toFixed(0)} M launched)`, 8, h - 8, { size: 11, w: 600, halo: true });
+    legend(ctx, 8, h - 26, [["leaving the source", C.src, "dot"], ["sample to detector", C.purple, "line"], ["missed the detector", "#9a9a9a", "line"]]);
+    txt(ctx, `${Ph.mc.n_det} detected of ${(Ph.mc.n_launched / 1e6).toFixed(0)} M launched`, 8, h - 8, { size: 11, w: 600, halo: true });
   }, 0.95);
-  // 3-D model of the same head, drag to rotate
-  const cv3 = document.getElementById("f6b");
-  cv3.addEventListener("pointerdown", e => { drag = [e.clientX, e.clientY, yaw, pitch]; cv3.setPointerCapture(e.pointerId); });
-  cv3.addEventListener("pointermove", e => { if (drag) { yaw = drag[2] + (e.clientX - drag[0]) * 0.01; pitch = Math.max(-1.4, Math.min(1.4, drag[3] + (e.clientY - drag[1]) * 0.01)); } });
-  cv3.addEventListener("pointerup", () => { drag = null; });
-  cv3.addEventListener("wheel", e => { e.preventDefault(); zoomK = Math.max(0.5, Math.min(3, zoomK * (e.deltaY < 0 ? 1.1 : 0.9))); }, { passive: false });
-  canvas("f6b", 0.82, (d, dt) => {
-    const { ctx, w, h } = d, G = geo;
-    if (!drag) yaw += dt * 0.12;
-    const ctr = [(G.S[0] + G.D[0]) / 2, 0, (G.S[2] + G.zs) / 2 + 4], scl = Math.min(w, h) / 95 * zoomK;
-    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-    const pr = p => {
-      const x = p[0] - ctr[0], y = p[1] - ctr[1], z = p[2] - ctr[2];
-      const x1 = cy * x - sy * y, y1 = sy * x + cy * y, y2 = cp * y1 - sp * z, z2 = sp * y1 + cp * z;
-      const s = 160 / (160 + y2); return [w / 2 + scl * x1 * s, h / 2 - scl * z2 * s];
-    };
-    const poly = (pts, stroke, fill, lw = 1.2) => {
-      ctx.beginPath(); pts.forEach((p, i) => { const q = pr(p); i ? ctx.lineTo(...q) : ctx.moveTo(...q); }); ctx.closePath();
-      if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
-    };
-    const disk = (c, u, v, r, n = 40) => grid(0, 2 * Math.PI, n).map(a => add(c, add(mul(u, r * Math.cos(a)), mul(v, r * Math.sin(a)))));
-    // sample plate with a 5 mm grid
-    const L = 28, z = G.zs;
-    poly([[-L, -L, z], [L, -L, z], [L, L, z], [-L, L, z]], C.faint, "rgba(139,94,60,.16)");
-    ctx.strokeStyle = "rgba(139,94,60,.18)"; ctx.lineWidth = 0.7;
-    for (let g = -L; g <= L; g += 5) { ctx.beginPath(); ctx.moveTo(...pr([g, -L, z])); ctx.lineTo(...pr([g, L, z])); ctx.moveTo(...pr([-L, g, z])); ctx.lineTo(...pr([L, g, z])); ctx.stroke(); }
-    // rays coloured by their angle to the drive axis
-    for (const r of rays) {
-      ctx.strokeStyle = r.blocked ? "rgba(160,160,160,.35)" : thetaCol(r.th); ctx.globalAlpha = r.blocked ? 1 : 0.55; ctx.lineWidth = 0.9;
-      ctx.beginPath(); ctx.moveTo(...pr(r.P)); ctx.lineTo(...pr(r.E)); ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    // drive axis, source, aperture, detector
-    ctx.setLineDash([5, 4]); ctx.strokeStyle = C.mute; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...pr(add(G.S, mul(G.n, -18)))); ctx.lineTo(...pr(add(G.S, mul(G.n, 40)))); ctx.stroke(); ctx.setLineDash([]);
-    poly(disk(add(G.S, mul(G.n, -14)), G.u, G.v, G.src + 2), "#718096", "rgba(226,232,240,.8)");
-    poly(disk(G.S, G.u, G.v, G.src), C.src, "rgba(221,107,32,.55)", 1.6);
-    poly(disk(G.A, G.u, G.v, G.ap + 5), "#4a5568", null, 4); poly(disk(G.A, G.u, G.v, G.ap), "#4a5568", null, 1.4);
-    poly(disk(G.D, G.du, G.dv, G.det), C.det, "rgba(44,122,123,.55)", 1.6);
-    poly(disk(add(G.D, mul(G.dn, -10)), G.du, G.dv, G.det + 1.5), "#718096", "rgba(226,232,240,.6)");
-    const lab = (p, s, col) => { const q = pr(p); txt(ctx, s, q[0] + 8, q[1] - 6, { size: 12, w: 700, col, halo: true }); };
-    lab(add(G.S, mul(G.n, -14)), "source on drive", C.src); lab(G.A, "aperture", "#4a5568"); lab(G.D, "detector", C.det); lab([L * 0.7, -L * 0.7, z], "sample", C.sample);
+  // 3-D model of the same head
+  const cv3 = document.getElementById("f6b"), cam = orbit(cv3, { yaw: -0.75, pitch: 0.35 });
+  canvas("f6b", 0.6, (d, dt) => {
+    const { ctx, w, h } = d;
+    if (!cam.drag && !cam.touched) cam.yaw += dt * 0.12;
+    const top = 22, keyH = w < 520 ? 70 : 52;
+    render3d(ctx, { x: 0, y: top, w, h: h - top - keyH }, cam, sc);
+    txt(ctx, "drag to rotate · right-drag to pan · Ctrl+scroll to zoom · double-click to reset", 40, 14, { size: 11, col: C.mute });
+    const y = legend3d(ctx, 8, h - keyH + 16, w - 16);
+    thetaBar(ctx, 8, y + 22, 90);
     const K = SB.kernels[head];
-    txt(ctx, `Monte Carlo geometry · drag to rotate, scroll to zoom`, 8, 16, { size: 11.5, w: 600 });
-    txt(ctx, `Blue 0° to purple 25° · Gray paths stop at the aperture`, 8, h - 24, { size: 11, col: C.mute });
-    txt(ctx, `detected photons: mean θ ${K.theta_mean}°, line stretch ${K.stretch_pct}%, spread ${K.spread_pct}%`, 8, h - 8, { size: 11, w: 600 });
-  }, 0.95);
+    txt(ctx, `mean θ ${K.theta_mean}° · stretch ${K.stretch_pct}%`, w - 8, y + 21, { size: 11, w: 600, align: "right" });
+  }, 1.15);
 })();
 
 /* =============== FRAME 7: does the MC predict what we measured? =============== */
@@ -735,8 +841,8 @@ function seg(id, opts, onPick, init) {   // segmented button group
     return { v0, shift: v0 * (m - 1), spread: v0 * Math.sqrt(Math.max(0, m2 - m * m)) };
   };
   function table() {
-    const rows = SYS.map((s, i) => { const st = stats(s, head); return `<tr class="${i === sys ? "on" : ""}"><td>${s.name}</td><td>${st.v0.toFixed(2)}</td><td>${st.shift.toFixed(3)}</td><td>${(st.shift / LW).toFixed(2)}</td><td>${st.spread.toFixed(3)}</td></tr>`; });
-    document.getElementById("f8-table").innerHTML = `<table><thead><tr><th>Sample</th><th>Outermost line (mm/s)</th><th>Shift (mm/s)</th><th>Shift in line widths</th><th>Added spread (mm/s)</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+    const rows = SYS.map((s, i) => { const st = stats(s, head); return `<tr class="${i === sys ? "on" : ""}"><td>${SB.transmission ? s.name : s.name.replace(" (published parameters)", "")}</td><td>${st.v0.toFixed(2)}</td><td>${st.shift.toFixed(3)}</td><td>${(st.shift / LW).toFixed(2)}</td><td>${st.spread.toFixed(3)}</td></tr>`; });
+    document.getElementById("f8-table").innerHTML = `<div class="tablewrap"><table class="mini"><thead><tr><th>Sample</th><th>Outermost line (mm/s)</th><th>Shift (mm/s)</th><th>Shift in line widths</th><th>Added spread (mm/s)</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
   }
   table();
   canvas("f8", 0.46, (d) => {
@@ -749,9 +855,160 @@ function seg(id, opts, onPick, init) {   // segmented button group
     P.line(xs, ysm, C.purple, 2.2);
     const st = stats(s, head);
     legend(ctx, P.x + 6, P.y + P.h - 10, [[s.meas ? "transmission (measured)" : "transmission (model)", C.blue, s.meas ? "dot" : "line"], ["after simulated broadening", C.purple, "line"]]);
-    txt(ctx, `Outermost line shifts ${st.shift.toFixed(3)} mm/s (${(st.shift / LW).toFixed(2)} line widths)`, P.x + P.w - 6, P.y + 16, { align: "right", size: 12, w: 600, col: C.purple });
+    txt(ctx, `Outermost line shifts ${st.shift.toFixed(3)} mm/s (${(st.shift / LW).toFixed(2)} line widths)`, P.x + P.w - 6, P.y + P.h - 10, { align: "right", size: 12, w: 600, col: C.purple });
   }, 0.9);
 })();
+
+/* =============== frames drawn from the design study (assets/data/mc.json) =============== */
+const MCJ = (() => {
+  if (!["fk", "fc", "f9", "f10"].some(id => document.getElementById(id))) return null;
+  const el = document.querySelector("script[data-mc]");
+  return fetch(el ? el.dataset.mc : "assets/data/mc.json").then(r => r.json());
+})();
+const VER = {   // one colour per design, used on the 3-D panels, the spectra and the number cards
+  ver1: { name: "ver1 · original drawing", col: C.red }, ver2: { name: "ver2 · as built (in use)", col: C.purple },
+  ver3pb: { name: "ver3 · source 12.1 mm back", col: C.ink },
+};
+
+/* FRAME K: detected-photon angles -> the smearing kernel */
+MCJ && MCJ.then(D => {
+  if (!document.getElementById("fk")) return;
+  const P = D.pipe, mid = [], tot = P.counts.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < P.counts.length; i++) mid.push(0.5 * (P.edges[i] + P.edges[i + 1]));
+  const share = P.counts.map(c => 100 * c / tot);
+  // kernel rows rebuilt from (cos theta, weight), as kernel_matrix() does in Python; checked against its row at 8.5 mm/s
+  const n = P.v[2], v0 = P.v[0], dv = (P.v[1] - P.v[0]) / (n - 1), v = grid(P.v[0], P.v[1], n), cs = [], qs = [];
+  P.counts.forEach((c, m) => { if (c > 0) { cs.push(Math.cos(mid[m] * Math.PI / 180)); qs.push(c / tot); } });
+  const K = v.map(vi => { const row = new Float64Array(n);
+    cs.forEach((c, m) => { const x = c * vi; if (x < v[0] || x > v[n - 1]) return;
+      const j = Math.min(Math.max(Math.floor((x - v0) / dv), 0), n - 2), t = Math.min(Math.max((x - v[j]) / dv, 0), 1);
+      row[j] += qs[m] * (1 - t); row[j + 1] += qs[m] * t; });
+    return row; });
+  let i85 = 0; v.forEach((x, i) => { if (Math.abs(x - 8.5) < Math.abs(v[i85] - 8.5)) i85 = i; });
+  let err = 0; K[i85].forEach((x, j) => { err = Math.max(err, Math.abs(x - P.k_row_8p5[j])); });
+  document.getElementById("fk").dataset.check = err.toExponential(1);
+  const ramp = t => { const a = [255, 255, 255], b = [0x55, 0x3c, 0x9a]; return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`; };
+  canvas("fk", 0.44, (d) => {
+    const { ctx, w, h } = d, narrow = w < 640;
+    const pw = narrow ? w - 80 : (w - 150) / 2, ph = narrow ? (h - 150) / 2 : h - 90;
+    // angle histogram, bars in the ray colours
+    const H = new Plot(ctx, 60, 36, pw, ph, [0, 25], [0, Math.max(...share) * 1.12]);
+    H.frame({ xlabel: "θ, angle from the source axis (deg)", nx: 5, zero: false, yticks: true, ny: 4, ylabel: "share of detected photons (%)" });
+    txt(ctx, `Angles of ${P.n.toLocaleString("en-US")} detected photons`, H.x, 18, { w: 600, size: 13 });
+    H.clip(c => share.forEach((s, i) => { c.fillStyle = thetaCol(mid[i]); const x0 = H.X(P.edges[i]), x1 = H.X(P.edges[i + 1]); c.fillRect(x0, H.Y(s), Math.max(1, x1 - x0 - 0.5), H.Y(0) - H.Y(s)); }));
+    H.vline(P.mean_deg, C.ink, 1.3, [5, 4]);
+    txt(ctx, `mean ${P.mean_deg.toFixed(1)}°`, H.X(P.mean_deg) + 5, H.y + 14, { size: 11.5, w: 600 });
+    txt(ctx, `stretch ⟨1/cos θ⟩ − 1 = ${P.stretch.toFixed(2)}%`, H.x + H.w - 6, H.y + 32, { size: 11.5, align: "right", col: C.purple, w: 600 });
+    // kernel matrix, zoomed on the outer lines
+    const kx = narrow ? 60 : 60 + pw + 90, ky = narrow ? 36 + ph + 80 : 36, side = Math.min(pw, ph);
+    const M = new Plot(ctx, kx, ky, side, side, [7, 10], [7, 10]);
+    const i0 = v.findIndex(x => x >= 7) , i1 = v.findIndex(x => x > 10);
+    M.clip(c => { for (let i = i0; i < i1; i++) for (let j = i0; j < i1; j++) { const z = K[i][j]; if (z <= 0) continue;
+      c.fillStyle = ramp(Math.min(1, Math.sqrt(z) / 0.55)); c.fillRect(M.X(v[i] - dv / 2), M.Y(v[j] + dv / 2), M.X(v[i] + dv / 2) - M.X(v[i] - dv / 2) + 0.6, M.Y(v[j] - dv / 2) - M.Y(v[j] + dv / 2) + 0.6); } });
+    M.line([7, 10], [7, 10], C.blue, 1.4, [3, 3]);
+    M.frame({ xlabel: "true line position (mm/s)", nx: 3, zero: false, yticks: true, ny: 3, ylabel: "recorded velocity (mm/s)" });
+    txt(ctx, "The kernel: where each line is recorded", M.x, ky - 18, { w: 600, size: 13 });
+    legend(ctx, M.x + 6, M.y + 16, [["no broadening (θ = 0)", C.blue, "dash"]]);
+    const kx2 = M.x + M.w + 10; if (kx2 + 40 < w) { for (let i = 0; i < 100; i++) { ctx.fillStyle = ramp(i / 99); ctx.fillRect(kx2, M.y + M.h - i * M.h / 100 - M.h / 100, 9, M.h / 100 + 1); }
+      txt(ctx, "√weight", kx2 + 13, M.y + 10, { size: 10.5, col: C.mute }); }
+  }, 1.45);
+});
+
+/* FRAME C: four mineral pairs with and without our head's broadening */
+MCJ && MCJ.then(D => {
+  if (!document.getElementById("fc")) return;
+  const T = D.teach, NICE = { "np-oxide": "nanophase oxide" }, COLM = Object.fromEntries(MIN.map(m => [m.name, m.col]));
+  const nm = k => NICE[k] || k;
+  const tb = document.getElementById("mc-cases-table");
+  if (tb) tb.innerHTML = T.cases.map(c => `<tr><td>${nm(c.a)} + ${nm(c.b)}</td>` + c.rows.slice(0, 2).map(r =>
+    `<td>×${r.time.toFixed(2)} · ${Math.round(100 * Math.min(r.sep, 1))} %</td>`).join("") + "</tr>").join("");
+  canvas("fc", 0.62, (d) => {
+    const { ctx, w, h } = d, cols = w < 640 ? 1 : 2, rows = Math.ceil(T.cases.length / cols);
+    const cw = (w - 30) / cols, chh = (h - 40) / rows;
+    T.cases.forEach((c, i) => {
+      const cx = 20 + (i % cols) * cw, cy = 26 + Math.floor(i / cols) * chh, sext = c.a === "hematite";
+      const xr = sext ? [-10.5, 10.5] : [-1.6, 3.4];
+      const all = [...c.y0, ...c.y_ours], P = new Plot(ctx, cx + 6, cy + 20, cw - 26, chh - 66, xr, [0, Math.max(...all) * 1.08]);
+      P.frame({ xlabel: "source velocity (mm/s)", nx: sext ? 6 : 5 });
+      P.clip(cc => [[c.ya, COLM[c.a] || C.mute], [c.yb, COLM[c.b] || C.mute]].forEach(([y, col]) => {
+        cc.fillStyle = col; cc.globalAlpha = 0.14; cc.beginPath(); cc.moveTo(P.X(T.v[0]), P.Y(0));
+        T.v.forEach((x, k) => cc.lineTo(P.X(x), P.Y(y[k]))); cc.lineTo(P.X(T.v[T.v.length - 1]), P.Y(0)); cc.closePath(); cc.fill(); cc.globalAlpha = 1; }));
+      P.line(T.v, c.y0, C.blue, 1.8); P.line(T.v, c.y_ours, C.purple, 2);
+      const o = c.rows[0], far = c.rows[1];
+      txt(ctx, `${nm(c.a)} + ${nm(c.b)}`, P.x, cy + 8, { w: 700, size: 12.5 });
+      txt(ctx, `time ×${o.time.toFixed(2)} ours · ×${far.time.toFixed(1)} at 8 mm`, P.x + P.w, cy + 8, { size: 11.5, align: "right", col: C.purple, w: 600 });
+    });
+    legend(ctx, 26, h - 6, [["mixture before broadening", C.blue, "line"], ["what our head records (1.8% stretch)", C.purple, "line"]]);
+  }, 1.9);
+});
+
+/* FRAME 9: ver1, ver2, ver3 in 3-D, one camera, same scale */
+MCJ && MCJ.then(D => {
+  if (!document.getElementById("f9")) return;
+  const { sub, norm, dot, cross } = V3;
+  function sceneOf(traces) {   // the design study's own bodies and detected rays
+    const bodies = [], lines = [], rays = []; let S = [0, 0, 0], n = [0, 0, -1], chip = [0, 0, 0];
+    for (const t of traces) {
+      const nmT = t.name || "";
+      if (t.type === "mesh3d") {
+        if (/sample plane|other STEP/.test(nmT)) continue;
+        const P = t.x.map((x, i) => [x, t.y[i], t.z[i]]), tris = t.i.map((a, k) => [P[a], P[t.j[k]], P[t.k[k]]]);
+        let hw = HW.pb;
+        if (/source: active/.test(nmT)) { hw = HW.src; S = P[0]; n = norm(cross(sub(P[48], P[0]), sub(P[49], P[0]))); if (n[2] > 0) n = n.map(x => -x); }
+        else if (/capsule/i.test(nmT)) hw = HW.cap;
+        else if (/chip/.test(nmT)) { hw = HW.chip; chip = P[0]; }
+        else if (/cap|Part 1/.test(nmT)) hw = HW.det;
+        bodies.push(mkBody(tris, hw));
+      } else if (/limiting opening/.test(nmT)) {
+        lines.push({ pts: t.x.map((x, i) => [x, t.y[i], t.z[i]]).filter(p => p[0] != null), col: C.ink, lw: 2.2 });
+      } else if (/detected rays/.test(nmT)) {
+        let cur = [];
+        t.x.forEach((x, i) => { if (x == null) { if (cur.length > 1) rays.push({ pts: cur }); cur = []; } else cur.push([x, t.y[i], t.z[i]]); });
+        if (cur.length > 1) rays.push({ pts: cur });
+      }
+    }
+    for (const r of rays) r.th = Math.acos(Math.min(1, Math.abs(dot(norm(sub(r.pts[1], r.pts[0])), n)))) * 180 / Math.PI;
+    return { ctr: [(S[0] + chip[0]) / 2, 0, Math.max(S[2], chip[2]) / 2 + 3], span: 74, sampleZ: 0, plate: 26, bodies, lines, rays };
+  }
+  const KEYS = ["ver1", "ver2", "ver3pb"], SC = KEYS.map(k => sceneOf(D.heads[k]));
+  const cv = document.getElementById("f9"), cam = orbit(cv, { yaw: -1.2, pitch: 0.3 });
+  canvas("f9", 0.42, (d, dt) => {
+    const { ctx, w, h } = d, stack = w < 640, keyH = stack ? 74 : 54, top = 22;
+    if (!cam.drag && !cam.touched) cam.yaw += dt * 0.1;
+    txt(ctx, "one camera for all three · drag to rotate · right-drag to pan · Ctrl+scroll to zoom", 8, 14, { size: 11, col: C.mute });
+    KEYS.forEach((k, i) => {
+      const vp = stack ? { x: 0, y: top + i * (h - top - keyH) / 3, w, h: (h - top - keyH) / 3 } : { x: i * w / 3, y: top + 18, w: w / 3, h: h - top - keyH - 18 };
+      render3d(ctx, vp, cam, SC[i]);
+      const N = D.num[k];
+      txt(ctx, VER[k].name, vp.x + (stack ? 8 : vp.w / 2), vp.y + (stack ? 16 : -2), { w: 700, size: 12.5, col: VER[k].col, align: stack ? "left" : "center" });
+      txt(ctx, `${N.x_ver2.toFixed(1)}× counts · stretch ${N.smear.toFixed(1)}%`, vp.x + (stack ? 8 : vp.w / 2), vp.y + (stack ? 32 : 14), { size: 11, col: C.mute, align: stack ? "left" : "center" });
+    });
+    const y = legend3d(ctx, 8, h - keyH + 16, w - 16);
+    thetaBar(ctx, 8, y + 22, 90);
+  }, 1.9);
+});
+
+/* FRAME 10: a hematite spectrum through each design */
+MCJ && MCJ.then(D => {
+  if (!document.getElementById("f10")) return;
+  const S = D.spec, KEYS = ["ver1", "ver2", "ver3pb"];
+  canvas("f10", 0.4, (d) => {
+    const { ctx, w, h } = d, narrow = w < 640;
+    const fw = narrow ? w - 80 : (w - 120) * 0.62, zw = narrow ? w - 80 : (w - 120) * 0.38 - 20, ph = narrow ? (h - 170) / 2 : h - 100;
+    const Fp = new Plot(ctx, 56, 44, fw, ph, [-11, 11], [0, 1.05]);
+    const Zp = new Plot(ctx, narrow ? 56 : 56 + fw + 60, narrow ? 44 + ph + 80 : 44, zw, ph, [7.8, 10.2], [0, 1.05]);
+    Fp.clip(c => { c.fillStyle = "rgba(107,114,128,.10)"; c.fillRect(Fp.X(7.8), Fp.y, Fp.X(10.2) - Fp.X(7.8), Fp.h); });
+    for (const P of [Fp, Zp]) {
+      P.frame({ xlabel: "source velocity (mm/s)", nx: P === Fp ? 8 : 4, yticks: P === Fp, ny: 4, ylabel: P === Fp ? "emission (line 6 = 1)" : undefined, yfmt: t => t.toFixed(1) });
+      P.clip(c => { c.fillStyle = "rgba(43,108,176,.10)"; c.beginPath(); c.moveTo(P.X(S.v[0]), P.Y(0)); S.v.forEach((x, k) => c.lineTo(P.X(x), P.Y(S.expected[k]))); c.lineTo(P.X(S.v[S.v.length - 1]), P.Y(0)); c.closePath(); c.fill(); });
+      P.line(S.v, S.expected, C.blue, 1.4);
+      KEYS.forEach(k => P.line(S.v, S[k], VER[k].col, k === "ver2" ? 3 : 1.8, k === "ver3pb" ? [5, 4] : null));
+    }
+    txt(ctx, "Hematite through each design", Fp.x, 18, { w: 600, size: 13 });
+    txt(ctx, "line 6, enlarged", Zp.x, Zp.y - 22, { w: 600, size: 13 });
+    legend(ctx, Fp.x, h - 8, [["input sextet", C.blue, "line"], ["ver1", C.red, "line"], ["ver2 (in use)", C.purple, "line"], ["ver3, source moved back", C.ink, "dash"]]);
+  }, 1.3);
+});
 
 requestAnimationFrame(loop);
 })();
