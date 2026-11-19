@@ -136,7 +136,7 @@
     <div class="fig fig--light">
       <canvas id="f3" class="story" aria-label="A source on a drive moving toward a sample, its displacement and velocity over one cycle, and a spectrum of counts per velocity channel that grows only under a moving red marker"></canvas>
       <div class="fig-controls"><button type="button" class="btn btn--light" id="f3-play">Pause</button><button type="button" class="btn btn--light" id="f3-reset">Restart</button><span class="seg" id="f3-samp"></span><span class="seg" id="f3-speed"></span></div>
-      <p class="cap"><span class="tag-model">simulated</span>The red marker shows which velocity bin is receiving counts. Peaks rise out of the counting noise after about ten passes. The animation runs about 150 times slower than the drive.</p>
+      <p class="cap"><span class="tag-model">simulated</span>I simulate this one photon at a time. Each source photon leaves at the drive velocity of its moment, at an angle drawn from our head’s Monte Carlo, and the sample’s lines decide whether it comes back to the detector. Each detected photon goes into one of 512 velocity channels, and the red marker shows the channel being filled. Speed sets how many photons each frame simulates: about 30,000 a second at 1×, 3 million at 100×. The drive keeps its pace, so more speed means more counts per pass, and the noise shrinks as one over the square root of the counts. The purple line is the average the dots scatter around. The real drive is about 150 times faster.</p>
     </div>
 
     <h3>3. The neighbors write a fingerprint</h3>
@@ -304,7 +304,7 @@
 <script src="assets/js/md.js?v=20261116081401"></script>
 <script src="assets/js/figs.js?v=bf0a2b56d5e5"></script>
 <script src="assets/js/mc-story-data.js?v=20261118170000"></script>
-<script src="assets/js/mc-story.js?v=20261118164001" data-mc="assets/data/mc.json?v=20261116204832"></script>
+<script src="assets/js/mc-story.js?v=20261119120000" data-mc="assets/data/mc.json?v=20261116204832"></script>
 <script src="assets/js/sinrg.js?v=20261118204054"></script>
 </body>
 </html>

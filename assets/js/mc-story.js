@@ -373,46 +373,89 @@ function seg(id, opts, onPick, init) {   // segmented button group
 })();
 
 /* =============== FRAME 3: sweeping the Doppler velocity builds the spectrum =============== */
+// A photon-by-photon simulation. Each frame emits a Poisson number of source photons at times spread over the frame;
+// each one leaves at the drive velocity of its moment and an angle theta drawn from that sample's Monte Carlo kernel
+// (SB.kernels: detected-photon source angles), so the rock sees v cos(theta). It comes back to the detector with
+// probability PB (non-resonant scatter) plus PB*eff*shape(v cos theta) (resonant re-emission off the sample's lines),
+// and a detected photon is counted in the channel of the drive velocity, as the electronics do. Speed = photons per
+// second of animation; the drive keeps the same pace, so more speed means more counts per pass and noise ~ 1/sqrt(N).
 (function () {
   if (!document.getElementById("f3")) return;
-  const VMAX = 10, NB = 160, B0 = 250;   // channels across +-10 mm/s; ~250 baseline counts per channel per pass
-  const SAMPLES = { fe: [MIN[0], 0.30], hem: [MIN[1], 0.30], jar: [MIN[6], 0.22] };
-  let samp = "fe", speed = 1, playing = true, tau = 0, counts, prof;
-  const binV = i => -VMAX + (i + 0.5) * 2 * VMAX / NB;
-  function reset() {
-    counts = new Float64Array(NB); tau = 0; seed = 777;
-    const ph = SAMPLES[samp][0].ph, raw = Array.from({ length: NB }, (_, i) => absorb(binV(i), ph, 0.3)), mx = Math.max(...raw);
-    prof = raw.map(x => 1 + SAMPLES[samp][1] * x / mx);   // backscatter: re-emitted counts go UP at resonance
-    photons.length = 0;
-  }
+  const VMAX = 10, NB = 512, SEC = 3;                 // 512 channels across +-10 mm/s; one pass takes 3 s on screen
+  const RATE = 30000, NMAX = 60000, PB = 0.5;         // source photons per animation second at 1x; per-frame cap
+  const SAMPLES = { fe: [MIN[0], 0.30, "fe_8mm"], hem: [MIN[1], 0.30, "hem"], jar: [MIN[6], 0.22, "jarosite_co57"] };
+  const TV = 12, TN = 4801, TDV = 2 * TV / (TN - 1);   // resonance lookup table over +-12 mm/s
+  const SHOW = { 1: 14, 10: 40, 100: 90 };            // photons drawn in the head per second (a sample of the real ones)
+  let samp = "fe", speed = 1, playing = true, tau = 0, nEmit = 0, nDet = 0, nRes = 0;
+  let counts, expo, shape, pbar, eff, cosQ;
+  const NQ = 4096;                                    // cos(theta) quantile table: one lookup per photon
   const photons = [];
+  const binV = i => -VMAX + (i + 0.5) * 2 * VMAX / NB;
+  const binOf = v => Math.min(NB - 1, Math.max(0, Math.floor((v + VMAX) / (2 * VMAX) * NB)));
+  function reset() {
+    counts = new Float64Array(NB); expo = new Float64Array(NB); tau = 0; nEmit = nDet = nRes = 0; seed = 777; photons.length = 0;
+    const [m, e, key] = SAMPLES[samp]; eff = e;
+    shape = new Float32Array(TN); let mx = 0;
+    for (let k = 0; k < TN; k++) { shape[k] = absorb(-TV + k * TDV, m.ph, LW); mx = Math.max(mx, shape[k]); }
+    for (let k = 0; k < TN; k++) shape[k] /= mx;
+    const ker = kernelOf(key), K = ker.K, nT = K.theta.length;   // invert the angle histogram once
+    const thW = nT > 1 ? K.theta[1] - K.theta[0] : 0.25, cdf = new Float64Array(nT + 1);
+    for (let i = 0; i < nT; i++) cdf[i + 1] = cdf[i] + Math.max(0, K.q[i]);
+    cosQ = new Float32Array(NQ);
+    for (let j = 0, i = 0; j < NQ; j++) {
+      const u = (j + 0.5) / NQ * cdf[nT]; while (i < nT - 1 && cdf[i + 1] < u) i++;
+      const th = K.theta[i] - thW / 2 + thW * (u - cdf[i]) / Math.max(1e-12, cdf[i + 1] - cdf[i]);
+      cosQ[j] = Math.cos(th * Math.PI / 180);
+    }
+    const f = v => shape[Math.round((v + TV) / TDV)] || 0, g = smear(f, ker);
+    pbar = new Float64Array(NB); for (let i = 0; i < NB; i++) pbar[i] = PB * (1 + eff * g(binV(i)));
+    d3.dirty = true;
+  }
+  function expose(p0, p1, mu) {   // spread mu expected emissions over the channels the drive crosses in [p0, p1]
+    const cut = Math.floor(p0) + 1;
+    if (p1 > cut) { const f = (cut - p0) / (p1 - p0); expose(p0, cut - 1e-9, mu * f); expose(cut, p1, mu * (1 - f)); return; }
+    let xa = (vOf(p0) + VMAX) / (2 * VMAX) * NB, xb = (vOf(p1) + VMAX) / (2 * VMAX) * NB;
+    if (xa > xb) [xa, xb] = [xb, xa];
+    const len = xb - xa;
+    if (len <= 0) { expo[binOf(vOf(p0))] += mu; return; }
+    for (let c = Math.floor(xa); c <= Math.floor(xb); c++) {
+      const o = Math.min(xb, c + 1) - Math.max(xa, c); if (o > 0) expo[Math.min(NB - 1, Math.max(0, c))] += mu * o / len;
+    }
+  }
+  function simPhotons(dt) {   // emit, fly, detect, bin: returns how many source photons this frame simulated
+    const dTau = dt / SEC, mu = Math.min(RATE * speed * dt, NMAX), n = poisson(mu);   // slow frame -> capped, not stalled
+    let nShow = Math.min(poisson(SHOW[speed] * dt), 60 - photons.length);
+    expose(tau, tau + dTau, mu);                        // expected emissions per channel, for the model line
+    for (let q = 0; q < n; q++) {
+      const v = vOf(tau + rnd() * dTau), ve = v * cosQ[(rnd() * NQ) | 0];   // emission time -> drive velocity; angle
+      const pr = PB * eff * shape[((ve + TV) / TDV + 0.5) | 0], u = rnd();
+      const fate = u < PB ? 1 : u < PB + pr ? 2 : 0;    // 1 scattered, 2 resonant, 0 not detected
+      if (fate) { counts[binOf(v)] += 1; nDet++; if (fate === 2) nRes++; }
+      if (nShow > 0 && rnd() < 0.05) { photons.push({ t: 0, fate }); nShow--; }   // draw a few of the real ones
+    }
+    nEmit += n; tau += dTau; return n;
+  }
   seg("f3-samp", [["fe", "α-Fe"], ["hem", "hematite"], ["jar", "jarosite"]], v => { samp = v; reset(); }, "fe");
-  seg("f3-speed", [[1, "1×"], [3, "3×"], [10, "10×"]], v => { speed = +v; }, 1);
+  seg("f3-speed", [[1, "1×"], [10, "10×"], [100, "100×"]], v => { speed = +v; }, 1);
   document.getElementById("f3-play").onclick = e => { playing = !playing; e.target.textContent = playing ? "Pause" : "Play"; };
   document.getElementById("f3-reset").onclick = () => reset();
-  reset();
   const vOf = p => { p = ((p % 2) + 2) % 2; return p < 1 ? -VMAX + 2 * VMAX * p : VMAX - 2 * VMAX * (p - 1); };
   const xOf = p => {   // displacement (um) at 25 Hz: a half period is 20 ms; constant acceleration -> parabolas
     p = ((p % 2) + 2) % 2; const T = 0.02;
     if (p < 1) return 1e3 * T * (-VMAX * p + VMAX * p * p);
     const q = p - 1; return 1e3 * T * (VMAX * q - VMAX * q * q);
   };
-  canvas("f3", 0.66, (d, dt) => {
-    const { ctx, w, h } = d, SEC = 3;   // one pass takes 3 s at 1x (the real drive does it in 20 ms)
-    if (playing) {
-      const dTau = dt * speed / SEC, n = Math.ceil(dTau * NB * 2) + 1;
-      for (let k = 0; k < n; k++) {
-        const p = tau + (k + 0.5) * dTau / n, v = vOf(p), i = Math.min(NB - 1, Math.max(0, Math.floor((v + VMAX) / (2 * VMAX) * NB)));
-        counts[i] += poisson(B0 * NB * (dTau / n) * prof[i]);
-      }
-      tau += dTau;
-      if (rnd() < dt * 22 * Math.min(speed, 3)) photons.push({ t: 0, res: rnd() < (prof[Math.floor((vOf(tau) + VMAX) / (2 * VMAX) * (NB - 1))] - 1) * 3 + 0.15 });
-    }
+  const fmt = n => n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + " M" : n >= 1e4 ? Math.round(n / 1e3) + " k" : String(Math.round(n));
+  let lastN = 0;
+  const d3 = canvas("f3", 0.66, (d, dt) => {
+    const { ctx, w, h } = d;
+    if (playing && dt > 0) lastN = simPhotons(dt);
+    const narrow = w < 500;   // phone: shorter labels, spectrum lower down, its legend and readout below the axis
     const v = vOf(tau), pass = Math.floor(tau) + 1;
     // --- setup schematic (top left)
     const Sx = 10, Sw = 0.44 * w, Sy = 30, Sh = 0.42 * h;
-    txt(ctx, "Backscatter head (side view)", Sx, 18, { w: 600, size: 13 });
-    tag(ctx, "SCHEMATIC: motion exaggerated", Sx + Sw - 190, 18);
+    txt(ctx, narrow ? "Side view" : "Backscatter head (side view)", Sx, 18, { w: 600, size: 13 });
+    if (narrow) tag(ctx, "SCHEMATIC", Sx, 38); else tag(ctx, "SCHEMATIC: motion exaggerated", Sx + Sw - 190, 18);
     const axY = Sy + Sh * 0.42, xRest = Sx + Sw * 0.32, amp = Sw * 0.06, xs = xRest + amp * xOf(tau) / 50 * 2;
     ctx.fillStyle = "#e2e8f0"; ctx.fillRect(Sx + 6, axY - 26, Sw * 0.16, 52);
     txt(ctx, "drive", Sx + 6 + Sw * 0.08, axY + 42, { align: "center", size: 11, col: C.mute });
@@ -425,17 +468,17 @@ function seg(id, opts, onPick, init) {   // segmented button group
     const dX = Sx + Sw * 0.46, dY = axY + Sh * 0.36;
     ctx.fillStyle = C.det; ctx.beginPath(); ctx.ellipse(dX, dY, 9, 16, -0.5, 0, 7); ctx.fill();
     txt(ctx, "detector", dX, dY + 30, { align: "center", size: 11, col: C.det });
-    for (let i = photons.length - 1; i >= 0; i--) {
-      const ph = photons[i]; ph.t += dt * 1.6;
-      if (ph.t < 0.5) { const k = ph.t / 0.5; ctx.fillStyle = C.src; ctx.beginPath(); ctx.arc(xs + 8 + k * (smX - xs - 8), axY + (rnd() - 0.5) * 0, 2.6, 0, 7); ctx.fill(); }
-      else if (ph.res && ph.t < 1) { const k = (ph.t - 0.5) / 0.5; ctx.fillStyle = C.purple; ctx.beginPath(); ctx.arc(smX + k * (dX - smX), axY + k * (dY - axY), 3.2, 0, 7); ctx.fill(); }
-      else if (ph.res && ph.t < 1.15) { ctx.fillStyle = "rgba(128,90,213,.35)"; ctx.beginPath(); ctx.arc(dX, dY, 22, 0, 7); ctx.fill(); }
-      else if (ph.t > 1.15 || (!ph.res && ph.t > 0.5)) photons.splice(i, 1);
+    for (let i = photons.length - 1; i >= 0; i--) {   // each dot is one of the simulated photons, with its own fate
+      const ph = photons[i]; if (playing) ph.t += dt * 1.6;
+      if (ph.t < 0.5) { const k = ph.t / 0.5; ctx.fillStyle = C.src; ctx.beginPath(); ctx.arc(xs + 8 + k * (smX - xs - 8), axY, 2.6, 0, 7); ctx.fill(); }
+      else if (ph.fate && ph.t < 1) { const k = (ph.t - 0.5) / 0.5; ctx.fillStyle = ph.fate === 2 ? C.purple : "#a0aec0"; ctx.beginPath(); ctx.arc(smX + k * (dX - smX), axY + k * (dY - axY), ph.fate === 2 ? 3.2 : 2.4, 0, 7); ctx.fill(); }
+      else if (ph.fate === 2 && ph.t < 1.15) { ctx.fillStyle = "rgba(128,90,213,.35)"; ctx.beginPath(); ctx.arc(dX, dY, 22, 0, 7); ctx.fill(); }
+      else if (ph.t > 1.15 || (!ph.fate && ph.t > 0.5) || (ph.fate === 1 && ph.t > 1)) photons.splice(i, 1);
     }
-    txt(ctx, "Orange: source photons · Purple: detected photons", Sx + 4, Sy + Sh + 22, { size: 10.5, col: C.mute });
+    txt(ctx, narrow ? "Orange: source · Purple: resonant · Grey: scattered" : "Orange: source photons · Purple: resonant · Grey: scattered", Sx + 4, Sy + Sh + 22, { size: 10.5, col: C.mute });
     // --- displacement and velocity vs time (top right)
     const P = new Plot(ctx, 0.55 * w, 40, 0.38 * w, 0.40 * h - 30, [0, 2], [-VMAX * 1.1, VMAX * 1.1]);
-    txt(ctx, "Drive motion over one cycle", P.x, 18, { w: 600, size: 13 });
+    txt(ctx, narrow ? "Drive motion" : "Drive motion over one cycle", P.x, 18, { w: 600, size: 13 });
     const ts = grid(0, 2, 300);
     P.frame({ xlabel: "time (half-periods of the drive)", nx: 4, zero: false, yticks: true, ylabel: "velocity (mm/s)" });
     P.line([0, 2], [0, 0], C.grid, 1);
@@ -447,21 +490,37 @@ function seg(id, opts, onPick, init) {   // segmented button group
     for (const t of [-50, 0, 50]) txt(ctx, String(t), P.x + P.w + 5, P.Y(t / 50 * VMAX) + 4, { size: 10.5, col: C.mute });
     ctx.save(); ctx.translate(P.x + P.w + 34, P.y + P.h / 2); ctx.rotate(Math.PI / 2); txt(ctx, "displacement (µm)", 0, 0, { align: "center", size: 11.5, col: C.mute }); ctx.restore();
     legend(ctx, P.x + 6, P.y + 14, [["velocity", C.red, "line"], ["displacement", C.ink, "dash"]]);
-    // --- spectrum being built (bottom)
-    const seen = [...counts].filter(c => c > 0), yMax = Math.max(1, ...seen), yMin = seen.length ? Math.min(...seen) : 0;
+    // --- spectrum being built (bottom): dots = simulated counts, line = their expectation
+    let yMax = 1, yMin = Infinity, tot = 0, nb = 0, eMax = 0;
+    for (let i = 0; i < NB; i++) eMax = Math.max(eMax, expo[i]);
+    for (let i = 0; i < NB; i++) if (counts[i] > 0) {   // scale the axis on channels at least half as exposed as the most
+      tot += counts[i]; nb++;
+      if (expo[i] >= 0.5 * eMax) { yMax = Math.max(yMax, counts[i]); yMin = Math.min(yMin, counts[i]); }
+    }
+    if (yMin === Infinity) yMin = 0;
     const pad = Math.max(0.06 * (yMax - yMin), 3 * Math.sqrt(yMax));
-    const S = new Plot(ctx, 60, 0.58 * h, w - 80, 0.31 * h, [-VMAX, VMAX], [Math.max(0, yMin - pad), yMax + pad]);
+    const S = new Plot(ctx, 60, (narrow ? 0.62 : 0.58) * h, w - 80, (narrow ? 0.22 : 0.31) * h, [-VMAX, VMAX], [Math.max(0, yMin - pad), yMax + pad]);
     S.frame({ energy: true, yticks: true, ylabel: "counts per channel", xlabel: "source velocity (mm/s)", ny: 3 });
-    const xsB = [], ysB = [];
-    for (let i = 0; i < NB; i++) if (counts[i] > 0) { xsB.push(binV(i)); ysB.push(counts[i]); }
-    S.dots(xsB, ysB, C.data, 2.1);
+    const xm = [], ym = [];
+    for (let i = 0; i < NB; i++) if (expo[i] > 0) { xm.push(binV(i)); ym.push(expo[i] * pbar[i]); }
+    if (xm.length > 1) S.line(xm, ym, "rgba(128,90,213,.75)", 1.2);
+    const r = Math.max(0.8, Math.min(2, 0.8 * S.w / NB));
+    S.clip(c => { c.fillStyle = C.data; for (let i = 0; i < NB; i++) if (counts[i] > 0) { c.beginPath(); c.arc(S.X(binV(i)), S.Y(counts[i]), r, 0, 7); c.fill(); } });
     S.vline(v, C.red, 2);
     txt(ctx, `pass ${pass}`, S.x + 6, S.y + 16, { w: 600, size: 13, col: C.red });
-    txt(ctx, `v = ${v >= 0 ? "+" : ""}${v.toFixed(2)} mm/s  ·  ΔE = ${(v * NEV_PER_MMS).toFixed(0)} neV`, S.x + 70, S.y + 16, { size: 12, col: C.ink });
-    txt(ctx, pass < 10 ? "The red marker shows the channel being counted"
-                       : "The lines are visible after about 10 passes",
-        S.x + S.w - 6, S.y + 16, { align: "right", size: 11.5, col: C.mute });
-  }, 1.25);
+    const mean = nb ? tot / nb : 0;
+    const stat = `${fmt(nEmit)} photons · ${fmt(lastN)} this frame` + (mean > 0 ? ` · noise ±${(100 / Math.sqrt(mean)).toFixed(mean > 400 ? 1 : 0)} %` : "");
+    const vs = `v = ${v >= 0 ? "+" : ""}${v.toFixed(2)} mm/s`, es = `  ·  ΔE = ${(v * NEV_PER_MMS).toFixed(0)} neV`;
+    ctx.font = `400 12px ${FONT}`; const wv = ctx.measureText(vs).width, we = ctx.measureText(es).width;
+    ctx.font = `400 11px ${FONT}`; const ws = ctx.measureText(stat).width, room = S.w - 70 - 18;
+    const fitE = wv + we + ws < room, fitS = wv + ws < room;   // drop ΔE first, then move the readout down a row
+    txt(ctx, vs + (fitE || (!fitS && !narrow && wv + we < room) ? es : ""), S.x + 70, S.y + 16, { size: 12, col: C.ink });
+    if (narrow) txt(ctx, stat, S.x - 50, S.y + S.h + 64, { size: 11, col: C.mute });
+    else txt(ctx, stat, S.x + S.w - 6, fitS ? S.y + 16 : S.y + 32, { align: "right", size: 11, col: C.mute });
+    legend(ctx, narrow ? S.x - 50 : S.x, narrow ? S.y + S.h + 48 : S.y - 22, [["simulated counts", C.data, "dot"], ["expected", "rgba(128,90,213,.75)", "line"]]);
+    d.cv._sim = { NB, counts, expo, pbar, speed, get nEmit() { return nEmit; }, get nDet() { return nDet; }, get nRes() { return nRes; }, get tau() { return tau; }, lastN };
+  }, 1.45);
+  reset();
 })();
 
 /* =============== FRAME 4: fingerprints on Mars (NASA PDS MER data) =============== */
