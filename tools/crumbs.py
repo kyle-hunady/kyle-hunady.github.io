@@ -28,7 +28,7 @@ PAGES = {
     "montecarlo.html": (PROJECTS, "Spectrometer modeling"),
     "battery.html": (PROJECTS, "Battery materials"),
     "automation.html": (PROJECTS, "Literature workflow"),
-    "bc.html": (PROJECTS, "Early coding"),
+    "bc.html": (PROJECTS, "B.C. (before Claude)"),
     "art.html": (PROJECTS, "Art and making"),
     "latte.html": (None, "Latte log"),
 }

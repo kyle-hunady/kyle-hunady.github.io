@@ -142,8 +142,8 @@ ten minutes — hard-reload before deciding a change did not land.
 Five sections, in the order a first-time visitor needs them: **about, research, outreach, projects,
 contact**. The rule is one home per fact.
 
-- **About** is who he is and where, in his own plain register. It carries both degrees and the
-  current position, so nothing else on the page repeats them — an Education row was removed
+- **About** is how he approaches problems, in his own plain register, plus both degrees (no years).
+  The hero carries the current position and the one-line research summary, so About does not repeat them — an Education row was removed
   2026-08-23 for exactly that duplication.
 - **Research** is research: the three positions, then publications. Education and leadership used to
   sit here too, under a heading that names neither.
