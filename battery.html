@@ -16,7 +16,7 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/site.css?v=20261119055004">
+<link rel="stylesheet" href="assets/css/site.css?v=20261119075940">
 <style>
   .fig + p, p + .fig, .fig + h3 { margin-top: 1.4rem; }
   .fig--light img { border-radius: .3rem; }
@@ -27,6 +27,14 @@
   .elements div { background: var(--surface); border: 1px solid var(--rule); border-radius: .6rem; padding: .7rem .8rem; font-family: var(--sans); font-size: .88rem; line-height: 1.5; color: var(--muted); }
   .elements b { display: block; color: var(--accent); font-weight: 500; margin-bottom: .2rem; }
   @media (max-width: 640px) { .elements { grid-template-columns: 1fr; } }
+  .eis-pair { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); gap: 1rem; align-items: center; }
+  .ckt { width: 100%; height: auto; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linejoin: round; }
+  .ckt circle { fill: var(--bg); }
+  .ckt text { fill: var(--white); stroke: none; font: 14px var(--sans); text-anchor: middle; }
+  .ckt text.lb { fill: var(--muted); font-size: 12px; }
+  .ckt .gb { stroke: var(--steel); } .ckt text.gb { fill: var(--steel); }
+  .ckt .ct { stroke: var(--accent); } .ckt text.ct { fill: var(--accent); }
+  @media (max-width: 640px) { .eis-pair { grid-template-columns: 1fr; } .ckt { max-width: 18rem; margin: 0 auto; } }
 </style>
 <!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Battery materials", "item": "https://kyle-hunady.github.io/battery.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
@@ -69,9 +77,11 @@
     </ol>
 
     <h2 class="part" id="sse"><span>I</span>Making a solid electrolyte from two salts</h2>
-    <p>Most lithium-ion batteries use a flammable liquid electrolyte. Solid electrolytes can reduce that hazard, but some take a long time to fire at high temperatures or require special presses to make dense pellets.</p>
-    <p>Li<sub>2</sub>OHCl can be made by melting lithium hydroxide and lithium chloride together and letting the melt cool. Both salts are inexpensive, and the resulting compound melts below 300 °C, which makes it possible to cast it (<a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">Song 2020</a>). The powder can also be cold-pressed into pellets above 90% of theoretical density (<a href="https://doi.org/10.1021/jacs.5b11851" target="_blank" rel="noreferrer">Hood 2016</a>).</p>
-    <p>Lithium ions move slowly through Li<sub>2</sub>OHCl at room temperature. Between about 35 and 60 °C, its crystal structure changes from orthorhombic to cubic, and its conductivity rises (<a href="https://doi.org/10.1002/aenm.201700971" target="_blank" rel="noreferrer">Song 2018</a>, <a href="https://doi.org/10.1002/anie.201604554" target="_blank" rel="noreferrer">Li 2016</a>). Song measured more than 10<sup>−4</sup> S/cm at 110 °C. The salts also pick up water from the air, which can change what forms during synthesis.</p>
+    <p>The electrolyte sits between a battery’s two electrodes. It lets lithium ions pass from one side to the other and blocks electrons, which have to go through the outside circuit. Most lithium-ion batteries use a liquid electrolyte, a lithium salt dissolved in organic solvents, and those solvents are flammable (<a href="https://doi.org/10.1002/anie.201604554" target="_blank" rel="noreferrer">Li 2016</a>, <a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">Song 2020</a>).</p>
+    <p>A solid electrolyte can reduce the fire hazard. It may also allow a lithium metal anode, which would let a cell store more energy (<a href="https://doi.org/10.1021/jacs.5b11851" target="_blank" rel="noreferrer">Hood 2016</a>, <a href="https://doi.org/10.1002/aenm.201700971" target="_blank" rel="noreferrer">Song 2018</a>).</p>
+    <p>The number that matters most is ionic conductivity, σ. A layer of electrolyte with thickness L and area A has resistance R = L/(σA), and the cell loses voltage pushing current through it. The best solid electrolytes reach about 10<sup>−2</sup> S/cm, but resistance where the electrolyte meets the electrodes can still limit the cell (<a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">Song 2020</a>).</p>
+    <p>Many solid electrolytes also need long firing at high temperatures or special presses to make dense pellets. Li<sub>2</sub>OHCl can be made by melting lithium hydroxide and lithium chloride together and letting the melt cool. Both salts are inexpensive, and the resulting compound melts below 300 °C, which makes it possible to cast it (<a href="https://doi.org/10.1002/aenm.201903480" target="_blank" rel="noreferrer">Song 2020</a>). The powder can also be cold-pressed into pellets above 90% of theoretical density (<a href="https://doi.org/10.1021/jacs.5b11851" target="_blank" rel="noreferrer">Hood 2016</a>).</p>
+    <p>Lithium ions move slowly through Li<sub>2</sub>OHCl at room temperature. Between about 35 and 60 °C, its crystal structure changes from orthorhombic to cubic, and its conductivity rises (<a href="https://doi.org/10.1002/aenm.201700971" target="_blank" rel="noreferrer">Song 2018</a>, <a href="https://doi.org/10.1002/anie.201604554" target="_blank" rel="noreferrer">Li 2016</a>). Song measured more than 10<sup>−4</sup> S/cm at 110 °C. The group later described this conductivity as too low for most commercial uses (<a href="https://doi.org/10.1038/s41563-021-00943-2" target="_blank" rel="noreferrer">Xiao 2021</a>). The salts also pick up water from the air, which can change what forms during synthesis.</p>
     <p>I worked with Ah-Young Song, whose research showed that rotating hydroxyl groups help lithium ions move through the crystal. I made the powder by induction-melting the salts in an argon glovebox, then casting and grinding the cooled material. I sealed the powder in a zirconia jar under vacuum and ball-milled it outside the glovebox. The new milling process increased conductivity about tenfold.</p>
 
     <figure class="fig fig--light">
@@ -92,6 +102,56 @@
     <p>The resistance of a pellet cell comes from several places. I wanted to separate the resistance inside the grains from the resistance at grain boundaries and at the two electrode contacts. A DC measurement combines them.</p>
     <p>Impedance spectroscopy separates those contributions by their response to an AC voltage. I applied 100 to 500 mV and swept the frequency from 1 MHz down to 1 Hz. At each frequency I measured the current and its phase relative to the voltage to get the complex impedance Z = Z′ + jZ″. A Nyquist plot shows Z′ on the horizontal axis and −Z″ on the vertical axis, with one point per frequency. The curves here start at high frequency on the left.</p>
     <p>A resistor and capacitor in parallel produce a semicircle on a Nyquist plot. Its width gives the resistance R, and its highest point occurs at f = 1/(2πRC). Two processes with similar resistances can therefore produce separate arcs if their capacitances are different enough. Capacitance also helps identify the source of an arc. In a 2021 class talk, I used a rule of thumb of about a picofarad for grain interiors and a nanofarad for grain boundaries. Electrode contacts can have larger capacitances and show diffusion.</p>
+
+    <p>The plot below is the simplest case: a series resistor R<sub>s</sub> followed by one R ‖ C pair. Changing R changes the size of the arc. Changing C leaves the arc in place and moves the frequency points along it.</p>
+
+    <div class="fig" id="eis-rc">
+      <div class="eis-pair">
+        <svg class="ckt" viewBox="0 0 260 120" role="img" aria-label="Circuit: a series resistor R s, then a resistor R in parallel with a capacitor C">
+          <circle cx="8" cy="60" r="3"/><circle cx="252" cy="60" r="3"/>
+          <path d="M11 60H30l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H110M110 30V90M110 30H140l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H220M110 90H160M160 78V102M168 78V102M168 90H220M220 30V90M220 60H249"/>
+          <text x="55" y="46">R<tspan dy="3" font-size="9">s</tspan></text>
+          <text x="165" y="15">R</text>
+          <text x="164" y="117">C</text>
+        </svg>
+        <canvas class="plot eis-plot" aria-label="Simulated Nyquist plot of a series resistor plus one parallel RC: a semicircle, redrawn as the sliders change"></canvas>
+      </div>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label>Resistance R <input class="a-r" type="range" min="200" max="3000" step="50" value="1500"></label>
+        <label>Capacitance C <input class="a-c" type="range" min="-9" max="-6" step="0.05" value="-8"></label>
+      </div>
+      <p class="cap"><span class="tag-model">model</span><b>An R ‖ C pair draws a semicircle of width R, starting at R<sub>s</sub>.</b> Frequency falls from left to right. Dots mark each tenfold step, and the ring marks the top of the arc, where ω = 1/RC. R<sub>s</sub> is 100 Ω. C runs from 1 nF to 1 µF.</p>
+    </div>
+
+    <p>In a pellet pressed between two lithium disks, lithium ions meet three kinds of resistance in a row. They move through the grains of the electrolyte (R<sub>b</sub>), cross the boundaries between grains (R<sub>gb</sub>), and transfer between the electrolyte and the lithium metal at each disk (R<sub>ct</sub>). The grain boundaries and the interfaces also store charge, so each acts as an R ‖ C pair. The interface capacitance C<sub>dl</sub> comes from the charged double layer at the metal surface and is much larger than C<sub>gb</sub>, so its arc appears at lower frequency. The grains also have an arc, but it often sits above 1 MHz, so the measured curve starts at R<sub>b</sub> on the real axis.</p>
+
+    <div class="fig" id="eis-cell">
+      <div class="eis-pair">
+        <svg class="ckt" viewBox="0 0 300 130" role="img" aria-label="Circuit for a lithium symmetric cell: bulk resistor R b, then R gb in parallel with C gb, then R ct in parallel with C dl">
+          <text class="lb" x="45" y="12">bulk</text><text class="lb gb" x="130" y="12">grain boundaries</text><text class="lb ct" x="235" y="12">Li interfaces</text>
+          <circle cx="6" cy="70" r="3"/><circle cx="294" cy="70" r="3"/>
+          <path d="M9 70H20l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H85M175 70H190M280 70H291"/>
+          <path class="gb" d="M85 45V95M85 45H105l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H175M85 95H126M126 83V107M134 83V107M134 95H175M175 45V95"/>
+          <path class="ct" d="M190 45V95M190 45H210l4.2,-6 8.3,12 8.3,-12 8.3,12 8.3,-12 8.3,12 4.2,-6H280M190 95H231M231 83V107M239 83V107M239 95H280M280 45V95"/>
+          <text x="45" y="56">R<tspan dy="3" font-size="9">b</tspan></text>
+          <text class="gb" x="130" y="31">R<tspan dy="3" font-size="9">gb</tspan></text>
+          <text class="gb" x="130" y="124">C<tspan dy="3" font-size="9">gb</tspan></text>
+          <text class="ct" x="235" y="31">R<tspan dy="3" font-size="9">ct</tspan></text>
+          <text class="ct" x="235" y="124">C<tspan dy="3" font-size="9">dl</tspan></text>
+        </svg>
+        <canvas class="plot eis-plot" aria-label="Simulated Nyquist plot of a Li | electrolyte | Li cell: an intercept, a grain-boundary arc and an interface arc, redrawn as the sliders change"></canvas>
+      </div>
+      <div class="fig-out" aria-live="polite"></div>
+      <div class="fig-controls">
+        <label><span>Bulk R<sub>b</sub></span><input class="b-rb" type="range" min="50" max="1500" step="50" value="300"></label>
+        <label><span>Grain boundary R<sub>gb</sub></span><input class="b-rgb" type="range" min="0" max="1500" step="50" value="800"></label>
+        <label><span>Li interface R<sub>ct</sub></span><input class="b-rct" type="range" min="0" max="3000" step="50" value="1200"></label>
+      </div>
+      <p class="cap"><span class="tag-model">model</span><b>Each ion process gives its own arc, in order of frequency.</b> The curve starts at R<sub>b</sub>, the grain-boundary arc (blue, C<sub>gb</sub> = 1 nF) comes next, and the interface arc (gold, C<sub>dl</sub> = 1 µF) comes last. R<sub>ct</sub> here combines both lithium disks. The line is colored by which element contributes most to −Z″ at that frequency.</p>
+    </div>
+
+    <p>To get conductivity from a measured spectrum, I read R where the curve meets the real axis, either at R<sub>b</sub> or after one of the arcs, and used σ = L/(R·A), with L the pellet thickness and A its area.</p>
 
     <div class="elements">
       <div><b>Resistor (R)</b>A series resistor shifts the whole curve to the right by R. A wire or a process that is too fast to resolve can contribute to this shift.</div>
@@ -164,6 +224,7 @@
 </footer>
 
 <script src="assets/js/site.js?v=20261117065748"></script>
+<script src="assets/js/eis-primer.js?v=20261119075940"></script>
 <script>
 (function () {
   const root = document.getElementById('eis-toy'); if (!root) return;

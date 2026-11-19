@@ -17,6 +17,7 @@ assets/css/site.css   every style, all pages
 assets/js/site.js     nav highlighting, copy-to-clipboard, gallery lightbox
 assets/js/md.js       linePlot (tiny canvas plotter) + MDSim, an MD engine with no page yet (shelved 2026-11-16)
 assets/js/figs.js     the interactive figures; a page opts in with data-fig="..."
+assets/js/eis-primer.js  battery.html EIS primer: simulated Nyquist plots (R_s + R‖C, Li | electrolyte | Li)
 assets/js/latte-dates.js   generated: photo number -> date
 assets/img/gallery/<page>/  gallery photos: name.jpg (1600 px) + name-t.jpg (720 px thumb)
 assets/img/logos/     outreach logos (Kyle's redesigns for GSC, GSAB, Alpine Club)
