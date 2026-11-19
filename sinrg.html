@@ -18,8 +18,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=20261118203614">
-</head>
+<link rel="stylesheet" href="assets/css/site.css?v=20261118204244">
+
+<!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Research", "item": "https://kyle-hunady.github.io/index.html#research"}, {"@type": "ListItem", "position": 3, "name": "Reading rocks with gamma rays", "item": "https://kyle-hunady.github.io/sinrg.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -51,6 +52,7 @@
 
 <header class="page__head">
   <div class="container header__container">
+    <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#research">Research</a></li><li aria-current="page">Reading rocks with gamma rays</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Planetary instrumentation · Caltech and JPL</p>
     <h1>Reading rocks with gamma rays</h1>
     <p class="header__line">A small instrument head that, pressed against a rock, tells you which elements it holds and what its iron is doing.</p>
@@ -59,7 +61,6 @@
 
 <main id="main" class="page">
   <div class="container">
-    <a href="index.html#research" class="back-link"><svg><use href="#i-arrow-left"/></svg>All research</a>
 
 
     <div class="callout tldr"><div>SiNRG is a lab prototype that combines two measurements in one head: <b>X-ray fluorescence</b>, which lists the elements in a rock, and <b>Mössbauer spectroscopy</b>, which tells you which minerals hold the iron and how oxidized it is. A Mössbauer spectrometer on the Mars rovers found minerals that formed in water. Ours adds the element measurement, swaps the voice-coil drive for a 7 g piezo and lets you trade speed against sharpness by moving the source. I measured the drive, debugged the counting electronics and built the models that predict how each part shapes the spectrum. The models show the central trade: moving the source closer collects <b>8× the counts</b> but widens the outer iron line from 0.31 to 0.73 mm/s (Section VI).</div></div>
