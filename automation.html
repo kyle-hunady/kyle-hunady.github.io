@@ -10,7 +10,7 @@
 <meta property="og:url" content="https://kyle-hunady.github.io/automation.html">
 <meta property="og:title" content="A literature workflow with Claude Code">
 <meta property="og:description" content="How I use Claude Code to find papers and answer a question from them, with two NASA rocket-engine copper alloys as the example.">
-<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/proj-literature.jpg">
+<meta property="og:image" content="https://kyle-hunady.github.io/assets/img/lit-grcop-conductivity.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -52,7 +52,7 @@
     <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Literature workflow</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Research tools</p>
     <h1>A literature workflow with Claude Code</h1>
-    <p class="header__line">One command searches for papers, downloads the ones it can get, and writes an answer that cites every number. The papers it can't get come back to me as a short list.</p>
+    <p class="header__line">One command finds the papers, reads the ones it can get, and writes a sourced answer.</p>
   </div>
 </header>
 
@@ -63,196 +63,52 @@
       <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
       <pre><span class="t-cmd">&gt; /lit-fetch how GRCop-42 and GRCop-84 compare for additively manufactured rocket combustion chambers</span></pre>
     </div>
-    <p class="cap-under">The command I typed, word for word. Everything below came back from it.</p>
+    <p class="cap-under">The one command I typed. Everything below came back from it.</p>
 
     <h2>1 · The question</h2>
-    <p>GRCop-42 and GRCop-84 are NASA copper alloys made for the cooled inner walls of rocket engines. Which one should go in a 3-D printed combustion-chamber liner? I picked this question because it is a real design choice with good published data behind it.</p>
+    <p>Which NASA copper alloy should line a 3-D printed rocket combustion chamber?</p>
 
-    <h2>2 · What came back on its own</h2>
+    <h2>2 · The answer it wrote</h2>
     <div class="facts">
-      <div class="fact"><b>10</b><span>relevant papers found</span></div>
+      <div class="fact"><b>10</b><span>papers found</span></div>
       <div class="fact"><b>6</b><span>downloaded and read</span></div>
-      <div class="fact"><b>207</b><span>values plotted, each traced to a table, page or figure</span></div>
+      <div class="fact"><b>207</b><span>values plotted, each with its source</span></div>
       <div class="fact"><b>4</b><span>handed back to me</span></div>
     </div>
-    <div class="callout"><div><b>GRCop-42.</b> GRCop-84 is stronger below about 600 °C, but the two are matched above that. GRCop-42 conducts 5 to 20 % more heat and prints about 20 % faster, and NASA moved to it for its printed chambers (<a href="https://doi.org/10.2514/6.2019-4228" target="_blank" rel="noreferrer">Gradl et al., 2019</a>).</div></div>
+    <div class="callout"><div><b>GRCop-42.</b> GRCop-84 is stronger below about 600 °C, the two are matched above that, and GRCop-42 conducts 5 to 20 % more heat.</div></div>
     <figure class="fig fig--light" style="margin-top:1rem">
       <img src="assets/img/lit-grcop-conductivity.png" alt="Thermal conductivity against temperature from 25 to 800 °C. Pure copper is highest, GRCop-42 next at about 350 W/(m K), and both GRCop-84 curves lower, around 285 to 317 W/(m K)." width="1266" height="670" loading="lazy">
-      <figcaption>Thermal conductivity of wrought alloys, read off NASA's published curves (Gradl et al., 2019, Fig. 1). GRCop-42 sits 13 to 20 % above standard GRCop-84. This is Figure 3 of the write-up.</figcaption>
+      <figcaption>Thermal conductivity of the wrought alloys, read off NASA's published curves (Gradl et al., 2019).</figcaption>
     </figure>
-    <p>The write-up has the full answer: an alloy-by-property table with test conditions, five figures, and a list of every plotted value with where it sits in its paper. It also says where the papers disagree and which gap is still open.</p>
-    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Read the GRCop write-up</a></div>
+    <div class="next-links" style="margin-top:1rem"><a class="btn btn-primary" href="lit/grcop.html">Read the full write-up</a></div>
 
-    <h2>3 · The papers it couldn't get</h2>
-    <p>When a paper is paywalled or the publisher's site blocks scripts, Claude stops and hands me the DOI. It does not try to get around a login or a bot check.</p>
-    <ul>
-      <li><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a> (Journal of Materials Engineering and Performance, 2008). Paywalled. A second try through Caltech's subscription got it.</li>
-      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> (AIAA Propulsion and Energy Forum, 2021). Paywalled, and the publisher's site shows a bot check. This NASA hot-fire paper may fill the main gap in the answer.</li>
-      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> (Fusion Science and Technology). Listed as open access in MIT's repository, but the repository limited the download rate and the publisher's site shows a bot check.</li>
-      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications</a> (International Materials Reviews, 2020). Listed as open access, but the download link refused the request and the publisher's site shows a bot check.</li>
-    </ul>
+    <h2>3 · The papers it read</h2>
+    <ol>
+      <li><a href="https://doi.org/10.2514/6.2019-4228" target="_blank" rel="noreferrer">GRCop-42 Development and Hot-fire Testing Using Additive Manufacturing Powder Bed Fusion for Channel-cooled Combustion Chambers</a> <span class="paper__meta">Gradl et al., 2019</span></li>
+      <li><a href="https://doi.org/10.1016/j.msea.2021.141690" target="_blank" rel="noreferrer">Fracture characteristics and heat treatment of laser powder bed fusion additively manufactured GRCop-84 copper</a> <span class="paper__meta">Seltzman &amp; Wukitch, 2021</span></li>
+      <li><a href="https://doi.org/10.1016/j.mtcomm.2023.106665" target="_blank" rel="noreferrer">Thermophysical properties of additively manufactured (AM) GRCop-42 and GRCop-84</a> <span class="paper__meta">Chen et al., 2023</span></li>
+      <li><a href="https://doi.org/10.1016/j.addlet.2024.100224" target="_blank" rel="noreferrer">GRCop-42: Comparison between laser powder bed fusion and laser powder direct energy deposition</a> <span class="paper__meta">Demeneghi et al., 2024</span></li>
+      <li><a href="https://doi.org/10.1016/j.engfailanal.2025.109710" target="_blank" rel="noreferrer">Additively manufactured GRCop-42 copper-alloy combustion chamber failure analysis: The role of build interruptions</a> <span class="paper__meta">Demeneghi et al., 2025</span></li>
+      <li><a href="https://doi.org/10.1007/s11837-025-07787-0" target="_blank" rel="noreferrer">Multi-Scale Mechanical Characterization of Additively Manufactured GRCop-42 and GRCop-84 Alloys</a> <span class="paper__meta">Mahtabi et al., 2025</span></li>
+    </ol>
 
-    <h2>4 · Feeding them back in</h2>
-    <p>I request the missing papers through the Caltech library and drop the PDFs into one folder. One command adds them to my library:</p>
+    <h2>4 · The papers it couldn't get</h2>
+    <p>Claude stops at a paywall or bot check and hands me the DOI.</p>
+    <ol>
+      <li><a href="https://doi.org/10.1007/s11665-007-9175-3" target="_blank" rel="noreferrer">Comparison of GRCop-84 to Other Cu Alloys with High Thermal Conductivities</a> <span class="paper__meta">paywalled; got it on a second try through Caltech</span></li>
+      <li><a href="https://doi.org/10.2514/6.2021-3233" target="_blank" rel="noreferrer">Extreme Environment Hot Fire Durability of Post Processed Additively Manufactured GRCop-Alloy Combustion Chambers</a> <span class="paper__meta">paywalled, bot check</span></li>
+      <li><a href="https://doi.org/10.1080/15361055.2022.2147765" target="_blank" rel="noreferrer">Precipitate Size in GRCop-42 and GRCop-84 Cu-Cr-Nb Alloy Gas Atomized Powder and L-PBF Additive Manufactured Material</a> <span class="paper__meta">open copy rate-limited, bot check</span></li>
+      <li><a href="https://doi.org/10.1080/09506608.2020.1821485" target="_blank" rel="noreferrer">Copper-based alloys for structural high-heat-flux applications: a review of development, properties, and performance of Cu-rich Cu-Cr-Nb alloys</a> <span class="paper__meta">download refused, bot check</span></li>
+    </ol>
+
+    <h2>5 · Feeding them back in</h2>
+    <p>I get the PDFs through the Caltech library, add them to my library, and ask the question again.</p>
     <div class="term" role="region" aria-label="Ingest command">
       <div class="term__bar"><i></i><i></i><i></i><span>terminal</span></div>
       <pre><span class="t-cmd">$ python -m litfetch_tools.ingest_folder ~/Desktop/grcop --project .</span></pre>
     </div>
-    <p>Then I ask the question again. Claude finds the new PDFs in the library, reads them, and writes the answer with them included. For this question, one of the four came in on the second try; the other three need a library request.</p>
 
-    <h2>How it works</h2>
-    <div class="fig"><svg class="schem" viewBox="0 0 340 300" style="max-width:22rem;margin:0 auto;display:block" role="img" aria-label="The workflow searches for papers, checks my library, downloads available copies, extracts the text, and drafts notes. It lists the DOIs of papers I need to get myself.">
-  <g text-anchor="middle">
-  <rect x="4" y="4" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="21">1 · Search</text><text x="130" y="36">OpenAlex</text>
-  <rect x="4" y="56" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="73">2 · Check the library</text><text x="130" y="88">check for a saved copy</text>
-  <rect x="4" y="108" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="125">3 · Download</text><text x="130" y="140">open access first</text>
-  <rect x="4" y="160" width="252" height="40" rx="7" style="fill:var(--surface-2);stroke:var(--rule)"/><text class="lbl" x="130" y="177">4 · Extract the text</text><text x="130" y="192">on my computer</text>
-  <rect x="4" y="212" width="252" height="40" rx="7" style="fill:var(--accent-dim);stroke:var(--accent-deep)"/><text class="lbl" x="130" y="229">5 · Draft a note</text><text x="130" y="244">how it relates to my project</text>
-  <path d="M130 45v10M126 51l4 4 4-4M130 97v10M126 103l4 4 4-4M130 149v10M126 155l4 4 4-4M130 201v10M126 207l4 4 4-4" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/>
-  <path d="M257 128h40v136M293 260l4 4 4-4" fill="none" style="stroke:#C98A7F" stroke-width="1.5"/>
-  <text x="170" y="286" style="fill:#C98A7F">I get the DOIs of papers to fetch myself</text>
-  </g></svg>
-      <p class="cap">Claude runs the five steps. The branch shows where it sends me the DOIs for papers I need to retrieve myself.</p></div>
-    <ol>
-      <li><strong>Search.</strong> Claude searches OpenAlex, an open index of scholarly papers, and ranks the results by citation count, with priority given to open-access copies.</li>
-      <li><strong>Check the library.</strong> Claude looks for a copy in my library before downloading anything.</li>
-      <li><strong>Download.</strong> Claude checks Unpaywall, arXiv, and OpenAlex for an open-access copy, then checks for licensed access through the publisher's text-mining service.</li>
-      <li><strong>Extract the text.</strong> A script extracts text from each PDF on my computer. The PDFs stay in my local library.</li>
-      <li><strong>Draft a note.</strong> Claude writes one page on how each new paper relates to my project.</li>
-    </ol>
-    <p>A script checks each PDF for expected terms to catch download mix-ups. The notes trace numbers back to a page, table, or figure, and a second script checks each new note. The summaries below flag when the evidence comes from a simulation or when I only have the abstract.</p>
-
-    <p>For a question like the GRCop one, Claude then records each value it uses with its paper, table or figure, and test condition. Where a paper only gives a plot, a script reads the curve from the PDF's vector drawing. The write-up plots only those records.</p>
-
-    <h2>The library</h2>
-    <p>As of November 2026, I use the same library of more than 2,000 papers across three projects.</p>
-    <div class="fig"><img src="assets/img/proj-literature.jpg" alt="First pages of 128 papers from the library" width="1252" height="772" loading="lazy" style="border-radius:.4rem">
-      <p class="cap">128 first pages from my library, November 2026.</p></div>
-
-    <details class="details">
-      <summary>Run summary for the GRCop question</summary>
-    <div class="term" role="region" aria-label="Run summary">
-      <div class="term__bar"><i></i><i></i><i></i><span>claude</span></div>
-      <pre><span class="t-cmd">&gt; /lit-fetch how GRCop-42 and GRCop-84 compare for additively manufactured rocket combustion chambers</span>
-
-● Searching OpenAlex, five queries.
-  └ GRCop-42 · GRCop-84 · GRCop additive · Cu-Cr-Nb additive manufacturing · Cu-Cr-Nb combustion chamber
-    10 candidates kept
-
-● Downloading, extracting and writing notes.
-  └ 6 papers read and summarized (two of the PDFs are accepted manuscripts)
-
-● Taking the numbers.
-  └ 34 values from tables, 7 from the text, 166 read off digitized figures
-
-● Done. 6 papers read, 4 handed back:
-    10.1007/s11665-007-9175-3       closed
-    10.2514/6.2021-3233             closed
-    10.1080/15361055.2022.2147765   listed open access, download failed
-    10.1080/09506608.2020.1821485   listed open access, download failed</pre>
-    </div>
-    </details>
-
-    <details class="details">
-      <summary>An earlier example: ten papers on piezo velocity control</summary>
-    <p>I tried this on a question from my <a href="instrument.html">spectrometer</a> work. The source in a Mössbauer spectrometer has to move at a precisely controlled velocity. Our group drives it with a piezo stack (Guzman et al., 2023). I wanted to see which methods from atomic force microscopy and other fields might help us control that motion.</p>
-    <p>The search returned 160 candidates. Claude picked ten papers. Four were already in my library, four downloaded automatically, and two needed my help. One was behind a paywall, and the other needed a browser download. My notes record which parts Claude read, the evidence behind the key numbers, and what I can use in my project. The titles link to the papers.</p>
-    <div class="papers">
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">No preview available</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2006 · Mechatronics · <span class="route r-lib">In my library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.mechatronics.2005.11.006" target="_blank" rel="noreferrer">Design of hysteresis-compensating iterative learning control for piezo-positioners: Application to atomic force microscopes</a></h3>
-          <p class="paper__who">Leang &amp; Devasia</p>
-          <p class="paper__sum">The authors used iterative learning control to reduce hysteresis error to the sensor's noise floor. They drove the piezo at 1 Hz or less, well below its 445 Hz resonance, to isolate hysteresis from the scanner's dynamics. A Mössbauer drive runs closer to resonance.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/02.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2008 · Ultramicroscopy · <span class="route r-lib">In my library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1016/j.ultramic.2008.05.004" target="_blank" rel="noreferrer">Charge drives for scanning probe microscope positioning stages</a></h3>
-          <p class="paper__who">Fleming &amp; Leang</p>
-          <p class="paper__sum">With charge control, the piezo's open-loop hysteresis error fell below 1% on a 1 Hz triangle scan without a position sensor. A slow feedback loop can then correct drift.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/03.jpg" alt="First page of the paper (thumbnail)" width="260" height="337" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2013 · Review of Scientific Instruments · <span class="route r-oa">Open access</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1063/1.4803449" target="_blank" rel="noreferrer">Wide-area scanner for high-speed atomic force microscopy</a></h3>
-          <p class="paper__who">Watanabe et al.</p>
-          <p class="paper__sum">The authors drove a lever-amplified piezo scanner with a triangle wave at up to about 1 kHz in open loop. They kept the harmonics the scanner could follow and used its measured frequency response and a hysteresis model to shape the input. The same steps could help shape a piezo velocity waveform.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">Paywalled<br>Library request</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2014 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">Manual download</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2014.2326396" target="_blank" rel="noreferrer">Stability of Velocity Control for a Piezoelectric Stepper</a></h3>
-          <p class="paper__who">Wilcox &amp; Devasia</p>
-          <p class="paper__sum"><strong>Abstract only.</strong> I need to request the full paper through the library. Of these ten papers, this is the only one that directly analyzes piezo velocity control. It looks at stability under Coulomb friction and uses an inverse model to choose the input for a target velocity.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/05.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2016 · IEEE Transactions on Industrial Electronics · <span class="route r-oa">Open access</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tie.2016.2569060" target="_blank" rel="noreferrer">Robust Antiwindup Compensation for High-Precision Tracking of a Piezoelectric Nanostage</a></h3>
-          <p class="paper__who">Liu et al.</p>
-          <p class="paper__sum">When the amplifier saturated, the periodic tracking controller wound up and the stage stopped following the target motion. A repeating drive waveform could run into the same problem if it clips at the turnaround. The authors' anti-windup compensator held the tracking error under 0.23% at about 250 Hz bandwidth.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><div class="paper__nopdf">Open access<br>Browser download</div></div>
-        <div class="paper__body">
-          <div class="paper__meta">2020 · IEEE/ASME Transactions on Mechatronics · <span class="route r-miss">Manual download</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1109/tmech.2020.2984367" target="_blank" rel="noreferrer">A Method to Realize Low Velocity Movability and Eliminate Friction Induced Noise in Piezoelectric Ultrasonic Motors</a></h3>
-          <p class="paper__who">Delibas &amp; Koc</p>
-          <p class="paper__sum"><strong>Abstract only.</strong> The open-access PDF needs to be downloaded in a browser. The authors drove a resonant piezo motor at two frequencies to get smooth, quiet motion. They report positioning error below 10 nm from 1 down to 0.001 mm/s.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/07.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2022 · Scientific Reports · <span class="route r-oa">Open access</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-022-14332-5" target="_blank" rel="noreferrer">High precision robust control design of piezoelectric nanopositioning platform</a></h3>
-          <p class="paper__who">Feng et al.</p>
-          <p class="paper__sum"><strong>Simulation.</strong> The authors compared positive position feedback, integral resonant control, and H-infinity control on a 100 µm triangle at 5 to 20 Hz. Added mass shifted the resonance from 205 to 139 Hz. H-infinity tracked best in every case tested in the simulations.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/08.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2023 · Review of Scientific Instruments · <span class="route r-lib">In my library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1063/5.0157651" target="_blank" rel="noreferrer">A miniaturized piezoelectric Mössbauer spectrometer with feedback control</a></h3>
-          <p class="paper__who">Guzman et al.</p>
-          <p class="paper__sum">With strain-gauge feedback, our group's piezo Mössbauer drive matched the linewidth of a conventional electromagnetic drive and stayed linear within 3.5%. The authors suspect some of the remaining distortion comes from inferring source motion from strain measured on the stack. A direct measurement of source motion could test that.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/09.jpg" alt="First page of the paper (thumbnail)" width="258" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2023 · Scientific Reports · <span class="route r-lib">In my library</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-023-46846-x" target="_blank" rel="noreferrer">Development of an advanced velocity modulator for a portable Mössbauer spectrometer</a></h3>
-          <p class="paper__who">Yoon et al.</p>
-          <p class="paper__sum">This was the only Mössbauer drive I found that uses iterative learning control. A voice coil followed a jerk-limited triangle at 25 Hz using proportional feedback and a learned feedforward signal. The velocity fit reached R² = 0.996. The control scheme is what I'd look at for a piezo drive.</p>
-        </div>
-      </article>
-      <article class="paper">
-        <div class="paper__thumb"><img src="assets/img/litdemo/10.jpg" alt="First page of the paper (thumbnail)" width="255" height="340" loading="lazy"></div>
-        <div class="paper__body">
-          <div class="paper__meta">2026 · Scientific Reports · <span class="route r-oa">Open access</span></div>
-          <h3 class="paper__title"><a href="https://doi.org/10.1038/s41598-026-55176-7" target="_blank" rel="noreferrer">Feedforward compensation of piezo nonlinearity for high-precision high-speed atomic force microscopy</a></h3>
-          <p class="paper__who">Umeda &amp; Kodera</p>
-          <p class="paper__sum">The authors ranked the effects of offset (up to 30%), amplitude (up to about 25%), hysteresis (5 to 10%), and frequency (1 to 2%) on open-loop piezo positioning. A feedforward correction for all four improved positioning about tenfold without adding hardware. For a drive that changes velocity range, I'd start the calibration with offset and amplitude.</p>
-        </div>
-      </article>
-    </div>
-
-    </details>
-
-    <div class="next-links"><a class="btn" href="lit/grcop.html">The GRCop write-up</a><a class="btn" href="index.html#projects">All projects</a></div>
+    <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>
 </main>
 
