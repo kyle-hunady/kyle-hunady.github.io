@@ -1037,3 +1037,10 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .hero-photo figcaption { padding: 0.6rem 0.9rem 0.8rem; }
 @media (max-width: 760px) { .models { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .duo, .models { grid-template-columns: 1fr; } }
+.annot-wrap { position: relative; }
+.annot-wrap img { display: block; width: 100%; height: auto; }
+.annot-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.vid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.vid2 figure { margin: 0; }
+.vid2 video { display: block; width: 100%; height: auto; border-radius: 0.4rem; background: #000; }
+@media (max-width: 640px) { .vid2 { grid-template-columns: 1fr; } }
