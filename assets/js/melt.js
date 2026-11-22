@@ -258,8 +258,14 @@
           return { atoms: at, corners: box8(L), centre: [L[0] / 2, L[1] / 2, L[2] / 2], ext: 0.9 * Math.hypot(L[0], L[1], L[2]) / 2 };
         };
       }
-      var vS = viewer(cvS, { group: grp, scene: function () { return scene(pick.value + '_s')(); } }),
-          vL = viewer(cvL, { group: grp, scene: function () { return scene(pick.value + '_l')(); } });
+      function tag(ph) {        // phase + temperature written on the pane itself
+        return function (c) {
+          var b = B[pick.value + '_' + ph]; c.textAlign = 'left'; c.font = '500 12px "IBM Plex Mono", monospace';
+          c.fillStyle = ph === 's' ? GOLD : BLUE; c.fillText((ph === 's' ? 'crystal' : 'liquid') + ' · ' + Math.round(b.T_set) + ' K', 10, 18);
+        };
+      }
+      var vS = viewer(cvS, { group: grp, over: tag('s'), scene: function () { return scene(pick.value + '_s')(); } }),
+          vL = viewer(cvL, { group: grp, over: tag('l'), scene: function () { return scene(pick.value + '_l')(); } });
       function drawGr() {
         var el = pick.value, s = B[el + '_s'], l = B[el + '_l'], g = ctx2d(cvG), c = g.c;
         var ym = Math.ceil(Math.max.apply(null, s.gr.concat(l.gr)));
@@ -274,8 +280,9 @@
       function caps() {
         var el = pick.value, s = B[el + '_s'], l = B[el + '_l'];
         var ps = function (b) { return (b.movie_frames * b.movie_dt_fs / 1000).toFixed(1); };
-        capS.innerHTML = '<b>' + s.label + '</b>' + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbours · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
-        capL.innerHTML = '<b>' + l.label + '</b>' + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbours · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
+        var tt = function (b) { return '<span style="color:#F2F3F0">' + Math.round(b.T_set) + ' K</span> (run mean ' + Math.round(b.T_run) + ' K) · '; };
+        capS.innerHTML = '<b>' + s.label + '</b>' + tt(s) + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbours · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
+        capL.innerHTML = '<b>' + l.label + '</b>' + tt(l) + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbours · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
         var dv = (l.vol_per_atom / s.vol_per_atom - 1) * 100;
         out.textContent = el + ' on melting: neighbours ' + s.cn.toFixed(1) + ' → ' + l.cn.toFixed(1) + '  ·  volume ' + (dv >= 0 ? '+' : '') + dv.toFixed(1) + ' %' +
           (dv < 0 ? '  ·  the liquid is denser than the crystal' : '') + '  ·  ' + VIEWHINT;
