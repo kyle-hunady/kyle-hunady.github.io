@@ -6,6 +6,7 @@
 
    data-motion="lit"  sideways-scrolling strip of paper first pages (assets/img/proj-literature-strip.jpg,
                       built by tools/lit_strip.py; CSS animation, repeat-x so the wrap is seamless)
+   data-motion="melt" the two Pb coexistence slabs from melting.html, crystal growing at 590 K and melting at 663 K
    data-motion="mc"   the Monte Carlo head redrawn live: the fe_8mm geometry from mc-story-data.js
                       (montecarlo.html, frame 6), turning 360 deg per loop, photons flying source ->
                       sample -> detector and collecting on the chip. Only the left panel is redrawn;
@@ -36,6 +37,7 @@
       if (kind === "lit" && !slowNet) m = litStrip(el);
       if (kind === "mc") m = mcHead(el);
       if (kind === "drift") m = drift(el);
+      if (kind === "melt" && !slowNet) m = meltSlabs(el);
       if (!m) return;
       m.el = el; m.visible = false; live.push(m); io.observe(el);
     });
@@ -267,6 +269,74 @@
     }
     return { layer: layer,
       start: function () { if (raf) return; last = performance.now(); raf = requestAnimationFrame(frame); },
+      stop: function () { if (raf) cancelAnimationFrame(raf); raf = 0; } };
+  }
+
+  /* ------------------------------------------------------- melting slabs (melting.html card) */
+  // Both 1,024-atom MACE lead slabs from melt-sele (assets/data/melt-thumb.json, written by website_export.py):
+  // 590 K, where the crystal (gold) grows, and 663 K, where it melts into the liquid (blue). 40 saved frames per run,
+  // interpolated; played forward then backward so the loop has no jump. Atoms crossing a periodic face fade across.
+  function meltSlabs(el) {
+    var cv = document.createElement("canvas"), ctx = cv.getContext("2d"); if (!ctx) return null;
+    var layer = layerOn(el, cv), J = null, loading = false, IW = 1800, IH = 1124, T = 14;
+    var GOLD = [217, 178, 111], BLUE = [127, 167, 201], SPR = {};
+    function sprite(rgb, r) {
+      var k = rgb.join() + r; if (SPR[k]) return SPR[k];
+      var c = document.createElement("canvas"); c.width = c.height = 2 * r + 2; var g = c.getContext("2d");
+      var gr = g.createRadialGradient(r * 0.65, r * 0.6, r * 0.08, r + 1, r + 1, r);
+      var sh = function (f) { return "rgb(" + rgb.map(function (v) { return Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f)); }).join(",") + ")"; };
+      gr.addColorStop(0, sh(0.7)); gr.addColorStop(0.4, sh(0)); gr.addColorStop(1, sh(-0.6));
+      g.fillStyle = gr; g.beginPath(); g.arc(r + 1, r + 1, r, 0, 7); g.fill(); return (SPR[k] = c);
+    }
+    function dec(b64) { var s = atob(b64), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+    function draw(t) {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
+      if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+      var s = Math.max(cv.width / IW, cv.height / IH);
+      ctx.setTransform(s, 0, 0, s, (cv.width - IW * s) / 2, (cv.height - IH * s) / 2);
+      ctx.fillStyle = "#151716"; ctx.fillRect(0, 0, IW, IH);
+      var ph = (t % T) / T, u = ph < 0.5 ? 2 * ph : 2 - 2 * ph;   // ping-pong 0 -> 1 -> 0
+      ["590", "663"].forEach(function (key, row) {
+        var R = J.runs[key], N = R.n, nf = R.t_ps.length, L = R.box, x = u * (nf - 1), f0 = Math.floor(x), f1 = Math.min(f0 + 1, nf - 1), wgt = x - f0;
+        var sc = Math.min((IW - 140) / L[2], 440 / (L[0] + 0.45 * L[1])), x0 = (IW - L[2] * sc) / 2, y0 = 110 + row * 545, r = Math.max(4, Math.round(1.3 * sc)), nb = Math.ceil(N / 8);
+        var pts = [], FADE = 2.2;
+        for (var i = 0; i < N; i++) {
+          var p = [];
+          for (var k = 0; k < 3; k++) { var a = R.F[(f0 * N + i) * 3 + k] / 256, d = R.F[(f1 * N + i) * 3 + k] / 256 - a; d -= Math.round(d); p.push(((a + wgt * d) % 1 + 1) % 1 * L[k]); }
+          var cr = (R.C[(wgt < 0.5 ? f0 : f1) * nb + (i >> 3)] >> (i & 7)) & 1;
+          // periodic images within FADE Å of a face fade in/out, so nothing jumps across the box
+          var ox = [[p[0], 1]], oy = [[p[1], 1]], oz = [[p[2], 1]];
+          [[ox, 0], [oy, 1], [oz, 2]].forEach(function (q) { var v = p[q[1]], Lk = L[q[1]];
+            if (v > Lk - FADE) q[0].push([v - Lk, 1 - (Lk - v) / FADE]); if (v < FADE) q[0].push([v + Lk, 1 - v / FADE]); });
+          ox.forEach(function (a1) { oy.forEach(function (b1) { oz.forEach(function (c1) {
+            var al = a1[1] * b1[1] * c1[1]; if (al > 0.05) pts.push([x0 + c1[0] * sc, y0 + (a1[0] + 0.45 * b1[0]) * sc, b1[0], cr, al < 1 ? 0.6 * al : 1]);
+          }); }); });
+        }
+        pts.sort(function (a2, b2) { return b2[2] - a2[2]; });
+        pts.forEach(function (q) { ctx.globalAlpha = q[4]; ctx.drawImage(sprite(q[3] ? GOLD : BLUE, r), q[0] - r, q[1] - r); });
+        ctx.globalAlpha = 1; ctx.font = "500 60px 'IBM Plex Mono', Consolas, monospace"; ctx.fillStyle = "#F2F3F0";
+        ctx.fillText(key + " K · the crystal " + (key === "590" ? "grows" : "melts"), x0, y0 - 26);
+        ctx.fillStyle = "rgba(242,243,240,0.55)"; ctx.textAlign = "right";
+        ctx.fillText((R.t_ps[0] + u * (R.t_ps[nf - 1] - R.t_ps[0])).toFixed(0) + " ps", x0 + L[2] * sc, y0 - 26); ctx.textAlign = "left";
+      });
+    }
+    var raf = 0, last = 0, t = 0, drawn = false;
+    function frame(now) {
+      t += Math.min(0.1, (now - last) / 1000); last = now; t %= T;
+      draw(t); if (!drawn) { drawn = true; layer.classList.add("is-ready"); }
+      raf = requestAnimationFrame(frame);
+    }
+    function go() { last = performance.now(); raf = requestAnimationFrame(frame); }
+    return { layer: layer,
+      start: function () {
+        if (raf) return;
+        if (J) return go();
+        if (loading) return; loading = true;
+        fetch("assets/data/melt-thumb.json").then(function (r) { return r.json(); }).then(function (d) {
+          Object.keys(d.runs).forEach(function (k) { d.runs[k].F = dec(d.runs[k].f); d.runs[k].C = dec(d.runs[k].c); });
+          J = d; if (el.__meltWant !== false) go();
+        }).catch(function () { loading = false; });
+      },
       stop: function () { if (raf) cancelAnimationFrame(raf); raf = 0; } };
   }
 

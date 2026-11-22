@@ -280,7 +280,7 @@
       function caps() {
         var el = pick.value, s = B[el + '_s'], l = B[el + '_l'];
         var ps = function (b) { return (b.movie_frames * b.movie_dt_fs / 1000).toFixed(1); };
-        var tt = function (b) { return '<span style="color:#F2F3F0">' + Math.round(b.T_set) + ' K</span> (run mean ' + Math.round(b.T_run) + ' K) · '; };
+        var tt = function (b) { return '<span style="color:#F2F3F0">' + Math.round(b.T_set) + ' K</span> · '; };
         capS.innerHTML = '<b>' + s.label + '</b>' + tt(s) + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbours · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
         capL.innerHTML = '<b>' + l.label + '</b>' + tt(l) + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbours · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
         var dv = (l.vol_per_atom / s.vol_per_atom - 1) * 100;
