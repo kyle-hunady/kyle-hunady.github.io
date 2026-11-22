@@ -298,19 +298,22 @@
       var ph = (t % T) / T, u = ph < 0.5 ? 2 * ph : 2 - 2 * ph;   // ping-pong 0 -> 1 -> 0
       ["590", "663"].forEach(function (key, row) {
         var R = J.runs[key], N = R.n, nf = R.t_ps.length, L = R.box, x = u * (nf - 1), f0 = Math.floor(x), f1 = Math.min(f0 + 1, nf - 1), wgt = x - f0;
-        var sc = Math.min((IW - 140) / L[2], 440 / (L[0] + 0.45 * L[1])), x0 = (IW - L[2] * sc) / 2, y0 = 110 + row * 545, r = Math.max(4, Math.round(1.3 * sc)), nb = Math.ceil(N / 8);
-        var pts = [], FADE = 2.2;
+        // view down fcc [110], the close-packed direction, so the crystal reads as columns; on the square
+        // cross-section (x - y) mod L is the exact periodic projection coordinate (same as the static image)
+        var hv = L[0] / Math.SQRT2, sc = Math.min((IW - 140) / L[2], 400 / hv), x0 = (IW - L[2] * sc) / 2, y0 = 190 + row * 500,
+            r = Math.max(4, Math.round(1.05 * sc)), nb = Math.ceil(N / 8), pts = [], FADE = 2.2;
         for (var i = 0; i < N; i++) {
           var p = [];
           for (var k = 0; k < 3; k++) { var a = R.F[(f0 * N + i) * 3 + k] / 256, d = R.F[(f1 * N + i) * 3 + k] / 256 - a; d -= Math.round(d); p.push(((a + wgt * d) % 1 + 1) % 1 * L[k]); }
           var cr = (R.C[(wgt < 0.5 ? f0 : f1) * nb + (i >> 3)] >> (i & 7)) & 1;
+          var sv = ((p[0] - p[1]) % L[0] + L[0]) % L[0], dep = ((p[0] + p[1]) % L[0] + L[0]) % L[0];
           // periodic images within FADE Å of a face fade in/out, so nothing jumps across the box
-          var ox = [[p[0], 1]], oy = [[p[1], 1]], oz = [[p[2], 1]];
-          [[ox, 0], [oy, 1], [oz, 2]].forEach(function (q) { var v = p[q[1]], Lk = L[q[1]];
-            if (v > Lk - FADE) q[0].push([v - Lk, 1 - (Lk - v) / FADE]); if (v < FADE) q[0].push([v + Lk, 1 - v / FADE]); });
-          ox.forEach(function (a1) { oy.forEach(function (b1) { oz.forEach(function (c1) {
-            var al = a1[1] * b1[1] * c1[1]; if (al > 0.05) pts.push([x0 + c1[0] * sc, y0 + (a1[0] + 0.45 * b1[0]) * sc, b1[0], cr, al < 1 ? 0.6 * al : 1]);
-          }); }); });
+          var os = [[sv, 1]], oz = [[p[2], 1]];
+          if (sv > L[0] - FADE) os.push([sv - L[0], 1 - (L[0] - sv) / FADE]); if (sv < FADE) os.push([sv + L[0], 1 - sv / FADE]);
+          if (p[2] > L[2] - FADE) oz.push([p[2] - L[2], 1 - (L[2] - p[2]) / FADE]); if (p[2] < FADE) oz.push([p[2] + L[2], 1 - p[2] / FADE]);
+          os.forEach(function (a1) { oz.forEach(function (c1) {
+            var al = a1[1] * c1[1]; if (al > 0.05) pts.push([x0 + c1[0] * sc, y0 + a1[0] / Math.SQRT2 * sc, dep, cr, al < 1 ? 0.6 * al : 1]);
+          }); });
         }
         pts.sort(function (a2, b2) { return b2[2] - a2[2]; });
         pts.forEach(function (q) { ctx.globalAlpha = q[4]; ctx.drawImage(sprite(q[3] ? GOLD : BLUE, r), q[0] - r, q[1] - r); });

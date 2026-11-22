@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Where the entropy of melting comes from · Kyle Hunady</title>
+<title>Faster entropy estimates with a downloaded force field · Kyle Hunady</title>
 <meta name="description" content="Caltech research on the entropy of melting: machine-learned MACE molecular dynamics of Pb, Bi, Sn, Zn, Ge and Si, DFT electronic entropy, and comparison with neutron-scattering measurements.">
 <link rel="canonical" href="https://kyle-hunady.github.io/melting.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/melting.html">
-<meta property="og:title" content="Where the entropy of melting comes from · Kyle Hunady">
+<meta property="og:title" content="Faster entropy estimates with a downloaded force field · Kyle Hunady">
 <meta property="og:description" content="Caltech research on the entropy of melting: machine-learned MACE molecular dynamics of Pb, Bi, Sn, Zn, Ge and Si, DFT electronic entropy, and comparison with neutron-scattering measurements.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -32,7 +32,7 @@
   .fig canvas.m-slab { width: 100%; height: 12rem; background: var(--surface-2); border-radius: 0.5rem; display: block; margin-bottom: 0.5rem; }
   @media (max-width: 720px) { .melt3d { grid-template-columns: repeat(var(--nm, 1), minmax(0, 1fr)); } }
 </style>
-<!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Research", "item": "https://kyle-hunady.github.io/index.html#research"}, {"@type": "ListItem", "position": 3, "name": "Entropy of melting", "item": "https://kyle-hunady.github.io/melting.html"}]}</script><!-- /crumbs-ld --></head>
+<!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Research", "item": "https://kyle-hunady.github.io/index.html#research"}, {"@type": "ListItem", "position": 3, "name": "Faster entropy estimates", "item": "https://kyle-hunady.github.io/melting.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -65,17 +65,17 @@
 
 <header class="page__head">
   <div class="container header__container">
-    <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#research">Research</a></li><li aria-current="page">Entropy of melting</li></ol></div><!-- /crumbs -->
-    <p class="header__eyebrow">Machine-learned potentials · Caltech · in progress</p>
-    <h1>Where the entropy of melting comes from</h1>
-    <p class="header__line">Can a free, pretrained machine-learned potential reproduce a melting study that needed custom-fitted models? I test it on lead, then on five more elements.</p>
+    <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#research">Research</a></li><li aria-current="page">Faster entropy estimates</li></ol></div><!-- /crumbs -->
+    <p class="header__eyebrow">Thermodynamics · machine-learned potentials · Caltech · in progress</p>
+    <h1>Faster entropy estimates with a downloaded force field</h1>
+    <p class="header__line">Pretrained machine-learned potentials, built from databases that already exist, can estimate thermodynamic properties without fitting a new model for every material. I test how close one gets to the entropy of melting, with lead as the worked example.</p>
   </div>
 </header>
 
 <main id="main" class="page">
   <div class="container">
 
-    <p class="lede">Machine-learned interatomic potentials let a computer follow thousands of atoms with close to quantum-mechanical accuracy. Until recently every study fitted its own: hundreds of quantum-mechanical calculations per element, an active-learning loop, and weeks of work before the first useful simulation. Pretrained “foundation” potentials change that. Models such as MACE-OMAT-0 are trained once on over a hundred million calculations across the periodic table, and anyone can download them and use them as they are. If they are accurate enough, every new material skips the fitting step.</p>
+    <p class="lede">Machine-learned interatomic potentials let a computer follow thousands of atoms with close to quantum-mechanical accuracy. Until recently every study fitted its own: hundreds of quantum-mechanical calculations per element, an active-learning loop, and weeks of work before the first useful simulation. Pretrained “foundation” potentials change that. Models such as MACE-OMAT-0 are trained once on over a hundred million calculations across the periodic table, and anyone can download them and use them as they are. If they are accurate enough, every new material skips the fitting step. The goal is not a perfect number but a good estimate, fast, from tools that already exist, so the expensive calculations go only where the estimate is not good enough.</p>
     <p>To find out how far that goes, I am repeating a melting study from our own group with a downloaded model. a 2024 Caltech PhD thesis by Camille Bernal-Choban, a former member of our group (<a href="https://doi.org/10.1038/s43246-024-00695-x" target="_blank" rel="noreferrer">Bernal-Choban et al. 2024</a>) measured how much entropy several elements gain when they melt, split it into its sources, and backed the split with simulations that used potentials fitted to each element. Because the reference numbers and the people who made them are in the same lab, every difference can be traced to its cause. Lead is the worked example: MACE melts it within 2 % of the measured temperature, but its entropy of fusion comes out about 25 % high, and its electronic part is about eight times smaller than hers. On bismuth, zinc, germanium and silicon the model melts 14–34 % too early, yet the entropy of fusion lands within 10 % of the measured value. Results are updated as they come in; preliminary numbers are labelled.</p>
 
     <div class="melt-eq" role="figure" aria-label="Gibbs free energy of fusion">
