@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A literature workflow with Claude Code · Kyle Hunady</title>
-<meta name="description" content="How I use Claude Code to find papers and answer an engineering question from them. The example: GRCop-42 or GRCop-84 for a 3-D printed rocket combustion-chamber liner.">
+<title>Getting up to speed on a question with Claude Code · Kyle Hunady</title>
+<meta name="description" content="How quickly I can find out where a question stands in the current literature with Claude Code and the tools I built around it. The example: GRCop-42 or GRCop-84 for a 3-D printed rocket combustion-chamber liner.">
 <link rel="canonical" href="https://kyle-hunady.github.io/automation.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/automation.html">
-<meta property="og:title" content="A literature workflow with Claude Code">
-<meta property="og:description" content="How I use Claude Code to find papers and answer a question from them, with two NASA rocket-engine copper alloys as the example.">
+<meta property="og:title" content="Getting up to speed on a question with Claude Code">
+<meta property="og:description" content="How quickly I can find out where a question stands in the literature with Claude Code, with two NASA rocket-engine copper alloys as the example.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/lit-grcop-conductivity.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
@@ -51,8 +51,8 @@
   <div class="container header__container">
     <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Literature workflow</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Research tools</p>
-    <h1>A literature workflow with Claude Code</h1>
-    <p class="header__line">What I typed to Claude Code for one engineering question, and what came back each time.</p>
+    <h1>Getting up to speed on a question with Claude Code</h1>
+    <p class="header__line">When I start on a new question, I want to know quickly what the literature already says about it. Here is one engineering question, the two commands I typed, and what came back each time.</p>
   </div>
 </header>
 
@@ -131,6 +131,14 @@
       <p class="note">The new micrograph: both alloys, as printed and after 900 °C for 5 h (Seltzman &amp; Wukitch 2023, Fig. 8, CC BY-NC-ND 4.0). The verdict, GRCop-42, stands. The three papers still missing are process studies, and none is likely to change it.</p>
       <div class="rframe"><div class="rframe__bar"><span>The updated report (version 2)</span><a href="lit/grcop.html" target="_blank" rel="noreferrer">Open full page &#8599;</a></div><iframe src="lit/grcop.html" title="The updated report (version 2)" loading="lazy"></iframe></div>
     </div>
+
+    <h2>What sits behind the two commands</h2>
+    <p>The commands are short because the work behind them lives in tools I built up across projects. Claude Code calls them; it doesn't rebuild them each time.</p>
+    <p><b>Finding and getting papers.</b> It asks the free indexes first (OpenAlex, Crossref, Unpaywall, arXiv, OSTI) and then the publishers' text-mining APIs that Caltech's subscriptions cover, such as Elsevier, Wiley and Springer. When there is no legal way to download a paper, it hands me the DOI instead. That is where the second command comes from.</p>
+    <p><b>Reading them.</b> Text and tables are pulled out of the PDFs on my laptop. Data that only exists as a plot gets digitized from the figure, read straight from the drawing when the PDF has one and from the image when it doesn't. I tested that step on made-up figures with known answers before trusting it. This is how the report can put two papers' measurements on the same axes.</p>
+    <p><b>Writing the report.</b> Every report is built from one shared kit, so they all read the same way: the answer first, then one section per claim, with figures and a short note on how each number was found. A script checks the page and a second Claude reviews it before I see it. Each paper also gets a short summary saved with the project, so the next question on the same topic starts from those instead of the PDFs.</p>
+    <p><b>Keeping it cheap.</b> My Claude usage is the real cost, so the setup tries hard not to waste it. It looks in local databases before going to the web, sends parallel reading to smaller helper agents, and ends long work with a short hand-off note so a fresh session can pick up without rereading everything.</p>
+    <p>All of these tools sit in one shared folder that every project calls. A fix made while answering this question is already there for the next one.</p>
 
     <div class="next-links"><a class="btn" href="index.html#projects">All projects</a></div>
   </div>

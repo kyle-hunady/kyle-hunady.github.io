@@ -1122,3 +1122,17 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .edu__item span { display: flex; flex-direction: column; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.03em; line-height: 1.45; }
 .edu__item b { color: var(--white); font-weight: 500; font-size: 0.78rem; }
 .edu__item:hover b { color: var(--accent); }
+
+/* project-card motion (assets/js/cards.js): a layer over the static thumbnail, which stays as the fallback */
+.project__thumb[data-motion] { position: relative; }
+.thumb-motion { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
+.thumb-motion.is-ready { opacity: 1; }
+.lit-strip { position: absolute; top: 0; left: 0; height: 100%; background-repeat: repeat-x; background-size: auto 100%;
+  animation: lit-scroll 96s linear infinite paused; will-change: transform; }
+.thumb-motion.is-on .lit-strip { animation-play-state: running; }
+@keyframes lit-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .thumb-motion { display: none; } }
+.project__thumb.is-drift img { animation: thumb-drift 16s ease-in-out infinite alternate paused; transform-origin: var(--ox, 50%) var(--oy, 50%); }
+.project__thumb.is-drift.is-on img { animation-play-state: running; }
+@keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
+@media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
