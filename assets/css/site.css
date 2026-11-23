@@ -1295,3 +1295,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .pg-instrument .fig--light .tag-model { color: var(--paper-muted); border-color: #b9b9b2; }
 .pg-instrument .fig--light details.details { border-color: #d6d3ca; }
 .pg-instrument .fig--light details.details summary { color: var(--paper-ink); }
+
+/* ---- subway thumb 2026-11 ---- */
+/* data-motion="video" (cards.js clip): the looping clip fills the thumb like the poster <img> under it */
+.thumb-motion video { width: 100%; height: 100%; object-fit: cover; display: block; }
