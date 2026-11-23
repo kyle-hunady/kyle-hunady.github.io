@@ -362,7 +362,8 @@
   /* ------------------------------------------------------- melting slabs (melting.html card) */
   // Both 1,024-atom MACE lead slabs from melt-sele (assets/data/melt-thumb.json, written by website_export.py):
   // 590 K, where the crystal (gold) grows, and 663 K, where it melts into the liquid (blue). 40 saved frames per run,
-  // interpolated; played forward then backward so the loop has no jump. Atoms crossing a periodic face fade across.
+  // interpolated; played forward, then rewound 4x faster (a rewind mark beside the clock) so the loop has no jump.
+  // Atoms crossing a periodic face fade across.
   function meltSlabs(el) {
     var cv = document.createElement("canvas"), ctx = cv.getContext("2d"); if (!ctx) return null;
     var layer = layerOn(el, cv), J = null, loading = false, IW = 1800, IH = 1124, T = 14;
@@ -382,12 +383,12 @@
       var s = Math.max(cv.width / IW, cv.height / IH);
       ctx.setTransform(s, 0, 0, s, (cv.width - IW * s) / 2, (cv.height - IH * s) / 2);
       ctx.fillStyle = "#151716"; ctx.fillRect(0, 0, IW, IH);
-      var ph = (t % T) / T, u = ph < 0.5 ? 2 * ph : 2 - 2 * ph;   // ping-pong 0 -> 1 -> 0
+      var FWD = 0.8, ph = (t % T) / T, rev = ph >= FWD, u = rev ? 1 - (ph - FWD) / (1 - FWD) : ph / FWD;   // 0 -> 1, rewind 4x faster
       ["590", "663"].forEach(function (key, row) {
         var R = J.runs[key], N = R.n, nf = R.t_ps.length, L = R.box, x = u * (nf - 1), f0 = Math.floor(x), f1 = Math.min(f0 + 1, nf - 1), wgt = x - f0;
         // view down fcc [110], the close-packed direction, so the crystal reads as columns; on the square
         // cross-section (x - y) mod L is the exact periodic projection coordinate (same as the static image)
-        var hv = L[0] / Math.SQRT2, sc = Math.min((IW - 140) / L[2], 400 / hv), x0 = (IW - L[2] * sc) / 2, y0 = 190 + row * 500,
+        var hv = L[0] / Math.SQRT2, sc = Math.min((IW - 140) / L[2], 400 / hv), x0 = (IW - L[2] * sc) / 2, y0 = 230 + row * 500,
             r = Math.max(4, Math.round(1.05 * sc)), nb = Math.ceil(N / 8), pts = [], FADE = 2.2;
         for (var i = 0; i < N; i++) {
           var p = [];
@@ -405,9 +406,16 @@
         pts.sort(function (a2, b2) { return b2[2] - a2[2]; });
         pts.forEach(function (q) { ctx.globalAlpha = q[4]; ctx.drawImage(sprite(q[3] ? GOLD : BLUE, r), q[0] - r, q[1] - r); });
         ctx.globalAlpha = 1; ctx.font = "500 60px 'IBM Plex Mono', Consolas, monospace"; ctx.fillStyle = "#F2F3F0";
-        ctx.fillText(key + " K · the crystal " + (key === "590" ? "grows" : "melts"), x0, y0 - 26);
+        // caption sits above the faded periodic images (FADE/sqrt2 * sc + r above y0), not on them
+        var cy = y0 - Math.round(FADE / Math.SQRT2 * sc) - r - 22, xr = x0 + L[2] * sc;
+        ctx.fillText(key + " K · the crystal " + (key === "590" ? "grows" : "melts"), x0, cy);
         ctx.fillStyle = "rgba(242,243,240,0.55)"; ctx.textAlign = "right";
-        ctx.fillText((R.t_ps[0] + u * (R.t_ps[nf - 1] - R.t_ps[0])).toFixed(0) + " ps", x0 + L[2] * sc, y0 - 26); ctx.textAlign = "left";
+        var ps = (R.t_ps[0] + u * (R.t_ps[nf - 1] - R.t_ps[0])).toFixed(0) + " ps";
+        ctx.fillText(ps, xr, cy); ctx.textAlign = "left";
+        if (rev) {   // rewind mark: two small left-pointing triangles left of the clock
+          var gx = xr - ctx.measureText(ps).width - 22, gh = 17;
+          [0, 1].forEach(function (j) { var bx = gx - j * 26; ctx.beginPath(); ctx.moveTo(bx, cy - 21 - gh); ctx.lineTo(bx, cy - 21 + gh); ctx.lineTo(bx - 26, cy - 21); ctx.closePath(); ctx.fill(); });
+        }
       });
     }
     var raf = 0, last = 0, t = 0, drawn = false;
