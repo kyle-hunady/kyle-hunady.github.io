@@ -2,8 +2,8 @@
  * data-melt="<name>". Teaching models are tagged "model" on the page; the MD figures replay
  * real MACE-OMAT-0 trajectories exported by melt-sele/scripts/website_export.py.
  *
- * TABLE holds every number the comparison figures draw, each with its source. Update it (and
- * the page text) when a new result is graded.
+ * The comparison numbers load from assets/data/melt-compare.json (see buildTable). Re-run
+ * melt-sele/scripts/website_compare_export.py and update the page text when a new result is graded.
  */
 (function () {
   'use strict';
@@ -143,25 +143,23 @@
   }
   var VIEWHINT = 'Drag to rotate · right-drag to pan · Ctrl+scroll to zoom · double-click to reset.';
 
-  /* Every comparison number on the page. k_B per atom; K. src = where it comes from. */
-  var TABLE = [
-    { el: 'Pb', kind: 'metal', Tx: 600.6, Tm: 611, Tlo: 608, Thi: 614, Tmtp: 663, fx: 0.95, fh: 1.03, fm: 1.20, sfm: 0.05,
-      vib: -0.08, el_h: 0.07, conf: 1.03, el_m: 0.008, sel_m: 0.0005,
-      src: 'T_m: coexistence, calcs 013/032 (611 ± 3 K). ΔS_fus: calc 028, rerun 2026-11-22 with the 611 K frames. ΔS_el: VASP on MACE frames at 611 K, calc 032.' },
-    { el: 'Zn', kind: 'metal', Tx: 692.7, Tm: 460, Tlo: 440, Thi: 480, Tmtp: null, fx: 1.27, fh: null, fm: 1.15, sfm: 0.06,
-      src: 'T_m: coexistence, calc 026 (440–480 K). Not in the thesis. The model crystal has a stretched c/a.' },
-    { el: 'Sn', kind: 'metal', Tx: 505, Tm: null, Tmtp: null, fx: 1.67, fh: null, fm: null,
-      src: 'The model loses the β-Sn crystal 180–255 K below the melting point (calc 014), so it has no melting point to compare.' },
-    { el: 'Bi', kind: 'semimetal', Tx: 544.6, Tm: 445, Tlo: 440, Thi: 453, Tmtp: null, fx: 2.50, fh: null, fm: 2.47, sfm: 0.34,
-      vib: 0.57, el_m: 0.084, prelim_el: true,
-      src: 'T_m: coexistence, calcs 025/030. ΔS_fus: calc 028 rerun at T_m 445 K (2026-11-22). ΔS_el: first estimate with spin–orbit coupling, liquid at the measured density (calcs 004–006).' },
-    { el: 'Ge', kind: 'semiconductor', Tx: 1211, Tm: 825, Tlo: 821, Thi: 829, Tmtp: 978, fx: 3.67, fh: 3.78, fm: 3.57, sfm: 0.07,
-      vib: 1.48, el_h: 0.16, conf: 2.14, el_m: 0.1016, sel_m: 0.0007,
-      src: 'T_m: coexistence, calc 015 + ladder (825 ± 4 K). ΔS_fus: calc 028 rerun at 825 K (2026-11-22). ΔS_el: VASP on MACE frames at 825 K, calc 022 T825 (0.1016 ± 0.0007).' },
-    { el: 'Si', kind: 'semiconductor', Tx: 1687, Tm: 1450, Tlo: 1445, Thi: 1455, Tmtp: 1452, fx: 3.58, fh: 3.51, fm: 3.44, sfm: 0.05,
-      vib: 1.09, el_h: 0.19, conf: 2.24, el_m: 0.1587, sel_m: 0.0026,
-      src: 'T_m: coexistence, calc 015 (1450 ± 5 K). ΔS_fus: calc 028 rerun (2026-11-22). ΔS_el: VASP on MACE frames at 1446 K, calc 022 TSI (0.1587 ± 0.0026).' }
-  ];
+  /* Every comparison number on the page comes from assets/data/melt-compare.json, written by
+   * melt-sele/scripts/website_compare_export.py from the thesis tables (Bernal-Choban 2024, Tables 4.1 and 4.2)
+   * and the melt-sele result files; each MACE value carries its source path there. Nothing is typed here.
+   * TABLE is the flat view the figures draw from; it is filled before any figure runs (init). */
+  var CMP_URL = 'assets/data/melt-compare.json?v=20261122a', CMP = null, TABLE = [];
+  var ORDER = ['Pb', 'Zn', 'Sn', 'Bi', 'Ge', 'Si'];
+  function buildTable(d) {
+    CMP = d;
+    TABLE = d.rows.concat(d.extra || []).map(function (r) {
+      var tm = r.Tm.mace, fm = r.fus.mace, em = r.el_ && r.el_.mace;
+      return { el: r.el, kind: r.kind, Tx: r.Tm.exp, Tmtp: r.Tm.mtp,
+        Tm: tm ? Math.round(tm.v) : null, Tlo: tm ? tm.lo : null, Thi: tm ? tm.hi : null,
+        fx: r.fus.exp, fh: r.fus.mtp, fm: fm ? fm.v : null, sfm: fm ? fm.se : null,
+        vib: r.vib ? r.vib.mtp : null, el_h: r.el_ ? r.el_.mtp : null, conf: r.conf ? r.conf.mtp : null,
+        el_m: em ? em.v : null, sel_m: em ? em.se : null, prelim_el: !!(em && em.prelim) };
+    }).sort(function (x, y) { return ORDER.indexOf(x.el) - ORDER.indexOf(y.el); });
+  }
 
 
   /* The cutoff figure: MACE-OMAT-0's radial cutoff and three ideal crystals at measured room-temperature lattices.
@@ -275,16 +273,16 @@
           p[0].gr_r.forEach(function (r, i) { var X = a.X(r), Y = a.Y(p[0].gr[i]); if (i) c.lineTo(X, Y); else c.moveTo(X, Y); }); c.stroke();
         });
         c.lineWidth = 1; c.setLineDash([3, 3]); c.strokeStyle = RULE; c.beginPath(); c.moveTo(a.X(s.rc), a.T); c.lineTo(a.X(s.rc), g.h - a.B); c.stroke(); c.setLineDash([]);
-        c.fillStyle = INK; c.textAlign = 'left'; c.fillText('first-neighbour shell', a.X(s.rc) + 4, a.T + 10);
+        c.fillStyle = INK; c.textAlign = 'left'; c.fillText('first-neighbor shell', a.X(s.rc) + 4, a.T + 10);
       }
       function caps() {
         var el = pick.value, s = B[el + '_s'], l = B[el + '_l'];
         var ps = function (b) { return (b.movie_frames * b.movie_dt_fs / 1000).toFixed(1); };
         var tt = function (b) { return '<span style="color:#F2F3F0">' + Math.round(b.T_set) + ' K</span> · '; };
-        capS.innerHTML = '<b>' + s.label + '</b>' + tt(s) + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbours · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
-        capL.innerHTML = '<b>' + l.label + '</b>' + tt(l) + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbours · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
+        capS.innerHTML = '<b>' + s.label + '</b>' + tt(s) + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbors · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
+        capL.innerHTML = '<b>' + l.label + '</b>' + tt(l) + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbors · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
         var dv = (l.vol_per_atom / s.vol_per_atom - 1) * 100;
-        out.textContent = el + ' on melting: neighbours ' + s.cn.toFixed(1) + ' → ' + l.cn.toFixed(1) + '  ·  volume ' + (dv >= 0 ? '+' : '') + dv.toFixed(1) + ' %' +
+        out.textContent = el + ' on melting: neighbors ' + s.cn.toFixed(1) + ' → ' + l.cn.toFixed(1) + '  ·  volume ' + (dv >= 0 ? '+' : '') + dv.toFixed(1) + ' %' +
           (dv < 0 ? '  ·  the liquid is denser than the crystal' : '') + '  ·  ' + VIEWHINT;
       }
       function draw() { vS.draw(); vL.draw(); }
@@ -358,7 +356,7 @@
     function drawAll() {
       views.forEach(function (v) { v.draw(); });
       out.textContent = two.checked
-        ? 'Two layers: each neighbour has already gathered its own 6 Å surroundings, so information reaches 12 Å, a few hundred atoms. ' + VIEWHINT
+        ? 'Two layers: each neighbor has already gathered its own 6 Å surroundings, so information reaches 12 Å, a few hundred atoms. ' + VIEWHINT
         : 'One layer: the white atom’s energy depends only on the bright atoms inside the 6 Å sphere. ' + VIEWHINT;
     }
     var last = 0;
@@ -492,7 +490,7 @@
     for (var x = Math.ceil(x0 / step) * step; x <= x1; x += step) xt.push(x);
     var a = axes(g, { x0: x0, x1: x1, y0: -vm, y1: vm, xt: xt, yt: yt.filter(function (v) { return Math.abs(v) <= vm; }), xl: 'temperature (K)', yl: 'interface velocity (Å/ps)', L: 48, T: 22 });
     c.strokeStyle = RULE; c.beginPath(); c.moveTo(a.L, a.Y(0)); c.lineTo(g.w - a.R, a.Y(0)); c.stroke();
-    if (r.Tlo) { c.fillStyle = 'rgba(169,155,201,0.22)'; c.fillRect(a.X(r.Tlo), a.T, Math.max(2, a.X(r.Thi) - a.X(r.Tlo)), g.h - a.B - a.T); }
+    if (r.Tlo) { c.fillStyle = 'rgba(242,243,240,0.16)'; c.fillRect(a.X(r.Tlo), a.T, Math.max(2, a.X(r.Thi) - a.X(r.Tlo)), g.h - a.B - a.T); }
     c.setLineDash([4, 3]); c.strokeStyle = 'rgba(242,243,240,0.6)'; c.beginPath(); c.moveTo(a.X(r.Tx), a.T); c.lineTo(a.X(r.Tx), g.h - a.B); c.stroke();
     if (big && r.Tmtp) { c.setLineDash([1.5, 3]); c.strokeStyle = LILAC; c.beginPath(); c.moveTo(a.X(r.Tmtp), a.T); c.lineTo(a.X(r.Tmtp), g.h - a.B); c.stroke(); }
     c.setLineDash([]);
@@ -581,53 +579,108 @@
     });
   }
 
-  /* ---------------------------------------------- model T_m and dS_fus vs measured --- */
-  function compare(root) {
-    var cv = $(root, 'canvas.m-cmp'), what = $(root, '.m-what'), out = $(root, '.fig-out'), leg = $(root, '.legend');
-    function dot(c, x, y, col, r) { c.fillStyle = col; c.beginPath(); c.arc(x, y, r || 4.5, 0, 6.2832); c.fill(); }
-    function draw() {
-      var g = ctx2d(cv), c = g.c, m = what.value, rows = TABLE, n = rows.length;
-      if (m === 'tm') {
-        var a = axes(g, { x0: 0.5, x1: 1.15, y0: 0, y1: n, xt: [0.6, 0.7, 0.8, 0.9, 1.0, 1.1], xl: 'melting point ÷ measured', L: 40 });
-        c.setLineDash([3, 3]); c.strokeStyle = SAGE; c.beginPath(); c.moveTo(a.X(1), a.T); c.lineTo(a.X(1), g.h - a.B); c.stroke(); c.setLineDash([]);
+  /* ------------------------------------------------ the answer: MACE vs the thesis ---
+   * Three panels on one element axis. Experiment = dashed line / open ring, Bernal-Choban's fitted MTP = lilac square,
+   * MACE-OMAT-0 = filled white circle with its uncertainty. T_m and dS_fus are drawn as % off experiment so
+   * agreement reads as distance from the dashed line; dS_el has no measurement, so it is drawn in k_B/atom.
+   * Hover (or tap) a row for its numbers. The table under the panels prints every value, missing ones included. */
+  var C_EXP = 'rgba(242,243,240,0.6)', C_HER = LILAC, C_US = WHITE;
+  var QDEF = {
+    tm: { title: 'Melting point', unit: '% off experiment', x0: -40, x1: 20, xt: [-40, -20, 0, 20], pct: true,
+          get: function (r) { var m = r.Tm.mace; return { exp: r.Tm.exp, her: r.Tm.mtp, us: m ? m.v : null, lo: m ? m.lo : null, hi: m ? m.hi : null }; },
+          fmt: function (v) { return Math.round(v) + ' K'; } },
+    fus: { title: 'Entropy of fusion', unit: '% off experiment', x0: -20, x1: 40, xt: [-20, 0, 20, 40], pct: true,
+          get: function (r) { var m = r.fus.mace; return { exp: r.fus.exp, her: r.fus.mtp, us: m ? m.v : null, lo: m ? m.v - m.se : null, hi: m ? m.v + m.se : null }; },
+          fmt: function (v) { return v.toFixed(2) + ' kB/atom'; } },
+    el: { title: 'Electronic part', unit: 'kB / atom (not measurable)', x0: 0, x1: 0.22, xt: [0, 0.1, 0.2], pct: false,
+          get: function (r) { var m = r.el_.mace; return { exp: null, her: r.el_.mtp, us: m ? m.v : null, lo: m && m.se ? m.v - m.se : null, hi: m && m.se ? m.v + m.se : null, prelim: m && m.prelim }; },
+          fmt: function (v) { return v.toFixed(3) + ' kB/atom'; } }
+  };
+  function pctOff(v, e) { return (v - e) / e * 100; }
+  function sgn(p) { return (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(0) + ' %'; }
+  function answer(root) {
+    var rows = CMP.rows, out = $(root, '.fig-out'), n = rows.length;
+    var idle = function () { return 'Hover or tap a row for its numbers.'; };
+    Array.prototype.forEach.call(root.querySelectorAll('canvas.m-ans'), function (cv) {
+      var q = QDEF[cv.dataset.q], A = null;
+      function X(v, e) { return q.pct ? pctOff(v, e) : v; }
+      function draw() {
+        var g = ctx2d(cv), c = g.c;
+        A = axes(g, { x0: q.x0, x1: q.x1, y0: 0, y1: n, xt: q.xt, xl: q.unit, L: 30, T: 22, B: 30, R: 12 });
+        c.fillStyle = WHITE; c.textAlign = 'left'; c.font = '500 11px "IBM Plex Mono", monospace'; c.fillText(q.title, A.L, 13);
+        c.font = '10px "IBM Plex Mono", monospace';
+        if (q.pct) { c.setLineDash([4, 3]); c.strokeStyle = C_EXP; c.beginPath(); c.moveTo(A.X(0), A.T); c.lineTo(A.X(0), g.h - A.B); c.stroke(); c.setLineDash([]); }
         rows.forEach(function (r, i) {
-          var y = a.Y(n - i - 0.5); c.fillStyle = WHITE; c.textAlign = 'right'; c.fillText(r.el, a.L - 8, y + 3);
-          if (r.Tmtp) dot(c, a.X(r.Tmtp / r.Tx), y, LILAC, 4);
-          if (r.Tm) { c.strokeStyle = GOLD; c.beginPath(); c.moveTo(a.X(r.Tlo / r.Tx), y); c.lineTo(a.X(r.Thi / r.Tx), y); c.stroke(); dot(c, a.X(r.Tm / r.Tx), y, GOLD); c.fillStyle = INK; c.textAlign = 'left'; c.fillText(r.Tm + ' K vs ' + r.Tx, a.X(Math.max(r.Thi, r.Tmtp || 0) / r.Tx) + 8, y + 3); }
-          else { c.fillStyle = ROSE; c.textAlign = 'left'; c.fillText('crystal lost before melting', a.X(0.52), y + 3); }
+          var d = q.get(r), y = A.Y(n - i - 0.5), clip = function (x) { return Math.max(A.L + 3, Math.min(g.w - A.R - 3, x)); };
+          if (i % 2 === 0) { c.fillStyle = 'rgba(242,243,240,0.035)'; c.fillRect(A.L, A.Y(n - i), g.w - A.L - A.R, A.Y(n - i - 1) - A.Y(n - i)); }
+          c.fillStyle = WHITE; c.textAlign = 'right'; c.fillText(r.el, A.L - 6, y + 3);
+          if (d.exp != null && q.pct) { c.strokeStyle = C_EXP; c.lineWidth = 1.3; c.beginPath(); c.arc(A.X(0), y, 4, 0, 6.2832); c.stroke(); c.lineWidth = 1; }
+          if (d.her != null) {
+            var xh = clip(A.X(X(d.her, d.exp))), rh = xh > g.w - 60;
+            c.fillStyle = C_HER; c.fillRect(xh - 4, y - 10, 8, 8);
+            if (q.pct) { c.textAlign = rh ? 'right' : 'left'; c.fillText(sgn(X(d.her, d.exp)), xh + (rh ? -8 : 8), y - 3); }
+          }
+          if (d.us != null) {
+            var xu = clip(A.X(X(d.us, d.exp))), ru = xu > g.w - 70;
+            if (d.lo != null) { c.strokeStyle = C_US; c.beginPath(); c.moveTo(clip(A.X(X(d.lo, d.exp))), y + 6); c.lineTo(clip(A.X(X(d.hi, d.exp))), y + 6); c.stroke(); }
+            c.beginPath(); c.arc(xu, y + 6, 4.2, 0, 6.2832);
+            if (d.prelim) { c.strokeStyle = C_US; c.lineWidth = 1.4; c.stroke(); c.lineWidth = 1; } else { c.fillStyle = C_US; c.fill(); }
+            var ex = d.lo != null ? clip(A.X(X(ru ? d.lo : d.hi, d.exp))) : xu;     // label clears the error bar
+            c.fillStyle = C_US; c.textAlign = ru ? 'right' : 'left';
+            c.fillText(q.pct ? sgn(X(d.us, d.exp)) : (d.prelim ? 'preliminary' : ''), ru ? Math.min(xu, ex) - 9 : Math.max(xu, ex) + 9, y + 9);
+          } else {
+            c.fillStyle = '#C98A7F'; c.textAlign = q.pct ? 'right' : 'left';
+            c.fillText(r.el === 'Sn' ? 'no crystal' : 'not yet', q.pct ? A.X(0) - 10 : A.L + 8, y + 7);
+          }
         });
-        leg.innerHTML = '<span><i style="background:#D9B26F"></i>MACE-OMAT-0 (this project)</span><span><i style="background:#A99BC9"></i>MTP (thesis)</span><span><i style="background:#8FA095"></i>measured = 1</span>';
-        out.textContent = 'The model melts Pb within 2 % of experiment, but Bi, Ge, Zn and Si 14–34 % low.';
-      } else if (m === 'fus') {
-        var b = axes(g, { x0: 0, x1: 4.2, y0: 0, y1: n, xt: [0, 1, 2, 3, 4], xl: 'ΔS_fus (kB / atom)', L: 40 });
-        rows.forEach(function (r, i) {
-          var y = b.Y(n - i - 0.5); c.fillStyle = WHITE; c.textAlign = 'right'; c.fillText(r.el, b.L - 8, y + 3);
-          dot(c, b.X(r.fx), y - 5, SAGE);
-          if (r.fh != null) dot(c, b.X(r.fh), y, LILAC, 4);
-          if (r.fm != null) { c.strokeStyle = GOLD; c.beginPath(); c.moveTo(b.X(r.fm - r.sfm), y + 5); c.lineTo(b.X(r.fm + r.sfm), y + 5); c.stroke(); dot(c, b.X(r.fm), y + 5, GOLD); }
-          else { c.fillStyle = ROSE; c.textAlign = 'left'; c.fillText('no model melting point', b.X(r.fx) + 10, y + 3); }
-        });
-        leg.innerHTML = '<span><i style="background:#8FA095"></i>measured</span><span><i style="background:#A99BC9"></i>computed in the thesis (MTP)</span><span><i style="background:#D9B26F"></i>MACE-OMAT-0, at its own T_m</span>';
-        out.textContent = 'Each value is the latent heat divided by the melting point of the same model.';
-      } else {
-        var e = axes(g, { x0: 0, x1: 0.22, y0: 0, y1: n, xt: [0, 0.05, 0.1, 0.15, 0.2], xl: 'ΔS_el, electronic entropy of fusion (kB / atom)', L: 40 });
-        rows.forEach(function (r, i) {
-          var y = e.Y(n - i - 0.5); c.fillStyle = WHITE; c.textAlign = 'right'; c.fillText(r.el, e.L - 8, y + 3);
-          if (r.el_h != null) dot(c, e.X(r.el_h), y - 4, LILAC, 4);
-          if (r.el_m != null) { dot(c, e.X(r.el_m), y + 4, r.prelim_el ? 'rgba(217,178,111,0.55)' : GOLD); }
-          if (r.el_h == null && r.el_m == null) { c.fillStyle = INK; c.textAlign = 'left'; c.fillText('in progress', e.X(0.005), y + 3); }
-        });
-        leg.innerHTML = '<span><i style="background:#A99BC9"></i>thesis (DFT)</span><span><i style="background:#D9B26F"></i>this project (DFT on MACE snapshots)</span><span><i style="background:rgba(217,178,111,0.55)"></i>preliminary</span>';
-        out.textContent = 'At each model melting point: Pb 0.008 vs 0.07 in the thesis, Ge 0.10 vs 0.16, Si 0.16 vs 0.19. Bi had no value; the first estimate is 0.08.';
       }
-    }
-    what.addEventListener('change', draw); onResize(draw); draw();
+      onResize(draw); draw();
+      function at(e) {
+        if (!A) return;
+        var b = cv.getBoundingClientRect(), my = e.clientY - b.top, i = Math.floor((my - A.T) / ((A.Y(0) - A.T) / n));
+        if (i < 0 || i >= n) { out.textContent = idle(); return; }
+        var r = rows[i], d = q.get(r), parts = [r.el + ' · ' + q.title.toLowerCase()];
+        if (d.exp != null) parts.push('experiment ' + q.fmt(d.exp));
+        parts.push('Bernal-Choban (fitted) ' + (d.her != null ? (q.pct ? q.fmt(d.her) : d.her + ' kB/atom') + (q.pct ? ' (' + sgn(pctOff(d.her, d.exp)) + ')' : '') : 'not computed'));
+        parts.push('MACE ' + (d.us != null ? q.fmt(d.us) + (q.pct ? ' (' + sgn(pctOff(d.us, d.exp)) + ')' : '') + (d.prelim ? ', preliminary' : '')
+          : (r.el === 'Sn' ? 'none, the model crystal does not survive' : 'not yet')));
+        out.textContent = parts.join(' · ');
+      }
+      cv.addEventListener('pointermove', at); cv.addEventListener('pointerdown', at);
+      cv.addEventListener('pointerleave', function () { out.textContent = idle(); });
+    });
+    out.textContent = idle();
+    var tab = $(root, '.m-tab'); if (tab) tab.innerHTML = answerTable();
+  }
+  function answerTable() {
+    function f(v, d) { return v == null ? '—' : (typeof v === 'number' ? v.toFixed(d) : v); }
+    function miss(t) { return '<span class="miss">' + t + '</span>'; }
+    var h = '<table class="cmp"><thead><tr><th>Element</th><th>Source</th><th>T<sub>m</sub> (K)</th><th>ΔS<sub>fus</sub></th>' +
+      '<th>ΔS<sub>vib</sub></th><th>ΔS<sub>el</sub></th><th>ΔS<sub>conf</sub></th></tr></thead><tbody>';
+    CMP.rows.forEach(function (r) {
+      var sn = r.el === 'Sn', none = miss(sn ? 'no crystal' : 'not yet'), tm = r.Tm.mace, fm = r.fus.mace, em = r.el_.mace;
+      h += '<tr class="first"><th rowspan="3">' + r.el + '</th><td class="who exp">Experiment</td><td>' + f(r.Tm.exp, 0) + '</td><td>' +
+        f(r.fus.exp, 2) + '</td><td>' + f(r.vib.exp, 2) + '</td><td>—</td><td>—</td></tr>';
+      h += '<tr><td class="who her">Bernal-Choban, fitted</td><td>' + f(r.Tm.mtp, 0) + '</td><td>' + f(r.fus.mtp, 2) + '</td><td>' +
+        f(r.vib.mtp, 2) + '</td><td>' + f(r.el_.mtp, 2) + '</td><td>' + f(r.conf.mtp, 2) + '</td></tr>';
+      h += '<tr><td class="who us">MACE, downloaded</td><td>' + (tm ? Math.round(tm.v) + ' ± ' + Math.round((tm.hi - tm.lo) / 2) : none) +
+        '</td><td>' + (fm ? fm.v.toFixed(2) + ' ± ' + fm.se.toFixed(2) : none) + '</td><td>' + none + '</td><td>' +
+        (em ? em.v.toFixed(3) + (em.se ? ' ± ' + em.se.toFixed(3) : '') + (em.prelim ? ' ' + miss('prelim.') : '') : none) +
+        '</td><td>' + none + '</td></tr>';
+    });
+    return h + '</tbody></table>';
   }
 
-  var FIGS = { gibbs: gibbs, fus: fus, cells: cells, cutoff: cutoff, coex: coex, compare: compare, gallery: gallery, vt: vt, dos: dos };
+  var FIGS = { gibbs: gibbs, fus: fus, cells: cells, cutoff: cutoff, coex: coex, answer: answer, gallery: gallery, vt: vt, dos: dos };
   function init() {
-    document.querySelectorAll('[data-melt]').forEach(function (el) {
-      var f = FIGS[el.dataset.melt]; if (f) { try { if (el.dataset.src) lazy(el, f); else f(el); } catch (err) { if (window.console) console.error(err); } }
+    // canvases inside a closed <details> have no width: redraw everything when one opens
+    document.querySelectorAll('details').forEach(function (d) {
+      d.addEventListener('toggle', function () { if (d.open) window.dispatchEvent(new Event('resize')); });
+    });
+    getJ(CMP_URL).then(buildTable, function (err) { if (window.console) console.error(err); }).then(function () {
+      document.querySelectorAll('[data-melt]').forEach(function (el) {
+        var f = FIGS[el.dataset.melt]; if (f) { try { if (el.dataset.src) lazy(el, f); else f(el); } catch (err) { if (window.console) console.error(err); } }
+      });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
