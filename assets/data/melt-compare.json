@@ -1,0 +1,249 @@
+{
+ "source": "melt-sele scripts/website_compare_export.py",
+ "generated": "2026-11-22",
+ "thesis": "C. M. Bernal-Choban, PhD thesis, Caltech (2024), Table 4.1 (entropies, k_B/atom, exp | comp) and Table 4.2 (T_melt, K, exp | comp); comp = her moment tensor potentials",
+ "not_run": [
+  "Li"
+ ],
+ "rows": [
+  {
+   "el": "Pb",
+   "kind": "metal",
+   "Tm": {
+    "exp": 601.0,
+    "mtp": 663.0,
+    "mace": {
+     "v": 611.0,
+     "lo": 608.0,
+     "hi": 614.0,
+     "src": "results/028_dsfus.json Tm (D-009: 590 GROW x2 / 625 MELT x2; v(T)=0 at 611 +- 3)"
+    }
+   },
+   "fus": {
+    "exp": 0.95,
+    "mtp": 1.03,
+    "mace": {
+     "v": 1.1974738720277736,
+     "se": 0.04921960600983345,
+     "src": "results/028_dsfus.json route1 dS ± sdS"
+    }
+   },
+   "vib": {
+    "exp": -0.17,
+    "mtp": -0.08,
+    "mace": null
+   },
+   "conf": {
+    "exp": null,
+    "mtp": 1.03,
+    "mace": null
+   },
+   "el_": {
+    "exp": null,
+    "mtp": 0.07,
+    "mace": {
+     "v": 0.008150027535130666,
+     "se": 0.0005316773519172569,
+     "T": 611.0,
+     "prelim": false,
+     "src": "results/032_tm611.json stage_b (DFT on MACE frames at the model T_m)"
+    }
+   }
+  },
+  {
+   "el": "Bi",
+   "kind": "semimetal",
+   "Tm": {
+    "exp": 545.0,
+    "mtp": null,
+    "mace": {
+     "v": 445.4,
+     "lo": 440.0,
+     "hi": 453.1,
+     "src": "results/028_dsfus.json Tm (calc 025 Amendment C ladder: v_f zero 445.4, 95 % CI [440.0, 453.1])"
+    }
+   },
+   "fus": {
+    "exp": 2.5,
+    "mtp": null,
+    "mace": {
+     "v": 2.4732225261762495,
+     "se": 0.33790116821186966,
+     "src": "results/028_dsfus.json route1 dS ± sdS"
+    }
+   },
+   "vib": {
+    "exp": 0.57,
+    "mtp": null,
+    "mace": null
+   },
+   "conf": {
+    "exp": null,
+    "mtp": null,
+    "mace": null
+   },
+   "el_": {
+    "exp": null,
+    "mtp": null,
+    "mace": {
+     "v": 0.0838677945290778,
+     "se": null,
+     "T": 544.6,
+     "prelim": true,
+     "src": "results/005_soc.json Bi_l SOC frames mean minus results/006_settling.json bi_soc.S_k6_mean; measured T_m and liquid density, not the model T_m (calc 031 pending)"
+    }
+   }
+  },
+  {
+   "el": "Sn",
+   "kind": "metal",
+   "Tm": {
+    "exp": 505.0,
+    "mtp": null,
+    "mace": null
+   },
+   "fus": {
+    "exp": 1.67,
+    "mtp": null,
+    "mace": null
+   },
+   "vib": {
+    "exp": 0.25,
+    "mtp": null,
+    "mace": null
+   },
+   "conf": {
+    "exp": null,
+    "mtp": null,
+    "mace": null
+   },
+   "el_": {
+    "exp": null,
+    "mtp": null,
+    "mace": null
+   },
+   "note": "MACE loses the beta-Sn crystal 180-255 K below the measured melting point (calc 014): no model T_m."
+  },
+  {
+   "el": "Ge",
+   "kind": "semiconductor",
+   "Tm": {
+    "exp": 1211.0,
+    "mtp": 978.0,
+    "mace": {
+     "v": 825.0,
+     "lo": 821.4,
+     "hi": 828.6,
+     "src": "results/028_dsfus.json Tm (calc 015 S2e ladder: v_f zero 825.8 +- 3.6; sign bracket 811 GROW x2 / 836 MELT x2)"
+    }
+   },
+   "fus": {
+    "exp": 3.67,
+    "mtp": 3.78,
+    "mace": {
+     "v": 3.5696304018076255,
+     "se": 0.06654868570419896,
+     "src": "results/028_dsfus.json route1 dS ± sdS"
+    }
+   },
+   "vib": {
+    "exp": 1.47,
+    "mtp": 1.48,
+    "mace": null
+   },
+   "conf": {
+    "exp": null,
+    "mtp": 2.14,
+    "mace": null
+   },
+   "el_": {
+    "exp": null,
+    "mtp": 0.16,
+    "mace": {
+     "v": 0.10162826898014025,
+     "se": 0.0006804030785877312,
+     "T": 825.0,
+     "at_exp": 0.1267746511604712,
+     "prelim": false,
+     "src": "results/022_t825.json dS_el (DFT on MACE frames at the model T_m); dS_1211 = same frames at 1211 K"
+    }
+   }
+  },
+  {
+   "el": "Si",
+   "kind": "semiconductor",
+   "Tm": {
+    "exp": 1683.0,
+    "mtp": 1452.0,
+    "mace": {
+     "v": 1449.8,
+     "lo": 1445.1,
+     "hi": 1454.5,
+     "src": "results/028_dsfus.json Tm (calc 015 S2f ladder: linear v(T) zero 1449.8 +- 4.7 (10 runs); 1437/1462 mixed-sign rungs)"
+    }
+   },
+   "fus": {
+    "exp": 3.58,
+    "mtp": 3.51,
+    "mace": {
+     "v": 3.443571758115786,
+     "se": 0.04551820487962101,
+     "src": "results/028_dsfus.json route1 dS ± sdS"
+    }
+   },
+   "vib": {
+    "exp": null,
+    "mtp": 1.09,
+    "mace": null
+   },
+   "conf": {
+    "exp": null,
+    "mtp": 2.24,
+    "mace": null
+   },
+   "el_": {
+    "exp": null,
+    "mtp": 0.19,
+    "mace": {
+     "v": 0.15866689581853224,
+     "se": 0.0025852138667993535,
+     "T": 1446.0,
+     "at_exp": 0.17307164993207635,
+     "prelim": false,
+     "src": "results/022_tsi.json dS_el (DFT on MACE frames at the model T_m); dS_1687 = same frames at 1687 K"
+    }
+   }
+  }
+ ],
+ "extra": [
+  {
+   "el": "Zn",
+   "kind": "metal",
+   "in_thesis": false,
+   "Tm": {
+    "exp": 692.7,
+    "mtp": null,
+    "mace": {
+     "v": 460.0,
+     "lo": 440.0,
+     "hi": 480.0,
+     "src": "results/028_dsfus.json Tm (calc 026: 440 GROW x2, 480 MELT (D-015 440-480))"
+    }
+   },
+   "fus": {
+    "exp": 1.25,
+    "exp_range": [
+     1.23,
+     1.27
+    ],
+    "mtp": null,
+    "mace": {
+     "v": 1.150303507015032,
+     "se": 0.05535465356575446,
+     "src": "results/028_dsfus.json route1 dS ± sdS"
+    }
+   },
+   "note": "Not in the thesis. Measured T_m: results/026a_liquids.json runs.Zn_l.T_target; measured dS_fus range: results/028_dsfus.json meas."
+  }
+ ]
+}
