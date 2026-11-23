@@ -119,7 +119,8 @@
     var off = 0, runs = Array.prototype.map.call(box.querySelectorAll(".lit-prompt__run"), function (r) {
       var tT = 0, segs = Array.prototype.map.call(r.querySelectorAll("[data-type]"), function (s) {
         var full = s.textContent, typed = document.createElement("span"), rest = document.createElement("span");
-        rest.className = "lit-prompt__rest"; s.textContent = ""; s.appendChild(typed); s.appendChild(rest);
+        rest.className = "lit-prompt__rest"; typed.textContent = full;   // finished line until the first frame
+        s.textContent = ""; s.appendChild(typed); s.appendChild(rest);
         var g = { el: s, full: full, typed: typed, rest: rest, ms: +s.getAttribute("data-type"), t0: tT };
         tT += full.length * g.ms; return g;
       });
