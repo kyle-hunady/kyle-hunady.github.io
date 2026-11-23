@@ -103,7 +103,7 @@
       <figcaption><b>How I made the powder.</b> I handled the salts under argon to keep them dry. Once the powder was sealed in the jar, I could run the planetary ball mill outside the glovebox.</figcaption>
     </figure>
 
-    <p>I prepared pellets from the milled powder by cold pressing, hot pressing at 80 °C or sintering at 150 °C. I placed each pellet between a lithium disk and a stainless steel disk and measured its impedance from room temperature to 110 °C. I made these plots from the original 2020 data.</p>
+    <p>I prepared pellets from the milled powder by cold pressing, hot pressing at 80 °C or sintering at 150 °C. I sandwiched each pellet between two lithium foil disks, with stainless steel spacers outside them to carry the current, and measured its impedance from room temperature to 110 °C. I made these plots from the original 2020 data.</p>
 
     <figure class="fig fig--light" style="max-width:44rem">
       <img src="assets/img/gt-lirap-sigma.png" alt="Conductivity on a log scale against inverse temperature for three pellets. All three rise from about 1e-7 S/cm at 22 °C to between 1.5e-5 and 4e-5 S/cm at 110 °C. The hot-pressed pellet sits about two times higher from 22 to 80 °C." width="1408" height="968" loading="lazy">
@@ -137,7 +137,7 @@
     </div>
 
     <p>Two regions give separate arcs when their time constants, RC, are far apart, and capacitance is usually what sets them apart. A layer’s capacitance grows with its area and shrinks with its thickness, so thin layers store more charge. As a rule of thumb, grain interiors give picofarads, grain boundaries nanofarads, and the charged layer at an electrode microfarads (<a href="https://doi.org/10.1002/adma.19900020304" target="_blank" rel="noreferrer">Irvine 1990</a>).</p>
-    <p>My cells were a pellet pressed between two lithium disks. Lithium ions leave one disk, cross the grains (R<sub>b</sub>) and the grain boundaries (R<sub>gb</sub>), and enter the other disk. At each lithium face, ions have to cross the interface (R<sub>ct</sub>), and a charged double layer forms there (C<sub>dl</sub>). The two faces are nearly alike, so their arcs overlap into one. Once the pellet is warm, the grain arc moves above 1 MHz, so the measured curve starts on the real axis at R<sub>b</sub>.</p>
+    <p>My cells were a pellet pressed between two lithium disks, with steel spacers behind them as current collectors. Lithium ions leave one disk, cross the grains (R<sub>b</sub>) and the grain boundaries (R<sub>gb</sub>), and enter the other disk. At each lithium face, ions have to cross the interface (R<sub>ct</sub>), and a charged double layer forms there (C<sub>dl</sub>). The two faces are nearly alike, so their arcs overlap into one. Once the pellet is warm, the grain arc moves above 1 MHz, so the measured curve starts on the real axis at R<sub>b</sub>.</p>
     <p>Measured arcs are flatter than semicircles. Rough interfaces and grains of different sizes spread out the time constants. A constant phase element (CPE), Z = 1/(Q(jω)<sup>n</sup>), models that spread. With n = 1 it is an ideal capacitor, and lower n flattens the arc. Next to each lithium face, Li<sup>+</sup> can also pile up or run short while current flows. Diffusion across that layer adds a Warburg impedance, Z<sub>W</sub> = σ<sub>W</sub>(1 − j)/√ω, which draws a 45° line at low frequency.</p>
 
     <div class="fig" id="eis-cell" data-el="li">
