@@ -97,8 +97,8 @@
   <div class="container">
 
     <div class="callout melt-answer">
-      <div><b>Question.</b> Camille Bernal-Choban’s 2024 Caltech thesis (<a href="https://doi.org/10.1038/s43246-024-00695-x" target="_blank" rel="noreferrer">Bernal-Choban et al. 2024</a>) measured how much entropy lead, bismuth, tin, germanium and silicon gain when they melt, and computed it with a potential fitted to each element. Does MACE-OMAT-0, a downloaded potential fitted to none of them, give her numbers?</div>
-      <div><b>Answer so far.</b> For the entropy of fusion, mostly yes. Germanium, silicon and bismuth land within 4 % of experiment, as close as her fitted potentials; lead comes out 26 % high, against her 8 %. Melting points miss by as much as hers or more: germanium 32 % low (hers 19 %), silicon 14 % low (hers also 14 %), bismuth 18 % low. Lead is the exception, 2 % off against her 10 %. The electronic part is smaller than hers for all three elements she computed, eight times smaller for lead. Tin cannot be tested, because the model’s crystal falls apart before it melts.</div>
+      <div><b>Question.</b> Camille Bernal-Choban’s 2024 Caltech thesis (<a href="https://doi.org/10.1038/s43246-024-00695-x" target="_blank" rel="noreferrer">Bernal-Choban et al. 2024</a>) measured and computed the entropy that lead, bismuth, tin, germanium and silicon gain on melting, with a potential fitted to each element. Does MACE-OMAT-0, fitted to none of them, give her numbers?</div>
+      <div><b>Answer so far.</b> Partly. The entropy of fusion of germanium, silicon and bismuth lands within 4 % of experiment, as close as her fitted potentials, but lead comes out 26 % high, against her 8 %. Melting points mostly come out low: germanium 32 % (hers 19 %), silicon 14 % (hers also 14 %), bismuth 18 %. Lead’s is 2 % off, against her 10 %. The electronic part is smaller than hers for all three elements she computed, eight times smaller for lead. Tin cannot be tested, because the model’s crystal falls apart before it melts.</div>
     </div>
 
     <div class="fig" data-melt="answer">
@@ -110,27 +110,19 @@
       </div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="tablewrap m-tab"></div>
-      <p class="cap"><span class="tag-data">data</span><b>The downloaded model gets the entropy of fusion about as right as the fitted potentials did, and the melting point no better.</b> The first two panels show distance from experiment in percent. The third shows the electronic part in k<sub>B</sub> per atom: it cannot be measured, so the only reference is Bernal-Choban’s DFT value. Each model is evaluated at its own melting point; white bars are MACE’s uncertainties. At the measured melting points MACE’s electronic part for germanium and silicon rises to 0.13 and 0.17, closer to her 0.16 and 0.19. The bismuth value (open circle) is preliminary: it was computed at the measured temperature and density. The table’s “Experiment” and “Bernal-Choban” rows are the two columns of her Tables 4.1 and 4.2; a dash means not reported (<a href="assets/data/melt-compare.json">data with sources</a>). Zinc, which is not in the thesis, melts 34 % low in the model, with an entropy of fusion 8 % low. Lithium, which is in the thesis, has not been run.</p>
+      <p class="cap"><span class="tag-data">data</span><b>Entropy of fusion lands near experiment except for lead; melting points mostly come out low.</b> The first two panels show percent off experiment. The third shows the electronic part in k<sub>B</sub> per atom, which cannot be measured, so her DFT value is the only reference. Each model is evaluated at its own melting point; white bars are MACE’s uncertainties, and the open circle (bismuth) is preliminary. The “Experiment” and “Bernal-Choban” rows are her Tables 4.1 and 4.2 (<a href="assets/data/melt-compare.json">data with sources</a>). Zinc, not in the thesis, melts 34 % low with an entropy of fusion 8 % low.</p>
     </div>
 
-    <div class="melt-eq" role="figure" aria-label="Gibbs free energy of fusion">
-      <div class="big">ΔG<sub>fus</sub> = ΔH<sub>fus</sub> − T ΔS<sub>fus</sub></div>
-      <div class="big">at T<sub>m</sub>:&nbsp; ΔG<sub>fus</sub> = 0 &nbsp;⇒&nbsp; ΔS<sub>fus</sub> = ΔH<sub>fus</sub> / T<sub>m</sub></div>
-      <p>The entropy of fusion is the latent heat ΔH<sub>fus</sub> divided by the melting point T<sub>m</sub>, both taken from the same model. That is how it can survive a wrong melting point: for germanium, silicon and bismuth, MACE’s latent heat is low by about the same fraction as its melting point. For lead the melting point is right and the latent heat is too large.</p>
-    </div>
-
-    <ol class="parts">
+    <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
       <li><a href="#test"><b>I. Same workflow, one swap</b><span>Her potentials replaced by a downloaded one</span></a></li>
       <li><a href="#tm"><b>II. Melting points come out low</b><span>Lead step by step, then four more elements</span></a></li>
-      <li><a href="#fusion"><b>III. Entropy of fusion holds up</b><span>Latent heat over melting point</span></a></li>
+      <li><a href="#fusion"><b>III. Entropy of fusion: close except lead</b><span>Latent heat over melting point</span></a></li>
       <li><a href="#el"><b>IV. Electronic part comes out smaller</b><span>DFT on MACE snapshots</span></a></li>
       <li><a href="#next"><b>V. Still missing</b><span>Vibrational and configurational parts, lithium</span></a></li>
-    </ol>
+    </ol></div>
 
     <h2 class="part" id="test"><span>I</span>Same workflow, one swap</h2>
-
-    <h3>One swap in an existing workflow</h3>
-    <p>Machine-learned potentials follow thousands of atoms with close to quantum-mechanical accuracy, but fitting one for a new element takes hundreds of DFT calculations and weeks of work. Pretrained potentials such as MACE-OMAT-0 are trained once, on over a hundred million calculations across the periodic table, and anyone can download them. If one is good enough, a new material skips the fitting step. To find out, I am repeating Bernal-Choban’s melting study with one change: her per-element moment tensor potentials (MTP; <a href="https://doi.org/10.1137/15M1054183" target="_blank" rel="noreferrer">Shapeev 2016</a>) are replaced by the downloaded model. Because her numbers come from our own group, each difference can be traced to its cause.</p>
+    <p>Fitting a machine-learned potential for a new element takes hundreds of DFT calculations and weeks of work. A pretrained potential such as MACE-OMAT-0 is trained once across the periodic table and anyone can download it. If one is good enough, a new material skips the fitting step. To test that, I am repeating Bernal-Choban’s melting study with her per-element moment tensor potentials (MTP; <a href="https://doi.org/10.1137/15M1054183" target="_blank" rel="noreferrer">Shapeev 2016</a>) replaced by the downloaded model. Her numbers come from our own group, so each difference can be traced to its cause.</p>
     <div class="versus">
       <div class="versus__head"></div><div class="versus__head">MTP (thesis)</div><div class="versus__head">MACE-OMAT-0 (this project)</div>
       <div class="versus__row">Training data</div><div>About 100–130 DFT structures per element, chosen by active learning</div><div>Over 100 million DFT calculations across the periodic table</div>
@@ -139,8 +131,8 @@
       <div class="versus__row">Main risk</div><div>Errors outside the training region</div><div>Systematic errors of a general model</div>
     </div>
 
-    <h3>What she measured and split</h3>
-    <p>The entropy gained on melting has three parts. The <b>vibrational</b> part comes from softer vibrations in the liquid, the <b>configurational</b> part from the many arrangements a liquid moves among, and the <b>electronic</b> part from electrons excited near the Fermi level. Bernal-Choban measured the vibrational part by inelastic neutron scattering, computed the electronic part with DFT on simulation snapshots, and took the configurational part as what remains. Entropies are in units of Boltzmann’s constant per atom (1 k<sub>B</sub> per atom ≈ 8.3 J/(mol·K)).</p>
+    <h3>The targets: her measured entropies</h3>
+    <p>The entropy gained on melting has three parts: <b>vibrational</b> (softer vibrations in the liquid), <b>configurational</b> (the many arrangements a liquid moves among) and <b>electronic</b> (electrons excited near the Fermi level). Bernal-Choban measured the vibrational part by inelastic neutron scattering, computed the electronic part with DFT on simulation snapshots, and took the configurational part as what remains. Entropies are in Boltzmann’s constant per atom (1 k<sub>B</sub> per atom ≈ 8.3 J/(mol·K)).</p>
     <div class="fig" data-melt="fus">
       <canvas class="m-fus plot" aria-label="Measured entropy of fusion of six elements as bars, split into parts for Pb, Ge and Si"></canvas>
       <div class="fig-out" aria-live="polite"></div>
@@ -153,8 +145,8 @@
 
     <h2 class="part" id="tm"><span>II</span>Melting points come out low</h2>
 
-    <h3>Lead: a sensible crystal and liquid</h3>
-    <p>A model has its own melting point, so every MACE number is taken at the model’s T<sub>m</sub>, not the measured one. Before finding it, the first check is that the model makes a real crystal and a real liquid.</p>
+    <h3>First check: a real crystal and a real liquid</h3>
+    <p>A model has its own melting point, so every MACE number is taken at the model’s T<sub>m</sub>, not the measured one. Before looking for it, the model has to make a real crystal and a real liquid.</p>
     <div class="fig" data-melt="cells" data-src="assets/data/melt-cells.json">
       <div class="melt3d" style="--n:2;--nm:2;--h:15rem">
         <figure><canvas class="m-cs" aria-label="Crystal cell from molecular dynamics, atoms vibrating"></canvas><figcaption class="m-capS"><b>Crystal</b></figcaption></figure>
@@ -167,11 +159,11 @@
         <label>Element <select class="m-el"><option value="Pb">Lead (metal)</option><option value="Ge">Germanium (semiconductor)</option></select></label>
         <button class="btn m-play" type="button">Pause</button>
       </div>
-      <p class="cap"><span class="tag-model">simulation</span><b>MACE keeps a proper crystal and liquid for lead and germanium, so its melting points are worth reading.</b> Both phases run at the same temperature and zero pressure, replayed from the saved MACE trajectories; each pane names its temperature. Lead keeps about the same number of neighbors when it melts. Germanium goes from four bonded neighbors to almost six and gets denser, as ice does. The lower plot is the pair distribution g(r), the relative chance of finding another atom at distance r. Drag either cell to rotate both.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>MACE keeps a proper crystal and liquid for lead and germanium, so its melting points are worth reading.</b> Replayed from saved MACE trajectories, both phases at one temperature and zero pressure. Lead keeps about the same number of neighbors when it melts. Germanium goes from four bonded neighbors to almost six and gets denser, as ice does. The lower plot is the pair distribution g(r), the relative chance of finding another atom at distance r.</p>
     </div>
 
     <h3>Lead melts at 611 K in the model</h3>
-    <p>Heating a perfect crystal overshoots T<sub>m</sub>, because a periodic crystal has no surface where melting can start. Instead I use the coexistence method (<a href="https://doi.org/10.1103/PhysRevB.49.3109" target="_blank" rel="noreferrer">Morris et al. 1994</a>): a long box, half crystal and half liquid, held at constant temperature and pressure. Above the model’s T<sub>m</sub> the liquid grows; below it the crystal grows. Each atom is labeled crystal-like or liquid-like by the symmetry of its neighbor shell, the averaged bond-order parameter q̄<sub>6</sub> (<a href="https://doi.org/10.1103/PhysRevB.28.784" target="_blank" rel="noreferrer">Steinhardt et al. 1983</a>; <a href="https://doi.org/10.1063/1.2977970" target="_blank" rel="noreferrer">Lechner &amp; Dellago 2008</a>).</p>
+    <p>Heating a perfect crystal overshoots T<sub>m</sub>, because a periodic crystal has no surface where melting can start. I use the coexistence method instead (<a href="https://doi.org/10.1103/PhysRevB.49.3109" target="_blank" rel="noreferrer">Morris et al. 1994</a>): a long box, half crystal and half liquid, held at constant temperature and pressure. Above the model’s T<sub>m</sub> the liquid grows; below it the crystal grows. Each atom is labeled crystal-like or liquid-like by the symmetry of its neighbor shell (q̄<sub>6</sub>; <a href="https://doi.org/10.1103/PhysRevB.28.784" target="_blank" rel="noreferrer">Steinhardt et al. 1983</a>; <a href="https://doi.org/10.1063/1.2977970" target="_blank" rel="noreferrer">Lechner &amp; Dellago 2008</a>).</p>
     <div class="fig" data-melt="coex" data-src="assets/data/melt-coex.json">
       <canvas class="m-slab" aria-label="Lead slab at 590 K in 3-D, crystal-like atoms gold and liquid-like atoms blue; the crystal region widens"></canvas>
       <canvas class="m-slab" aria-label="Lead slab at 663 K in 3-D; the crystal region shrinks to nothing"></canvas>
@@ -182,18 +174,18 @@
         <label>Time <input class="m-t" type="range" min="0" max="82" step="0.1" value="0"></label>
         <button class="btn m-play" type="button">Pause</button>
       </div>
-      <p class="cap"><span class="tag-model">simulation</span><b>Each slab run says only “above” or “below” the model’s melting point: at 590 K the crystal grows, at 663 K it melts within 47 ps.</b> Each box holds 1,024 lead atoms (2 nm by 8 nm), saved every 0.5 ps and interpolated between frames. Drag either slab to rotate both.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>Each slab run says only “above” or “below” the model’s melting point: at 590 K the crystal grows, at 663 K it melts within 47 ps.</b> Each box holds 1,024 lead atoms (2 nm by 8 nm), saved every 0.5 ps and interpolated between frames.</p>
     </div>
-    <p>The slope of the crystal fraction against time gives the speed of the crystal–liquid boundary: positive when the crystal grows, negative when it melts. I bracketed lead in three rounds, each narrower and longer than the last: 540, 601 and 663 K for 35 ps; 590 and 620 K with two seeds for 140 ps; then 605 and 625 K with two seeds for 280 ps. The speed changes sign between 605 and 620 K. Averaging the two seeds at each temperature and interpolating to zero gives 611 ± 3 K, where the uncertainty is the spread over reasonable choices of which runs to fit.</p>
+    <p>The slope of the crystal fraction against time gives the speed of the crystal–liquid boundary. I bracketed lead in three rounds of narrower, longer runs (up to 280 ps, two seeds each). The speed changes sign between 605 and 620 K, and interpolating the seed averages to zero gives 611 ± 3 K.</p>
     <div class="fig" data-melt="vt" data-src="assets/data/melt-extra.json">
       <canvas class="m-vt m-big plot plot--tall" data-el="Pb" aria-label="Interface velocity against temperature for every lead slab run, crossing zero at 611 K"></canvas>
       <div class="legend"><span><i style="background:#D9B26F"></i>crystal grows</span><span><i style="background:#7FA7C9"></i>crystal melts</span><span><i style="background:rgba(242,243,240,0.55)"></i>no clear motion</span><span><i style="background:transparent;border:1px solid #F2F3F0"></i>MACE: seed average + read-off (×)</span><span><i style="background:transparent;border:1px dashed #F2F3F0"></i>experiment 601 K</span><span><i style="background:#A99BC9"></i>Bernal-Choban’s fitted potential 663 K</span></div>
       <div class="fig-out" aria-live="polite"></div>
-      <p class="cap"><span class="tag-model">simulation</span><b>MACE melts lead at 611 K, 10 K above experiment; her fitted potential melted it at 663 K.</b> Each dot is one 1,024-atom slab run, with the two seeds side by side. The open circle at 480 K failed a start-up check and is not used. Hover a dot for its temperature, seed, speed and run length.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>MACE melts lead at 611 K, 10 K above experiment; her fitted potential melted it at 663 K.</b> Each dot is one 1,024-atom slab run, with the two seeds side by side. The open circle at 480 K failed a start-up check and is not used.</p>
     </div>
 
     <h3>Four more elements melt early</h3>
-    <p>A downloaded model costs nothing extra to try on another element, so I ran the same test on bismuth, zinc, germanium and silicon.</p>
+    <p>Trying another element costs nothing extra, so I ran the same test on bismuth, zinc, germanium and silicon.</p>
     <div class="fig" data-melt="vt" data-src="assets/data/melt-extra.json">
       <div class="melt3d" style="--n:2;--nm:1;--h:12rem">
         <canvas class="m-vt" data-el="Bi" aria-label="Interface velocity against temperature for bismuth slab runs"></canvas>
@@ -203,20 +195,24 @@
       </div>
       <div class="legend"><span><i style="background:#D9B26F"></i>crystal grows</span><span><i style="background:#7FA7C9"></i>crystal melts</span><span><i style="background:rgba(242,243,240,0.55)"></i>no clear motion</span><span><i style="background:rgba(242,243,240,0.25);border-radius:1px"></i>MACE melting point</span><span><i style="background:transparent;border:1px dashed #F2F3F0"></i>experiment</span></div>
       <div class="fig-out" aria-live="polite"></div>
-      <p class="cap"><span class="tag-model">simulation</span><b>Bismuth, zinc, germanium and silicon all melt 100–390 K below experiment in the model.</b> Same read-off as for lead. The shaded band is the model melting point; for bismuth, germanium and silicon it also uses finer temperature ladders not drawn here. Open circles failed a start-up check.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>Bismuth, zinc, germanium and silicon all melt 100–390 K below experiment in the model.</b> Same read-off as for lead; the shaded band is the model melting point. Open circles failed a start-up check.</p>
     </div>
     <p>For tin there is nothing to bracket: the model’s β-tin crystal falls apart 180–255 K below the real melting point.</p>
     <div class="fig" data-melt="gallery" data-src="assets/data/melt-extra.json">
       <div class="m-gal melt3d" style="--n:4;--nm:2;--h:10rem"></div>
       <div class="legend"><span><i style="background:#D9B26F"></i>crystal-like atom</span><span><i style="background:#7FA7C9"></i>liquid-like atom</span></div>
-      <p class="cap"><span class="tag-model">simulation</span><b>MACE keeps the crystals of lead, bismuth, germanium and silicon, and loses β-tin, which is why tin has no model melting point.</b> Each measured crystal sits beside the last frame of a constant-pressure MACE run. Zinc is shown at 643 K, above its model melting point, so it melts; germanium and silicon at their measured melting points, where the crystal still holds for the length of the run. Drag any cell to rotate all of them.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>MACE keeps the crystals of lead, bismuth, germanium and silicon, and loses β-tin, which is why tin has no model melting point.</b> Each measured crystal sits beside the last frame of a constant-pressure MACE run. Zinc is shown above its model melting point, so it melts.</p>
     </div>
 
-    <h2 class="part" id="fusion"><span>III</span>Entropy of fusion holds up</h2>
-    <p>At the model’s melting point the latent heat is the energy difference between long crystal and liquid runs at T<sub>m</sub>, and the entropy of fusion is that divided by T<sub>m</sub>. For lead this gives 1.20 ± 0.05 k<sub>B</sub> per atom, against 0.95 measured and 1.03 from Bernal-Choban’s fitted potential: MACE’s latent heat is too large for its melting point. For germanium (3.57), silicon (3.44) and bismuth (2.47) it is within 4 % of the measured value, because the latent heat and the melting point are low by similar fractions.</p>
+    <h2 class="part" id="fusion"><span>III</span>Entropy of fusion: close except lead</h2>
+    <div class="melt-eq" role="figure" aria-label="Gibbs free energy of fusion">
+      <div class="big">ΔG<sub>fus</sub> = ΔH<sub>fus</sub> − T ΔS<sub>fus</sub></div>
+      <div class="big">at T<sub>m</sub>:&nbsp; ΔG<sub>fus</sub> = 0 &nbsp;⇒&nbsp; ΔS<sub>fus</sub> = ΔH<sub>fus</sub> / T<sub>m</sub></div>
+      <p>The entropy of fusion is the latent heat divided by the melting point, both from the same model, so it can survive a wrong melting point. The latent heat is the energy difference between long crystal and liquid runs at the model’s T<sub>m</sub>. For germanium (3.57 k<sub>B</sub> per atom), silicon (3.44) and bismuth (2.47) it is low by about the same fraction as the melting point, and the ratio lands within 4 % of experiment. For lead the melting point is right and the latent heat is too large: 1.20 ± 0.05 k<sub>B</sub> per atom, against 0.95 measured and 1.03 from her potential.</p>
+    </div>
 
     <h2 class="part" id="el"><span>IV</span>Electronic part comes out smaller</h2>
-    <p>The electronic entropy of a snapshot follows from its electronic density of states g(E) and the Fermi function f: S<sub>el</sub> = −k<sub>B</sub> ∫ g(E) [f ln f + (1 − f) ln(1 − f)] dE (<a href="https://doi.org/10.1016/j.pmatsci.2009.05.002" target="_blank" rel="noreferrer">Fultz 2010</a>). Only states within a few k<sub>B</sub>T of the Fermi level count. I compute g(E) with DFT (VASP, <a href="https://doi.org/10.1103/PhysRevB.54.11169" target="_blank" rel="noreferrer">Kresse &amp; Furthmüller 1996</a>; PBE, <a href="https://doi.org/10.1103/PhysRevLett.77.3865" target="_blank" rel="noreferrer">Perdew et al. 1996</a>) on snapshots of the MACE crystal and liquid, as she did on hers.</p>
+    <p>The electronic entropy of a snapshot follows from its electronic density of states g(E) and the Fermi function f: S<sub>el</sub> = −k<sub>B</sub> ∫ g(E) [f ln f + (1 − f) ln(1 − f)] dE (<a href="https://doi.org/10.1016/j.pmatsci.2009.05.002" target="_blank" rel="noreferrer">Fultz 2010</a>), so only states within a few k<sub>B</sub>T of the Fermi level count. I compute g(E) with DFT (VASP, <a href="https://doi.org/10.1103/PhysRevB.54.11169" target="_blank" rel="noreferrer">Kresse &amp; Furthmüller 1996</a>; PBE, <a href="https://doi.org/10.1103/PhysRevLett.77.3865" target="_blank" rel="noreferrer">Perdew et al. 1996</a>) on snapshots of the MACE crystal and liquid, as she did on hers.</p>
     <div class="fig" data-melt="dos" data-src="assets/data/melt-extra.json">
       <div class="melt3d" style="--n:3;--nm:1;--h:11rem">
         <canvas class="m-dos" data-el="Pb" aria-label="Electronic density of states near the Fermi level, solid and liquid lead"></canvas>
@@ -225,15 +221,15 @@
       </div>
       <div class="fig-out" aria-live="polite"></div>
       <div class="legend"><span><i style="background:#D9B26F"></i>crystal</span><span><i style="background:#7FA7C9"></i>liquid</span><span><i style="background:transparent;border:1px dashed #F2F3F0"></i>Fermi level</span></div>
-      <p class="cap"><span class="tag-model">simulation</span><b>Melting fills the gap at the Fermi level in germanium and silicon and barely changes lead, which is why lead’s electronic part is small.</b> What counts is the height of each curve in the light band at E = 0. Faint lines are single MACE snapshots, thick lines their average. Lead is at 601 K; germanium and silicon are at their measured melting points, a reference run made before the model melting points were known.</p>
+      <p class="cap"><span class="tag-model">simulation</span><b>Melting fills the gap at the Fermi level in germanium and silicon and barely changes lead, which is why lead’s electronic part is small.</b> What counts is the height of each curve in the light band at E = 0. Faint lines are single MACE snapshots, thick lines their average, at the measured melting points.</p>
     </div>
-    <p>For lead the liquid-minus-crystal difference is 0.0082 ± 0.0005 k<sub>B</sub> per atom at 611 K, against 0.07 in the thesis. Denser k-point meshes, smearing and the reference structure each move it by at most 0.015, so the gap is not a convergence problem. The snapshots come from a different potential at a different temperature, and her thesis may define the reference differently; I am testing each in turn. Germanium and silicon come out at 0.10 and 0.16, against her 0.16 and 0.19. Part of that gap is temperature: the model melts them 386 K and 233 K colder, and electronic entropy grows with temperature. For bismuth the thesis has no value; the first estimate here is 0.08, about 3 % of its entropy of fusion, and needs spin–orbit coupling, without which the crystal’s electronic entropy is about 2.5 times too large.</p>
+    <p>For lead the liquid-minus-crystal difference is 0.0082 ± 0.0005 k<sub>B</sub> per atom at 611 K, against 0.07 in the thesis. The k-point mesh, smearing and reference structure each move it by at most 0.015, so the gap is not a convergence problem. Germanium and silicon come out at 0.10 and 0.16, against her 0.16 and 0.19, partly because the model melts them 386 K and 233 K colder and electronic entropy grows with temperature (at the measured melting points they rise to 0.13 and 0.17). For bismuth, which the thesis does not cover, a first estimate with spin–orbit coupling at the measured melting point is 0.08.</p>
 
     <h2 class="part" id="next"><span>V</span>Still missing</h2>
     <ul class="bullets">
-      <li>Bismuth’s electronic part at its model melting point, with spin–orbit coupling (running).</li>
-      <li>The vibrational part from the velocity autocorrelation of the same runs, then the configurational part by difference, as Bernal-Choban did. Until then those two MACE columns of the table stay empty.</li>
-      <li>The cause of the eightfold gap in lead’s electronic part.</li>
+      <li>Bismuth’s electronic part at its model melting point (running).</li>
+      <li>The vibrational part from the same runs, then the configurational part by difference, as Bernal-Choban did.</li>
+      <li>The cause of the eightfold gap in lead’s electronic part: the different potential, temperature and reference are being tested in turn.</li>
       <li>Lithium, the one thesis element not yet run.</li>
     </ul>
 
@@ -271,11 +267,10 @@
 
     <h2>What I did</h2>
     <ul class="bullets">
-      <li>Ran MACE molecular dynamics of crystals, liquids and 1,000-atom solid–liquid coexistence cells on NERSC Perlmutter A100 GPUs.</li>
-      <li>Bracketed each model melting point with seeded coexistence runs and pass/fail criteria written down before the runs.</li>
-      <li>Computed entropies of fusion from the model’s own latent heat and melting point.</li>
-      <li>Ran DFT (VASP) on MD snapshots for the electronic density of states, with k-point, smearing and spin–orbit convergence tests.</li>
-      <li>Checked every thesis value against the thesis tables and wrote the analysis and figures from the simulation output.</li>
+      <li>Ran MACE molecular dynamics of crystals, liquids and 1,000-atom coexistence cells on NERSC Perlmutter GPUs, with pass/fail criteria written down before the runs.</li>
+      <li>Computed melting points and entropies of fusion from the model’s own runs.</li>
+      <li>Ran DFT (VASP) on MD snapshots for the electronic part, with convergence tests.</li>
+      <li>Checked every thesis value against her tables.</li>
     </ul>
     <div class="chips"><span>MACE</span><span>ASE</span><span>VASP</span><span>Molecular dynamics</span><span>NERSC Perlmutter</span><span>Python</span></div>
 

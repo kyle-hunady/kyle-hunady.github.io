@@ -103,7 +103,7 @@
 
     <h2 class="part" id="iron"><span>I</span>What the iron says</h2>
     <p class="lead-line">XRF lists a rock’s elements. Mössbauer tells you which minerals hold the iron, and some of those form only in water.</p>
-    <p>Two rocks can hold the same amount of iron and tell opposite stories. In olivine the iron crystallized from magma. In goethite or jarosite it sat in water. XRF sees the same iron in both. Mössbauer separates them, because an iron nucleus feels the atoms around it.</p>
+    <p>In olivine the iron crystallized from magma; in goethite or jarosite it sat in water. XRF sees the same iron in both. Mössbauer separates them, because an iron nucleus feels the atoms around it.</p>
 
     <h3>Same elements, different minerals</h3>
     <div class="fig fig--light">
@@ -144,7 +144,7 @@
     <p>The ²⁴¹Am source makes each element in the rock give off X-rays at its own energies. The ⁵⁷Co source gives off 14.4 keV gamma rays that only ⁵⁷Fe nuclei absorb, and the rock sends some back as 14.4 keV gamma rays and 6.4 keV iron X-rays.</p>
     <div class="fig fig--light">
       <canvas id="fx" class="story" aria-label="Two schematic detector spectra on one energy axis: with the americium source, element peaks for potassium, calcium, titanium, manganese, iron, nickel, strontium and zirconium; with the cobalt source, the 14.4 keV Mössbauer line and the 6.4 keV iron X-ray"></canvas>
-      <p class="cap"><span class="tag-model">schematic</span><b>What the detector sees from each source.</b> ²⁴¹Am lights up the element lines. ⁵⁷Co gives the two iron lines that carry the Mössbauer signal, and the electronics count only the shaded windows. Peak heights are illustrative for a basalt.</p>
+      <p class="cap"><span class="tag-model">schematic</span><b>One detector reads both: element lines from ²⁴¹Am, iron lines from ⁵⁷Co.</b> The two ⁵⁷Co lines carry the Mössbauer signal, and the electronics count only the shaded windows. Peak heights are illustrative for a basalt.</p>
     </div>
 
     <h3>Moving the source scans the energy</h3>
@@ -159,7 +159,7 @@
     <p>The rock absorbs the softer 6.4 keV X-rays faster, so they come from nearer the surface than the 14.4 keV gamma rays. If the two spectra disagree, the rock has a coating or a weathering rind. The rover team used this on Mars [<a href="https://doi.org/10.1029/2007JE003022">Fleischer et al. 2008</a>].</p>
     <div class="fig fig--light">
       <canvas id="fd" class="story" aria-label="Three rocks side by side on one depth axis from 0 to 800 micrometers. 95 percent of the 14.4 keV signal comes from the top 303 micrometers of basalt, 768 of highland soil and 54 of hematite; for the 6.4 keV signal, 91, 170 and 48."></canvas>
-      <p class="cap"><span class="tag-model">model</span><b>How deep each signal reaches.</b> In basalt and soil the 6.4 keV signal comes from 3 to 5 times shallower than the 14.4 keV signal; in hematite both stay in the top 55 µm. Shading follows how much signal each depth gives, and the line marks 95%. X-ray attenuation (XrayDB) at our head’s angles.</p>
+      <p class="cap"><span class="tag-model">model</span><b>The 6.4 keV signal comes from nearer the surface.</b> In basalt and soil it comes from 3 to 5 times shallower than the 14.4 keV signal; in hematite both stay in the top 55 µm. Shading follows how much signal each depth gives, and the line marks 95%. X-ray attenuation (XrayDB) at our head’s angles.</p>
     </div>
 
     <h2 class="part" id="limits"><span>III</span>What limits a spectrum</h2>
@@ -177,15 +177,15 @@
         <figure><video src="assets/img/gallery/sinrg/piezo-drive-slowmo.mp4" width="960" height="540" autoplay muted loop playsinline controls preload="metadata" aria-label="Slow-motion video of the piezo drive running, as filmed"></video><figcaption><b>As filmed.</b> The drive running, in slow motion.</figcaption></figure>
         <figure><video src="assets/img/gallery/sinrg/piezo-drive-delta.mp4" width="960" height="540" autoplay muted loop playsinline controls preload="metadata" aria-label="The same video with only the moving edges highlighted in gold"></video><figcaption><b>What moves.</b> Same frames, with the change from the average frame in gold.</figcaption></figure>
       </div>
-      <p class="cap"><span class="tag-data">video</span><b>The piezo drive in slow motion.</b> The motion is real and about one pixel in this footage, so the left video looks still. Gold marks each frame’s difference from the average frame: the top beam’s edges move and the base stays dark. Nothing is magnified or warped.</p>
+      <p class="cap"><span class="tag-data">video</span><b>The piezo’s stroke is about one pixel in this footage.</b> The motion is real but tiny, so the left video looks still. Gold marks each frame’s difference from the average frame: the top beam’s edges move and the base stays dark. Nothing is magnified or warped.</p>
     </div>
 
     <h3>Photon angles</h3>
-    <p>Only the part of the source velocity along a photon’s path shifts its energy. A photon at angle θ to the drive axis sees v cos θ, so a line that belongs at v<sub>0</sub> shows up at v<sub>0</sub>/cos θ. Moving the source closer to the aperture lets in more photons at wider angles: you count faster and the lines blur.</p>
+    <p>A photon at angle θ to the drive axis sees only v cos θ, so a line that belongs at v<sub>0</sub> shows up at v<sub>0</sub>/cos θ. A source closer to the aperture lets in more photons at wider angles: you count faster and the lines blur.</p>
     <div class="fig fig--light">
       <canvas id="f5" class="story" aria-label="Side view of a source behind an aperture with rays at angle theta, the Monte Carlo angle distributions for the source 30 mm and 8 mm back, and an iron sextet through each"></canvas>
       <div class="fig-controls"><label>Photon angle (θ) <input type="range" id="f5-th" min="0" max="35" step="1" value="12"></label><span class="seg" id="f5-sb"></span><span class="seg" id="f5-zoom"></span></div>
-      <p class="cap"><span class="tag-model">simulated</span><b>Speed versus sharpness.</b> With the source 8 mm behind the aperture (purple) the head collects 8× the counts of 30 mm (blue), but the outer iron line widens to 0.73 mm/s instead of 0.31 (0.28 with no spread). The slider shows the shift for a single angle.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>Speed versus sharpness.</b> With the source 8 mm behind the aperture (purple) the head collects 8× the counts of 30 mm (blue), but the outer iron line widens to 0.73 mm/s instead of 0.31 (0.28 with no spread). The slider shows the shift for a single angle. The <a href="montecarlo.html">Monte Carlo page</a> has the model behind it and the real head designs.</p>
     </div>
 
     <h2 class="part" id="work"><span>IV</span>What I did</h2>
@@ -193,7 +193,7 @@
     <ul class="bullets">
       <li><b>Drive.</b> Measured its real velocity with a laser vibrometer. It missed the target by 0.11 mm/s RMS, the same way every cycle, so the error can be mapped and corrected. Compared candidate feedback sensors.</li>
       <li><b>Counting electronics.</b> Traced and debugged the firmware that sorts detector pulses by drive phase.</li>
-      <li><b>Photon model.</b> Wrote a Monte Carlo model of photon paths and measured the assembled head from photographs to feed it (<a href="montecarlo.html#pipeline">how the model works</a>). Checked against our spectra, photon angles explain about half the extra line width in backscatter compared with transmission. The rest is still open (<a href="montecarlo.html#limits">what the model leaves out</a>).</li>
+      <li><b>Photon model.</b> Wrote a Monte Carlo model of photon paths and measured the assembled head from photographs to feed it (<a href="montecarlo.html#pipeline">how the model works</a>). In our spectra, the part of the line width that grows with velocity matches the model. Line centers shift only 0.7 to 0.85 as far as predicted, and part of the extra width in backscatter does not depend on velocity, so it comes from something other than photon angles (<a href="montecarlo.html#limits">what the model leaves out</a>).</li>
       <li><b>A better head.</b> The model predicts that moving the source about 12 mm back in the next design keeps today’s line sharpness and doubles the count rate (<a href="montecarlo.html#heads">design comparison</a>).</li>
     </ul>
 
