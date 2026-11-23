@@ -64,7 +64,6 @@
 <main id="main" class="page">
   <div class="container">
 
-
     <div class="callout tldr"><div>SiNRG is a lab prototype of a small instrument head for Mars. Pressed against a rock, it measures the elements (<b>X-ray fluorescence</b>, XRF) and which minerals hold the iron (<b>Mössbauer spectroscopy</b>) with one detector. Mössbauer spectra are slow to collect and their lines blur, and the head’s geometry trades one against the other: moving the source closer collects <b>8× the counts</b> but widens the outer iron line from 0.31 to 0.73 mm/s. I measured the drive, debugged the counting electronics and modeled the photon paths. The model points to a head that keeps today’s sharpness at twice the count rate.</div></div>
 
     <figure class="fig hero-photo"><div class="annot-wrap"><img src="assets/img/gallery/sinrg/head-front.jpg" alt="The prototype head from the front, with three openings: the americium-241 source for X-ray fluorescence on the left, the detector in the middle and the cobalt-57 source for Mössbauer on the right" width="1600" height="900">
@@ -86,13 +85,6 @@
         </g>
       </svg></div>
       <figcaption><b>The prototype head.</b> A rock goes in front of three openings: the ²⁴¹Am source for XRF, the silicon drift detector, and the ⁵⁷Co source for Mössbauer, which rides on the piezo drive.</figcaption></figure>
-
-    <div class="facts">
-      <div class="fact"><b>⁵⁷Fe</b><span>Backscatter Mössbauer: no sample preparation</span></div>
-      <div class="fact"><b>+ XRF</b><span>Elements from the same head and detector</span></div>
-      <div class="fact"><b>7 g</b><span>Piezo drive, about 7× lighter than the flight voice coil</span></div>
-      <div class="fact"><b>2023–2026</b><span>NASA PICASSO, Caltech and JPL</span></div>
-    </div>
 
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
       <li><a href="#iron"><b>I. What the iron says</b><span>Minerals an element map can’t separate</span></a></li>
@@ -201,7 +193,6 @@
     <h2 class="part" id="status"><span>V</span>Status</h2>
     <p class="lead-line">The prototype records both kinds of spectra, and the write-up is under way.</p>
     <p>The three-year project under NASA’s PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations) closed with a review in November 2026. With one detector, the prototype recorded backscatter Mössbauer spectra of iron minerals, including a five-mineral Mars soil simulant, and XRF spectra of trace elements in a glass standard. We also ran the drive at 60 °C. We’re writing up the combined results with our JPL collaborators.</p>
-    <div class="chips"><span>Laser Doppler vibrometry</span><span>Monte Carlo</span><span>Python</span><span>Teensy / C++</span><span>CAD (STEP)</span><span>Silicon drift detectors</span><span>XRF (PIQUANT)</span></div>
 
     <h3>On the bench</h3>
     <div class="gallery">
@@ -216,7 +207,6 @@
     <div class="next-links"><a class="btn" href="montecarlo.html">Monte Carlo model</a><a class="btn" href="entropy.html">Alloy entropy</a><a class="btn" href="index.html#research">All research</a></div>
   </div>
 </main>
-
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image"><div class="lightbox-card lightbox-card--wide"> <img id="lightbox-img" src="" alt="" class="lightbox-img"> <div class="lightbox-footer"> <span class="lightbox-caption" id="lightbox-caption"></span> <div class="lightbox-controls"> <button class="lightbox-btn" id="lightbox-prev" type="button" aria-label="Previous image">&#8592;</button> <button class="lightbox-btn" id="lightbox-next" type="button" aria-label="Next image">&#8594;</button> <button class="lightbox-btn" id="lightbox-close" type="button" aria-label="Close">&#10005;</button></div>
     </div>

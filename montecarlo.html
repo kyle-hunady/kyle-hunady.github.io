@@ -63,10 +63,10 @@
 <main id="main" class="page">
   <div class="container">
 
-    <div class="callout abstract"><div>This page covers the photon model of the backscatter Mössbauer head that Caltech and JPL developed under NASA’s PICASSO program. The instrument, and how Mössbauer spectroscopy works, are on <a href="instrument.html">Reading rocks with gamma rays</a>. Method, in order: dimensions measured from a photo of the assembled head, a 3-D model of the source, collimator and detector, Monte Carlo tracing of about 30,000 detected photons per design, and a kernel built from their angles that broadens any input spectrum. All spectra on this page are simulated.</div></div>
-
     <div class="callout tldr"><div>Can we still tell iron minerals apart once the head broadens the lines, and can a new layout count faster without more broadening? Yes to both in the model. All four mineral pairs I tested stayed distinguishable. The hardest pair, hematite and magnetite, needed <b>1.65×</b> the counting time to reach the same precision as a spectrum without broadening. Moving the source about 12 mm farther back in the next design (ver3) would give <b>2×</b> the count rate of the current head at the same resolution.</div></div>
 
+    <figure class="fig hero-photo"><img src="assets/img/proj-montecarlo.png?v=20261119" alt="Model of the head: photons leave the cobalt-57 source as a cone, hit the sample, and some reach the detector; at right, the six iron lines the sample makes and the broader lines the detector records" width="1252" height="782">
+      <figcaption><b>The model of the head.</b> Photons leave the ⁵⁷Co source, scatter off the sample and reach the detector at a spread of angles, which broadens the lines. All spectra on this page are simulated. The instrument itself is on <a href="instrument.html">Reading rocks with gamma rays</a>.</figcaption></figure>
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
       <li><a href="#read"><b>I. The input spectra</b><span>Where each mineral puts its lines</span></a></li>
       <li><a href="#trade"><b>II. Why photon angle matters</b><span>Count rate against line width</span></a></li>
