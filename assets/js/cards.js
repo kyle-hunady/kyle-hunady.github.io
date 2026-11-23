@@ -12,8 +12,10 @@
                       (montecarlo.html, frame 6), turning 360 deg per loop, photons flying source ->
                       sample -> detector and collecting on the chip. Only the left panel is redrawn;
                       the sextet on the right is the static PNG showing through.
-   data-motion="video" a muted looping clip (data-video MP4, optional data-webm) laid over its own poster frame;
-                      loads on first view, plays only while visible. Used by the subway card. */
+   data-motion="anim" a looping animated image (data-anim, an animated WebP made from a phone clip) laid over its
+                      own poster frame; loads on first view. Used by the subway card. Not a <video>: muted autoplay is
+                      refused on some devices (iOS Low Power Mode, battery savers) and a hardware decoder painted a
+                      colored line along the clip's edge, while an animated image decodes in software and always plays. */
 "use strict";
 (function () {
   var thumbs = document.querySelectorAll(".project__thumb[data-motion]");
@@ -41,7 +43,7 @@
       if (kind === "mc") m = mcHead(el);
       if (kind === "drift") m = drift(el);
       if (kind === "melt" && !slowNet) m = meltSlabs(el);
-      if (kind === "video" && !slowNet) m = clip(el);
+      if (kind === "anim" && !slowNet) m = animImg(el);
       if (!m) return;
       m.el = el; m.visible = false; live.push(m); io.observe(el);
     });
@@ -64,30 +66,18 @@
       start: function () { el.classList.add("is-on"); }, stop: function () { el.classList.remove("is-on"); } };
   }
 
-  /* ---------------------------------------------------------------- video clip (subway card) */
-  // A short muted looping clip from data-video (MP4) / data-webm. Nothing downloads until the card first
-  // scrolls into view; it plays only while on screen. The static <img> (the clip's poster frame) stays underneath.
-  function clip(el) {
-    var mp4 = el.getAttribute("data-video"); if (!mp4) return null;
-    var v = document.createElement("video");
-    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none";
-    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("disablepictureinpicture", "");
-    var img = el.querySelector("img"); if (img) v.poster = img.currentSrc || img.src;
-    var layer = layerOn(el, v), loaded = false;
-    v.addEventListener("playing", function () { layer.classList.add("is-ready"); });
-    function play() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  /* ---------------------------------------------------------------- animated image (subway card) */
+  // data-anim is fetched the first time the card scrolls into view and fades in over the static poster once it
+  // has decoded. Browsers do not paint (or advance) an animated image that is off screen, so start/stop only
+  // decide when it first loads.
+  function animImg(el) {
+    var src = el.getAttribute("data-anim"); if (!src) return null;
+    var im = new Image(); im.alt = ""; im.decoding = "async";
+    var layer = layerOn(el, im), loaded = false;
+    im.onload = function () { layer.classList.add("is-ready"); };
     return { layer: layer,
-      start: function () {
-        if (!loaded) {
-          loaded = true;
-          [[el.getAttribute("data-webm"), "video/webm"], [mp4, "video/mp4"]].forEach(function (s) {
-            if (!s[0]) return; var so = document.createElement("source"); so.src = s[0]; so.type = s[1]; v.appendChild(so);
-          });
-          v.load();
-        }
-        play();
-      },
-      stop: function () { v.pause(); } };
+      start: function () { if (!loaded) { loaded = true; im.src = src; } },
+      stop: function () {} };
   }
 
   /* ---------------------------------------------------------------- literature strip */
