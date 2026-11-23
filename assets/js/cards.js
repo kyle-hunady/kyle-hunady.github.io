@@ -6,7 +6,7 @@
 
    data-motion="lit"  sideways-scrolling strip of paper first pages (assets/img/proj-literature-strip.jpg,
                       built by tools/lit_strip.py; CSS animation, repeat-x so the wrap is seamless), under the
-                      .lit-prompt terminal panel, which retypes a real /lit-fetch question (litPrompt)
+                      .lit-prompt terminal panel, which retypes three real /lit-fetch questions in turn (litPrompt)
    data-motion="melt" the two Pb coexistence slabs from melting.html, crystal growing at 590 K and melting at 663 K
    data-motion="mc"   the Monte Carlo head redrawn live: the fe_8mm geometry from mc-story-data.js
                       (montecarlo.html, frame 6), turning 360 deg per loop, photons flying source ->
@@ -77,50 +77,62 @@
       stop: function () { layer.classList.remove("is-on"); } };
   }
 
-  /* lit card prompt 2026-11: the .lit-prompt panel in index.html holds the finished line (what no-JS and
-     reduced-motion visitors see). Here it is retyped on a loop: /lit-fetch + question, a spinner counting the
-     papers read, the finished status, a hold, then it clears. The full text stays in the DOM (the untyped rest
-     is invisible), so the panel never changes size. Timing is a function of (elapsed mod period). */
+  /* lit card prompt 2026-11: the .lit-prompt panel in index.html holds three real /lit-fetch runs, each a
+     .lit-prompt__run with its question and finished status line (the first is what no-JS and reduced-motion
+     visitors see). Here they are retyped in turn: /lit-fetch + question, a spinner counting the papers read,
+     the finished status, a hold, then it clears and the next run types. The runs share one grid cell and each
+     keeps its full text in the DOM (the untyped rest is invisible), so the panel never changes size.
+     Timing is a function of (elapsed mod cycle). */
   function litPrompt(el) {
     var box = el.querySelector(".lit-prompt"); if (!box) return null;
-    var segs = Array.prototype.map.call(box.querySelectorAll("[data-type]"), function (s) {
-      var full = s.textContent, typed = document.createElement("span"), rest = document.createElement("span");
-      rest.className = "lit-prompt__rest"; s.textContent = ""; s.appendChild(typed); s.appendChild(rest);
-      return { el: s, full: full, typed: typed, rest: rest, ms: +s.getAttribute("data-type") };
-    });
-    var st = box.querySelector(".lit-prompt__st"), stFinal = st.innerHTML, nPapers = +st.getAttribute("data-count") || 0;
+    var PAUSE = 350, COUNT = 1600, HOLD = 3800, FADE = 450, GLYPH = "·✢✳✶✻✽";
     var caret = document.createElement("i"); caret.className = "lit-prompt__caret";
-    var tT = 0; segs.forEach(function (s) { s.t0 = tT; tT += s.full.length * s.ms; });
-    var PAUSE = 350, COUNT = 1600, HOLD = 4500, FADE = 450, P = tT + PAUSE + COUNT + HOLD + FADE;
-    var GLYPH = "·✢✳✶✻✽", last = "", raf = 0, acc = 0, base = 0;
-    function render(e) {
-      var key, stHTML = null;
-      segs.forEach(function (s) {
+    var off = 0, runs = Array.prototype.map.call(box.querySelectorAll(".lit-prompt__run"), function (r) {
+      var tT = 0, segs = Array.prototype.map.call(r.querySelectorAll("[data-type]"), function (s) {
+        var full = s.textContent, typed = document.createElement("span"), rest = document.createElement("span");
+        rest.className = "lit-prompt__rest"; s.textContent = ""; s.appendChild(typed); s.appendChild(rest);
+        var g = { el: s, full: full, typed: typed, rest: rest, ms: +s.getAttribute("data-type"), t0: tT };
+        tT += full.length * g.ms; return g;
+      });
+      var st = r.querySelector(".lit-prompt__st"), P = tT + PAUSE + COUNT + HOLD + FADE;
+      var run = { el: r, segs: segs, st: st, stFinal: st.innerHTML, n: +st.getAttribute("data-count") || 0, tT: tT, P: P, t0: off };
+      off += P; return run;
+    });
+    if (!runs.length) return null;
+    var CYCLE = off, cur = -1, last = "", raf = 0, acc = 0, base = 0;
+    function render(t) {
+      var i = 0; while (i < runs.length - 1 && t >= runs[i].t0 + runs[i].P) i++;
+      var R = runs[i], e = t - R.t0, key, stHTML = null;
+      if (i !== cur) { runs.forEach(function (x, j) { x.el.classList.toggle("is-shown", j === i); }); cur = i; last = ""; }
+      R.segs.forEach(function (s, j) {
         var n = Math.max(0, Math.min(s.full.length, Math.floor((e - s.t0) / s.ms)));
         if (s.n !== n) { s.n = n; s.typed.textContent = s.full.slice(0, n); s.rest.textContent = s.full.slice(n); }
-        if (e >= s.t0 && (e < s.t0 + s.full.length * s.ms || s === segs[segs.length - 1]) && caret.nextSibling !== s.rest) s.el.insertBefore(caret, s.rest);
+        if (e >= s.t0 && (e < s.t0 + s.full.length * s.ms || j === R.segs.length - 1) && caret.nextSibling !== s.rest) s.el.insertBefore(caret, s.rest);
       });
-      if (e < tT + PAUSE) key = "type";
-      else if (e < tT + PAUSE + COUNT) {
-        var k = Math.round(nPapers * (e - tT - PAUSE) / COUNT);
-        key = "n" + k + "g" + Math.floor(e / 110) % GLYPH.length;
-        stHTML = '<span class="lit-prompt__spin">' + GLYPH[Math.floor(e / 110) % GLYPH.length] + "</span> " + k + " papers read";
-      } else { key = e < P - FADE ? "done" : "fade"; stHTML = stFinal; }
-      box.classList.toggle("is-typing", e < tT);
+      if (e < R.tT + PAUSE) key = "type";
+      else if (e < R.tT + PAUSE + COUNT) {
+        var k = Math.round(R.n * (e - R.tT - PAUSE) / COUNT), g = GLYPH[Math.floor(e / 110) % GLYPH.length];
+        key = "n" + k + g;
+        stHTML = '<span class="lit-prompt__spin">' + g + "</span> " + k + " papers read";
+      } else { key = e < R.P - FADE ? "done" : "fade"; stHTML = R.stFinal; }
+      box.classList.toggle("is-typing", e < R.tT);
       if (key === last) return; last = key;
-      st.style.visibility = stHTML === null ? "hidden" : "";
-      if (stHTML !== null) st.innerHTML = stHTML;
+      R.st.style.visibility = stHTML === null ? "hidden" : "";
+      if (stHTML !== null) R.st.innerHTML = stHTML;
       box.classList.toggle("is-clearing", key === "fade");
     }
-    function frame(now) { acc = now - base; render(acc % P); raf = requestAnimationFrame(frame); }
+    function frame(now) { acc = now - base; render(acc % CYCLE); raf = requestAnimationFrame(frame); }
     box.classList.add("is-live");
     return {
       start: function () { if (!raf) { base = performance.now() - acc; raf = requestAnimationFrame(frame); } },
       stop: function () { cancelAnimationFrame(raf); raf = 0; },
-      reset: function () {   // back to the finished line, as in the markup
-        cancelAnimationFrame(raf); raf = 0; caret.remove();
-        segs.forEach(function (s) { s.el.textContent = s.full; });
-        st.innerHTML = stFinal; st.style.visibility = ""; box.classList.remove("is-live", "is-typing", "is-clearing");
+      reset: function () {   // back to the markup: the first run shown with its finished line
+        cancelAnimationFrame(raf); raf = 0; caret.remove(); cur = -1; last = "";
+        runs.forEach(function (R, j) {
+          R.segs.forEach(function (s) { s.el.textContent = s.full; s.n = undefined; });
+          R.st.innerHTML = R.stFinal; R.st.style.visibility = ""; R.el.classList.toggle("is-shown", j === 0);
+        });
+        box.classList.remove("is-live", "is-typing", "is-clearing");
       } };
   }
   function litCard(el, withStrip) {
