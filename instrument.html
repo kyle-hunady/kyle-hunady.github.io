@@ -193,14 +193,9 @@
     <ul class="bullets">
       <li><b>Drive.</b> Measured its real velocity with a laser vibrometer. It missed the target by 0.11 mm/s RMS, the same way every cycle, so the error can be mapped and corrected. Compared candidate feedback sensors.</li>
       <li><b>Counting electronics.</b> Traced and debugged the firmware that sorts detector pulses by drive phase.</li>
-      <li><b>Photon model.</b> Wrote a Monte Carlo model of photon paths and measured the assembled head from photographs to feed it (<a href="montecarlo.html">Monte Carlo write-up</a>). Checked against our spectra, photon angles explain about half the extra line width in backscatter compared with transmission. The rest is still open.</li>
+      <li><b>Photon model.</b> Wrote a Monte Carlo model of photon paths and measured the assembled head from photographs to feed it (<a href="montecarlo.html#pipeline">how the model works</a>). Checked against our spectra, photon angles explain about half the extra line width in backscatter compared with transmission. The rest is still open (<a href="montecarlo.html#limits">what the model leaves out</a>).</li>
+      <li><b>A better head.</b> The model predicts that moving the source about 12 mm back in the next design keeps today’s line sharpness and doubles the count rate (<a href="montecarlo.html#heads">design comparison</a>).</li>
     </ul>
-
-    <h3>A better head</h3>
-    <div class="fig fig--light">
-      <canvas id="f9" class="story" aria-label="Three instrument heads side by side in 3-D with translucent collimators and detected rays colored by angle"></canvas>
-      <p class="cap"><span class="tag-model">simulated</span><b>Three heads at the same scale.</b> Moving the source about 12 mm back in the next design keeps today’s line sharpness and doubles the count rate. Each ray is a detected photon, colored by its angle to the drive axis.</p>
-    </div>
 
     <h2 class="part" id="status"><span>V</span>Status</h2>
     <p class="lead-line">The prototype records both kinds of spectra, and the write-up is under way.</p>
