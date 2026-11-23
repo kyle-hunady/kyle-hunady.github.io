@@ -1,5 +1,6 @@
-/* sinrg.js - the three figures sinrg.html adds on top of mc-story.js (which supplies f1, f3, f4, f5, f9).
-   fx: what one detector sees (XRF lines vs the Mossbauer line). fm: mineral pairs XRF can't separate. fd: sampling depth.
+/* sinrg.js - the three figures instrument.html adds on top of mc-story.js (which supplies f3, f4, f5, f9).
+   fx: what one detector sees from each source (two panels, shared energy axis). fm: mineral pairs XRF can't separate.
+   fd: sampling depth of the 14.4 keV and 6.4 keV signals (three rocks side by side, shared depth axis).
    Line energies: python -m nucdata table xray / probes Fe (utilities/nucdata). Mineral parameters: Morris et al. 2006a,
    10.1029/2005JE002584 (Mars temperatures). Depths: sinrg/factsheet/build/D_info_depth.py (model, our head's angles). */
 "use strict";
@@ -45,30 +46,31 @@ function axisX(ctx, x0, x1, y, lo, hi, ticks, label) {
   return X;
 }
 
-/* ---------- fx: one detector, two kinds of signal ---------- */
+/* ---------- fx: one detector, two kinds of signal (two panels on one energy axis, no toggle) ---------- */
 // Ka / Kb energies in keV (nucdata xray table); 14.413 keV = 57Fe Mossbauer gamma (nucdata probes Fe)
 const LINES = { K: [3.314, 3.590], Ca: [3.692, 4.013], Ti: [4.512, 4.933], Mn: [5.900, 6.492], Fe: [6.405, 7.059], Ni: [7.480, 8.267], Sr: [14.165, 15.835], Zr: [15.775, 17.668] };
 const XRF_H = { K: 0.18, Ca: 0.55, Ti: 0.22, Mn: 0.08, Fe: 1.0, Ni: 0.05, Sr: 0.12, Zr: 0.09 };   // illustrative basalt
-const fx = fig("fx", 0.42, 0.75, (ctx, w, h, mode) => {
-  const L = 44, R = w - 16, T = 26, B = h - 46, lo = 2, hi = 18;
-  const X = axisX(ctx, L, R, B, lo, hi, [2, 4, 6, 8, 10, 12, 14, 16, 18], "photon energy (keV)");
-  const peaks = [];
-  if (mode === 0) for (const el in LINES) { peaks.push([LINES[el][0], XRF_H[el], el === "Fe" ? C.red : C.teal, el]); peaks.push([LINES[el][1], XRF_H[el] * 0.15, el === "Fe" ? C.red : C.teal, null]); }
-  else { peaks.push([14.413, 1.0, C.purple, "14.4 keV γ (Mössbauer)"]); peaks.push([LINES.Fe[0], 0.42, C.red, "Fe Kα 6.4 keV"]); peaks.push([LINES.Fe[1], 0.07, C.red, null]); }
-  if (mode === 1) {   // the two windows the electronics count in
-    [[5.9, 6.9, C.red], [13.7, 15.1, C.purple]].forEach(([a, b, c]) => { ctx.fillStyle = c; ctx.globalAlpha = 0.08; ctx.fillRect(X(a), T, X(b) - X(a), B - T); ctx.globalAlpha = 1; });
-    txt(ctx, "counting windows", X(10.3), T + 12, { size: 11, col: C.mute, align: "center" });
-  }
-  const Y = v => B - v * (B - T - 18);
-  const spec = e => peaks.reduce((s, [e0, a]) => { const sg = 0.055 * Math.sqrt(e0); return s + a * Math.exp(-0.5 * ((e - e0) / sg) ** 2); }, 0.015);
-  ctx.beginPath(); for (let px = L; px <= R; px++) { const e = lo + (px - L) / (R - L) * (hi - lo); const y = Y(spec(e)); px === L ? ctx.moveTo(px, y) : ctx.lineTo(px, y); }
-  ctx.strokeStyle = C.ink; ctx.lineWidth = 1.6; ctx.stroke();
-  peaks.forEach(([e0, a, c, lab], i) => { if (!lab) return; const up = (lab === "Ti" || lab === "Mn" || lab === "K") ? 14 : 0;
-    txt(ctx, lab, X(e0), Y(a) - 6 - up, { size: 11.5, w: 600, col: c, align: lab.length > 3 && e0 > 12 ? "right" : "center" }); });
-  badge(ctx, "SCHEMATIC", R, T - 8);
-  txt(ctx, mode === 0 ? "²⁴¹Am source: elements" : "⁵⁷Co source: iron, by Mössbauer", L, T - 8, { size: 12, w: 600 });
+const fx = fig("fx", 0.6, 1.15, (ctx, w, h) => {
+  const L = 16, R = w - 16, lo = 2, hi = 18, top = 30, bot = h - 46, gap = 40, ph = (bot - top - gap) / 2;
+  const X = v => L + (v - lo) / (hi - lo) * (R - L);
+  [0, 1].forEach(mode => {
+    const T = top + mode * (ph + gap), B = T + ph, peaks = [];
+    if (mode === 0) for (const el in LINES) { peaks.push([LINES[el][0], XRF_H[el], el === "Fe" ? C.red : C.teal, el]); peaks.push([LINES[el][1], XRF_H[el] * 0.15, el === "Fe" ? C.red : C.teal, null]); }
+    else { peaks.push([14.413, 1.0, C.purple, "14.4 keV γ (Mössbauer)"]); peaks.push([LINES.Fe[0], 0.42, C.red, "Fe Kα 6.4 keV"]); peaks.push([LINES.Fe[1], 0.07, C.red, null]); }
+    if (mode === 1) [[5.9, 6.9, C.red], [13.7, 15.1, C.purple]].forEach(([a, b, c]) => { ctx.fillStyle = c; ctx.globalAlpha = 0.08; ctx.fillRect(X(a), T + 6, X(b) - X(a), B - T - 6); ctx.globalAlpha = 1; });
+    if (mode === 1) txt(ctx, "counted windows", X(10.3), B - 8, { size: 11, col: C.mute, align: "center" });
+    const Y = v => B - v * (B - T - 26);
+    const spec = e => peaks.reduce((s, [e0, a]) => { const sg = 0.055 * Math.sqrt(e0); return s + a * Math.exp(-0.5 * ((e - e0) / sg) ** 2); }, 0.015);
+    ctx.beginPath(); for (let px = L; px <= R; px++) { const e = lo + (px - L) / (R - L) * (hi - lo); const y = Y(spec(e)); px === L ? ctx.moveTo(px, y) : ctx.lineTo(px, y); }
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.strokeStyle = C.faint; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, B); ctx.lineTo(R, B); ctx.stroke();
+    peaks.forEach(([e0, a, c, lab]) => { if (!lab) return; const up = (lab === "Ti" || lab === "Mn" || lab === "K") ? 14 : 0;
+      txt(ctx, lab, X(e0), Y(a) - 6 - up, { size: 11.5, w: 600, col: c, align: lab.length > 3 && e0 > 12 ? "right" : "center" }); });
+    txt(ctx, mode === 0 ? "²⁴¹Am source: element lines (XRF)" : "⁵⁷Co source: iron lines for Mössbauer", L, T - 8, { size: 12.5, w: 600 });
+  });
+  axisX(ctx, L, R, bot, lo, hi, [2, 4, 6, 8, 10, 12, 14, 16, 18], "photon energy (keV)");
+  badge(ctx, "SCHEMATIC", R, top - 8);
 });
-if (fx) seg("fx-src", ["²⁴¹Am · elements (XRF)", "⁵⁷Co · iron (Mössbauer)"], fx);
 
 /* ---------- fm: pairs an element map can't separate ---------- */
 const VF = [5.3119, 3.0768, 0.8417];   // alpha-Fe line velocities at 33.0 T (mc-story.js)
@@ -109,35 +111,48 @@ const fm = fig("fm", 0.5, 0.95, (ctx, w, h, mode) => {
     else arrow(X(pl[0][0]), X(pl[5][0]), base - amp * 0.12, "Bhf " + ph.B.toFixed(1) + " T");
   });
   badge(ctx, "MODEL", R, 14);
-  txt(ctx, "Same elements in the XRF. Different spectra.", L, 14, { size: 12, col: C.mute });
 });
 if (fm) seg("fm-pair", PAIRS.map(p => p.name), fm);
 
-/* ---------- fd: how deep each signal looks ---------- */
-const DEPTH = [   // 95 % information depth (um), 14.4 / 6.4 keV, our head's angles (factsheet D-N38-01..03)
-  { name: "Basalt", d14: 303, d64: 91, note: "FeO 19 wt %, 2.9 g/cm³" },
-  { name: "Lunar highland soil", d14: 768, d64: 170, note: "FeO 4.5 wt %, 1.5 g/cm³" },
-  { name: "Hematite-rich rock", d14: 54, d64: 48, note: "iron-rich, so both stay shallow" },
+/* ---------- fd: how deep each signal looks (three rocks side by side on one depth axis, no toggle) ---------- */
+// 95 % information depth (um), 14.4 / 6.4 keV, off resonance, our head's median angles (56 deg in, 62 deg out):
+// 1Research/sinrg/factsheet/build/D_info_depth.json (xraydb mass attenuation; compositions listed there).
+// The model is single exponential, weight(z) ~ exp(-mu_eff z), so mu_eff = ln 20 / z95 and the shading below is exact.
+const DEPTH = [
+  { name: "Basalt", note: "FeO 14 wt %, 2.9 g/cm³", d14: 303, d64: 91 },
+  { name: "Highland soil", note: "FeO 4.5 wt %, 1.5 g/cm³", d14: 768, d64: 170 },
+  { name: "Hematite", note: "Fe₂O₃, 5.3 g/cm³", d14: 54, d64: 48 },
 ];
-const fd = fig("fd", 0.42, 0.8, (ctx, w, h, mode) => {
-  const D = DEPTH[mode], L = 70, R = w - 16, T = 40, B = h - 16, max = 800;
+const LN20 = Math.log(20);
+const fd = fig("fd", 0.5, 1.05, (ctx, w, h) => {
+  const narrow = w < 560, L = 50, R = w - 6, T = narrow ? 96 : 78, B = h - 12, max = 800;
   const Y = z => T + z / max * (B - T);
-  ctx.fillStyle = "#e9e1d2"; ctx.fillRect(L, T, R - L, B - T);
-  for (let i = 0; i < 260; i++) { const x = L + ((i * 97) % 1000) / 1000 * (R - L), y = T + ((i * 61) % 997) / 997 * (B - T); ctx.fillStyle = i % 3 ? "#d8ccb6" : "#c9b99c"; ctx.fillRect(x, y, 3, 2); }
-  ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(R, T); ctx.stroke();
-  [0, 200, 400, 600, 800].forEach(z => { txt(ctx, z + " µm", L - 8, Y(z) + 4, { size: 11, col: C.mute, align: "right" }); });
-  const bw = Math.min(90, (R - L) / 5);
-  [[D.d14, C.purple, "14.4 keV γ", 0.3], [D.d64, C.red, "6.4 keV Fe X-ray", 0.6]].forEach(([z, c, lab, fx_]) => {
-    const x = L + (R - L) * fx_ - bw / 2;
-    const gr = ctx.createLinearGradient(0, T, 0, Y(z)); gr.addColorStop(0, c); gr.addColorStop(1, c + "33");
-    ctx.fillStyle = gr; ctx.fillRect(x, T, bw, Y(z) - T);
-    txt(ctx, lab, x + bw / 2, T - 8, { size: 12, w: 600, col: c, align: "center" });
-    txt(ctx, "95 % within " + z + " µm", x + bw + 8, Y(z) + 4, { size: 12, col: C.ink });
+  // legend
+  const sw = (x, y, c, s) => { ctx.fillStyle = c; ctx.fillRect(x, y - 9, 12, 10); txt(ctx, s, x + 17, y, { size: 12 }); };
+  sw(L, 16, C.purple, "14.4 keV γ (Mössbauer)");
+  if (narrow) sw(L, 34, C.red, "6.4 keV Fe X-ray"); else sw(L + 190, 16, C.red, "6.4 keV Fe X-ray");
+  badge(ctx, "MODEL", R, 16);
+  // depth axis
+  [0, 200, 400, 600, 800].forEach(z => { txt(ctx, String(z), L - 8, Y(z) + 4, { size: 11, col: C.mute, align: "right" });
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, Y(z)); ctx.lineTo(R, Y(z)); ctx.stroke(); });
+  ctx.save(); ctx.translate(13, (T + B) / 2); ctx.rotate(-Math.PI / 2); txt(ctx, "depth below the surface (µm)", 0, 0, { size: 11.5, col: C.mute, align: "center" }); ctx.restore();
+  const cw = (R - L) / 3;
+  DEPTH.forEach((D, i) => {
+    const x0 = L + i * cw + 5, x1 = x0 + cw - 10, cx = (x0 + x1) / 2;
+    ctx.fillStyle = "#efe8da"; ctx.fillRect(x0, T, x1 - x0, B - T);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, T); ctx.lineTo(x1, T); ctx.stroke();
+    txt(ctx, D.name, cx, T - (narrow ? 22 : 24), { size: 12.5, w: 600, align: "center" });
+    txt(ctx, narrow ? D.note.split(",")[0] : D.note, cx, T - 8, { size: 10.5, col: C.mute, align: "center" });
+    const bw = (x1 - x0) * 0.34;
+    [[D.d14, C.purple, 0.28], [D.d64, C.red, 0.72]].forEach(([z95, c, f]) => {
+      const bx = x0 + (x1 - x0) * f - bw / 2, g = ctx.createLinearGradient(0, T, 0, B), rgb = [1, 3, 5].map(k => parseInt(c.slice(k, k + 2), 16));
+      for (let k = 0; k <= 40; k++) { const z = k / 40 * max; g.addColorStop(k / 40, `rgba(${rgb},${(0.9 * Math.exp(-LN20 * z / z95)).toFixed(3)})`); }
+      ctx.fillStyle = g; ctx.fillRect(bx, T, bw, B - T);
+      ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx - 3, Y(z95)); ctx.lineTo(bx + bw + 3, Y(z95)); ctx.stroke();
+      txt(ctx, String(z95), bx + bw / 2, Y(z95) + 15 > B - 2 ? Y(z95) - 7 : Y(z95) + 15,{ size: 11.5, w: 600, col: c, align: "center" });
+    });
   });
-  badge(ctx, "MODEL", R, 14);
-  txt(ctx, D.name + " · " + D.note, L, 14, { size: 12, col: C.mute });
 });
-if (fd) seg("fd-mat", DEPTH.map(d => d.name), fd);
 
 let tm = null;
 const all = () => draws.forEach(d => d.redraw());

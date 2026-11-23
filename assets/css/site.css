@@ -1136,3 +1136,8 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .project__thumb.is-drift.is-on img { animation-play-state: running; }
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
+
+/* ---- instrument.html: model tags readable on the light figure paper ---- */
+.pg-instrument .fig--light .tag-model { color: var(--paper-muted); border-color: #b9b9b2; }
+.pg-instrument .fig--light details.details { border-color: #d6d3ca; }
+.pg-instrument .fig--light details.details summary { color: var(--paper-ink); }
