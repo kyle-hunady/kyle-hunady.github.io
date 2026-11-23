@@ -1136,3 +1136,20 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .project__thumb.is-drift.is-on img { animation-play-state: running; }
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
+
+/* battery.html #cathode: dense vs porous cathode schematic (#cathode-paths) */
+#cathode-paths .pore-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 640px) { #cathode-paths .pore-pair { grid-template-columns: 1fr; gap: 1.4rem; } }
+.pores { display: block; width: 100%; height: auto; color: var(--white); }
+.pores .p { fill: var(--surface); stroke: var(--muted); stroke-width: .7; }
+.pores .pf { fill: var(--accent); stroke: none; }
+.pores .chan { fill: none; stroke: var(--rule); stroke-dasharray: 3 2; }
+.pores .sep { stroke: var(--muted); stroke-width: .6; }
+.pores .hatch { stroke: var(--muted); stroke-width: 1; }
+.pores .foil { fill: var(--steel); fill-opacity: .55; }
+.pores .ion { fill: none; stroke: var(--white); stroke-width: 1.4; stroke-dasharray: 5 3; }
+.pores .ax { fill: none; stroke: var(--muted); stroke-width: .8; }
+.pores .conc { fill: none; stroke: var(--steel); stroke-width: 1.8; stroke-linejoin: round; }
+.pores .hd { fill: var(--white); font: 500 12px var(--sans); text-anchor: middle; }
+.pores .lb { fill: var(--muted); font: 10px var(--sans); text-anchor: middle; }
+.pores .t-ion { fill: var(--white); font: 11px var(--sans); }
