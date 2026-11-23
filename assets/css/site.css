@@ -1136,3 +1136,9 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .project__thumb.is-drift.is-on img { animation-play-state: running; }
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
+
+/* battery.html #eis-cell: the Electrodes select swaps the right-hand disk (lithium or blocking steel) */
+#eis-cell .ss-only { display: none; }
+#eis-cell[data-el="ss"] .ss-only { display: inline; }
+#eis-cell[data-el="ss"] .li-only { display: none; }
+#eis-cell .fig-controls select { max-width: 100%; }
