@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modeling a Mössbauer spectrometer · Kyle Hunady</title>
-<meta name="description" content="I used a photon simulation to see how changes to a backscatter Mössbauer spectrometer affect its count rate and spectral resolution.">
+<title>Simulating photon paths in a Mössbauer spectrometer · Kyle Hunady</title>
+<meta name="description" content="A Monte Carlo photon model of a backscatter Mössbauer spectrometer head: how its layout sets count rate and line broadening, what that costs four mineral pairs, and three head designs compared.">
 <link rel="canonical" href="https://kyle-hunady.github.io/montecarlo.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyle-hunady.github.io/montecarlo.html">
-<meta property="og:title" content="Modeling a Mössbauer spectrometer · Kyle Hunady">
-<meta property="og:description" content="I used a photon simulation to see how changes to a backscatter Mössbauer spectrometer affect its count rate and spectral resolution.">
+<meta property="og:title" content="Simulating photon paths in a Mössbauer spectrometer · Kyle Hunady">
+<meta property="og:description" content="A Monte Carlo photon model of a backscatter Mössbauer spectrometer head: how its layout sets count rate and line broadening, what that costs four mineral pairs, and three head designs compared.">
 <meta property="og:image" content="https://kyle-hunady.github.io/assets/img/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B0C0B">
@@ -19,11 +19,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <link rel="stylesheet" href="assets/css/site.css?v=20261122logo">
 =======
 <link rel="stylesheet" href="assets/css/site.css?v=20261122m1">
 >>>>>>> claude/mobile-layout-75e526
 <meta name="report-waive" content="M1: section I animates the spectrum building up on a timer-driven canvas, which the audit does not detect, and the photon paths are 3-D rays the reader can turn; S1: section II draws its generic head with the rays at both knob values before any number, as a side view because the head is generic, and the real heads are drawn in 3-D with their collimators and rays in sections III and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
+=======
+<link rel="stylesheet" href="assets/css/site.css?v=20261119075215">
+<meta name="report-waive" content="M1: section III animates the photon paths on the photo of the head on a timer-driven canvas, which the audit does not detect, and the 3-D heads in sections III and V turn; S1: section II draws its generic head with the rays at both knob values before any number, as a side view because the head is generic, and the real heads are drawn in 3-D with their collimators and rays in sections III and V; H1: a public page on the personal site, not a research report, so it is linked from the site's project card">
+>>>>>>> claude/mc-split-0ddb40
 <!-- crumbs-ld --><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyle-hunady.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://kyle-hunady.github.io/index.html#projects"}, {"@type": "ListItem", "position": 3, "name": "Spectrometer modeling", "item": "https://kyle-hunady.github.io/montecarlo.html"}]}</script><!-- /crumbs-ld --></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -58,73 +63,46 @@
   <div class="container header__container">
     <!-- crumbs --><div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="index.html#projects">Projects</a></li><li aria-current="page">Spectrometer modeling</li></ol></div><!-- /crumbs -->
     <p class="header__eyebrow">Instrument modeling · Caltech and JPL</p>
-    <h1>Modeling a Mössbauer spectrometer</h1>
-    <p class="header__line">We’re building a small spectrometer to identify iron minerals on other planets. I used a Monte Carlo model to find out how the layout of the source, collimator and detector affects how fast the instrument can measure a rock and how sharp its spectrum will be.</p>
+    <h1>Simulating photon paths in a Mössbauer spectrometer</h1>
+    <p class="header__line">A Monte Carlo model of our spectrometer head that predicts how its layout trades count rate against line sharpness, so we can compare designs before changing the hardware.</p>
   </div>
 </header>
 
 <main id="main" class="page">
   <div class="container">
 
-    <div class="callout abstract"><div>I wrote the photon simulation for a backscatter Mössbauer spectrometer that JPL and Caltech developed through NASA’s PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations). The model traces photons individually through each design, recording about 30,000 that reach the detector. The workflow uses published mineral spectra and dimensions I measured from a photo of the instrument. The angles of the detected photons tell us how much each design broadens the lines in a spectrum. The four Mars spectra come from NASA’s archive. The other spectra shown here are simulated.</div></div>
+    <div class="callout abstract"><div>This page covers the photon model behind the backscatter Mössbauer spectrometer that Caltech and JPL developed through NASA’s PICASSO program (Planetary Instrument Concepts for the Advancement of Solar System Observations). The instrument, and how Mössbauer spectroscopy works, are on <a href="instrument.html">Reading rocks with gamma rays</a>. Method, in order: dimensions measured from a photo of the assembled head, a 3-D model of the source, collimator and detector, Monte Carlo tracing of about 30,000 detected photons per design, and a kernel built from their angles that broadens any input spectrum. Mineral line positions come from rover measurements. All spectra on this page are simulated.</div></div>
 
-    <div class="callout tldr"><div>All four mineral pairs I tested stayed distinguishable in the simulation. The hardest pair, hematite and magnetite, needed <b>1.65×</b> the counting time to reach the same precision as a spectrum without broadening. The model also predicts that moving the source about 12 mm farther back in the next design (ver3) would double the count rate of the current instrument at the same resolution.</div></div>
+    <div class="callout tldr"><div>Can we still tell iron minerals apart once the head broadens the lines, and can a new layout count faster without more broadening? Yes to both in the model. All four mineral pairs I tested stayed distinguishable. The hardest pair, hematite and magnetite, needed <b>1.65×</b> the counting time to reach the same precision as a spectrum without broadening. Moving the source about 12 mm farther back in the next design (ver3) would give <b>2×</b> the count rate of the current head at the same resolution.</div></div>
 
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
-      <li><a href="#read"><b>I. Reading iron minerals</b><span>How iron minerals show up in a spectrum</span></a></li>
-      <li><a href="#trade"><b>II. Why spectral lines broaden</b><span>How the source position affects the spectrum</span></a></li>
-      <li><a href="#pipeline"><b>III. Modeling the current instrument</b><span>From a photo to a 3-D model and a kernel</span></a></li>
-      <li><a href="#risk"><b>IV. Can we still tell minerals apart?</b><span>How broadening affects four mineral pairs</span></a></li>
+      <li><a href="#read"><b>I. The input spectra</b><span>Where each mineral puts its lines</span></a></li>
+      <li><a href="#trade"><b>II. Why photon angle matters</b><span>Count rate against line width</span></a></li>
+      <li><a href="#pipeline"><b>III. Modeling the current head</b><span>From a photo to a 3-D model and a kernel</span></a></li>
+      <li><a href="#risk"><b>IV. Can we still tell minerals apart?</b><span>What broadening costs four mineral pairs</span></a></li>
       <li><a href="#heads"><b>V. Comparing three designs</b><span>ver1, ver2 and ver3 at the same scale</span></a></li>
-      <li><a href="#next"><b>VI. Model limits and thesis work</b><span>Where the model helps and where it runs high</span></a></li>
+      <li><a href="#limits"><b>VI. How far to trust the model</b><span>What it covers and what it leaves out</span></a></li>
     </ol></div>
 
-    <h2 class="part" id="read"><span>I</span>Reading iron minerals with Mössbauer spectroscopy</h2>
-    <p class="lead-line">A Mössbauer spectrum tells us which minerals hold the iron in a rock.</p>
-    <p>Olivine contains Fe²⁺. Goethite contains Fe³⁺ bound to hydroxide and forms in the presence of water. On Mars, Spirit used its MIMOS II spectrometer to find goethite in the Columbia Hills, evidence that water had been there [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>]. Opportunity found jarosite, a sulfate whose structural hydroxide is equivalent to about 10% water by weight [<a href="https://doi.org/10.1126/science.1104653">Klingelhöfer et al. 2004</a>].</p>
-
-    <h3>How resonant absorption works</h3>
-    <p>The source is radioactive ⁵⁷Co. Its decay leaves an excited ⁵⁷Fe nucleus, which can emit a 14.4 keV gamma ray as it returns to its ground state. Another ⁵⁷Fe nucleus in the rock absorbs the gamma ray most strongly when the energy matches its own transition. The natural line width is about 5 neV, roughly one part in three trillion. The atoms around the iron can shift the transition by tens of neV, enough to make absorption much less likely.</p>
-    <div class="fig fig--light">
-      <canvas id="f1" class="story" aria-label="Decay scheme of cobalt-57, and a gamma ray absorbed by an iron nucleus with the same energy gap or passing one with a shifted gap"></canvas>
-      <div class="fig-controls"><span class="seg" id="f1-env"></span></div>
-      <p class="cap"><span class="tag-model">schematic</span>The bottom plot shows the emission and absorption lines on the same energy axis. A shift of 0.4 mm/s, typical of a change in iron minerals, moves the absorption line by 19 neV, about four line widths. The ⁵⁷Fe transition is at 14.413 keV, and the excited state has a half-life of 98.3 ns.</p>
-    </div>
-
-    <h3>Each mineral has a fingerprint</h3>
-    <p>A gradient in the electric field splits the excited level in two and produces a doublet. A magnetic field splits both levels and can produce a sextet, with lines as far out as ±9 mm/s in these examples. The positions of the lines help identify the mineral and distinguish Fe²⁺ from Fe³⁺.</p>
+    <h2 class="part" id="read"><span>I</span>The input spectra</h2>
+    <p class="lead-line">Each iron mineral puts its lines at its own source velocities, from near zero out to about ±9 mm/s.</p>
+    <p>The <a href="instrument.html#mossbauer">instrument page</a> explains the measurement. A drive moves the ⁵⁷Co source back and forth at a few mm/s, and the Doppler shift tunes its 14.4 keV gamma rays. The rock sends more photons back to the detector when the source velocity matches one of its iron transitions, so each mineral shows up as a set of lines on a velocity axis. The model asks how much the head’s geometry moves and widens those lines.</p>
     <div class="fig fig--light">
       <canvas id="f2" class="story" aria-label="Nuclear level splitting and spectra for six iron minerals and the α-Fe calibration standard, compared on one velocity axis"></canvas>
       <div class="fig-controls"><span class="seg" id="f2-min"></span></div>
-      <p class="cap"><span class="tag-model">model</span>Select a row to compare six iron minerals and the α-Fe calibration standard. The arrows match the colors of the lines in the spectrum. The top axis shows the energy shift, and the bottom axis shows the source velocity. A velocity of 1 mm/s corresponds to 48 neV. The mineral line positions come from rover measurements [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>].</p>
+      <p class="cap"><span class="tag-model">model</span><b>The magnetic minerals have lines far from zero, where broadening is largest.</b> Select a row to compare six iron minerals and the α-Fe calibration standard. A field gradient splits a line into a doublet, and a magnetic field splits it into a sextet. The arrows match the colors of the lines in the spectrum. The top axis shows the energy shift and the bottom axis the source velocity, where 1 mm/s is 48 neV. Line positions come from rover measurements [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>].</p>
     </div>
-
-    <h3>How the instrument builds a spectrum</h3>
-    <p>The drive moves the source back and forth, ramping its velocity up and down. At a few mm/s, the Doppler shift is enough to scan across the iron transitions. The electronics sort each photon by the source velocity when it was detected. At resonance, the rock sends more photons back toward the detector, and a peak grows. In transmission, the same resonances appear as dips because fewer photons pass through the sample.</p>
-    <div class="fig fig--light">
-      <canvas id="f3" class="story" aria-label="A source on a drive moving toward a sample, its displacement and velocity over one cycle, and a spectrum of counts per velocity channel that grows only under a moving red marker"></canvas>
-      <div class="fig-controls"><button type="button" class="btn btn--light" id="f3-play">Pause</button><button type="button" class="btn btn--light" id="f3-reset">Restart</button><span class="seg" id="f3-samp"></span><span class="seg" id="f3-speed"></span></div>
-      <p class="cap"><span class="tag-model">simulated</span>The red marker shows the velocity bin receiving counts. In this simulation, peaks rise above the counting noise after about ten passes. The instrument runs at about 25 Hz with ±50 µm of travel. The animation is about 150 times slower. On Mars, Spirit’s spectrometer could take quick measurements in one to two hours early in the mission. About 17 months after landing, once the ⁵⁷Co source had weakened, 48-hour runs were typical [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>]. A higher count rate means more rocks per day and more time to use the instrument as its source decays.</p>
-    </div>
-
-    <h3>Four rocks on Mars</h3>
-    <p>A rock can contain several iron minerals. Fitting their combined spectrum estimates how much of the iron sits in each mineral. These four spectra from Spirit and Opportunity are each dominated by a different mineral.</p>
-    <div class="fig fig--light">
-      <canvas id="f4" class="story" aria-label="Four Mössbauer spectra from Mars with their published fits. Olivine dominates at Adirondack, pyroxene at Bounce Rock, hematite at Berry Bowl and goethite at Clovis."></canvas>
-      <p class="cap"><span class="tag-data">archived data</span>The dots show counts from NASA’s Planetary Data System (MER Mössbauer summed spectra, Klingelhöfer). I reconstructed each published fit in black using its phase parameters and fitted one shared line width. The colored areas mark the dominant minerals. Adirondack is fresh basalt. The goethite in Clovis points to past water. The phase assignments come from <a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a> and <a href="https://doi.org/10.1029/2006JE002791">Morris et al. 2006b</a>.</p>
-    </div>
-
-    <h2 class="part" id="trade"><span>II</span>Why spectral lines broaden</h2>
+    <h2 class="part" id="trade"><span>II</span>Why photon angle matters</h2>
     <p class="lead-line">In this example, moving the source from 30 to 8 mm behind the aperture makes the count rate eight times higher and more than doubles the width of line 6, the outermost peak.</p>
-    <p>For a photon leaving at angle θ to the drive axis, only the velocity component along its path, v cos θ, contributes to the Doppler shift. A resonance at v<sub>0</sub> then appears at v<sub>0</sub>/cos θ. Since photons leave at a range of angles, the recorded lines spread outward, especially far from zero velocity. I use <i>stretch</i> for the average fractional shift, ⟨1/cos θ⟩ − 1. Moving the source closer to the aperture admits photons over a wider range of angles. This figure uses a simplified geometry. Section V compares the actual designs, including the current one with the source 19.7 mm behind the aperture.</p>
+    <p>For a photon leaving at angle θ to the drive axis, only the velocity component along its path, v cos θ, contributes to the Doppler shift. A resonance at v<sub>0</sub> then appears at v<sub>0</sub>/cos θ. Since photons leave at a range of angles, the recorded lines spread outward, especially far from zero velocity. I use <i>stretch</i> for the average fractional shift, ⟨1/cos θ⟩ − 1. Moving the source closer to the aperture admits photons over a wider range of angles. More photons mean shorter runs, which matters because the ⁵⁷Co source decays with a 272-day half-life. This figure uses a simplified geometry. Section V compares the real designs, including the current one with the source 19.7 mm behind the aperture.</p>
 
     <div class="fig fig--light">
       <canvas id="f5" class="story" aria-label="Side view of a source behind an aperture with rays at angle theta, the Monte Carlo angle distributions for the source 30 mm and 8 mm back, and an iron sextet through each"></canvas>
       <div class="fig-controls"><label>Photon angle (θ) <input type="range" id="f5-th" min="0" max="35" step="1" value="12"></label><span class="seg" id="f5-sb"></span><span class="seg" id="f5-zoom"></span></div>
-      <p class="cap"><span class="tag-model">simulated</span>Move the slider to change the angle of the photon on the left. The red arrow shows the velocity component along its path. The upper-right plot shows how often photons at each angle reach the detector. The lower-right plot starts with an α-Fe sextet (gray) with lines 0.28 mm/s wide. Line 6 widens to 0.31 mm/s at 30 mm (blue) and 0.73 mm/s at 8 mm (purple). The 8 mm setting collects eight times as many counts. The dashed red line shows what happens at the selected angle alone.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>Moving the source closer collects eight times the counts and more than doubles the outer line width.</b> Move the slider to change the angle of the photon on the left. The red arrow shows the velocity component along its path. The upper-right plot shows how often photons at each angle reach the detector. The lower-right plot starts with an α-Fe sextet (gray) with lines 0.28 mm/s wide. Line 6 widens to 0.31 mm/s at 30 mm (blue) and 0.73 mm/s at 8 mm (purple). The 8 mm setting collects eight times as many counts. The dashed red line shows what happens at the selected angle alone.</p>
     </div>
 
-    <h2 class="part" id="pipeline"><span>III</span>Modeling the current instrument</h2>
+    <h2 class="part" id="pipeline"><span>III</span>Modeling the current head</h2>
     <p class="lead-line">In the simulation of the current instrument, detected photons span 0 to 22° off the drive axis, stretching the spectral lines by 1.8%.</p>
     <p>I measured the assembled instrument from a photograph to capture the positions of the parts as built. This example uses the geometry from our September 2026 run on metallic iron (α-Fe), labeled ver2.</p>
 
@@ -141,7 +119,7 @@
       <canvas id="f8" class="story" aria-label="A mineral's model spectrum before and after the smearing of our head or of the 8 mm setting, with a table of how far each mineral's outermost line moves"></canvas>
       <div class="fig-controls"><span class="seg" id="f8-sys"></span><span class="seg" id="f8-head"></span></div>
       <div id="f8-table"></div>
-      <p class="cap"><span class="tag-model">simulated</span>Blue shows the input spectrum, and purple shows what the selected geometry would record. The same percentage stretch shifts lines farther from zero by more. Hematite’s outer line at 8.6 mm/s moves the most, while a doublet near zero barely changes. The shift is |v₀|(⟨1/cos θ⟩ − 1), and the spread is |v₀| times the spread of 1/cos θ. The input line width is 0.28 mm/s.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>Lines far from zero move the most.</b> Blue shows the input spectrum, and purple shows what the selected geometry would record. The same percentage stretch shifts lines farther from zero by more. Hematite’s outer line at 8.6 mm/s moves the most, while a doublet near zero barely changes. The shift is |v₀|(⟨1/cos θ⟩ − 1), and the spread is |v₀| times the spread of 1/cos θ. The input line width is 0.28 mm/s.</p>
     </div>
     <p>Broadening spreads counts across more channels and can make a spectrum take longer to measure. When lines from different minerals overlap, fitting their fractions also gets harder. I tested both effects on four mineral pairs. The time factor tells you how much longer to count for the same precision. The percentage gives the fraction of the squared difference between the original spectra that remains after broadening.</p>
     <div class="fig fig--light">
@@ -150,7 +128,7 @@
         <thead><tr><th>pair (equal iron)<br><small>time factor · spectral difference retained</small></th><th>our head<br><small>1.8 % stretch</small></th><th>source 8 mm back<br><small>7.2 %</small></th></tr></thead>
         <tbody id="mc-cases-table"></tbody>
       </table></div>
-      <p class="cap"><span class="tag-model">simulated</span>Hematite and magnetite have outer lines around ±8 mm/s that broaden and overlap. With our current design, this pair needs 1.65× the counting time and retains 82% of its spectral difference. With the source 8 mm back, it needs 5.3× the time and retains 34%. The nearby doublets of olivine and pyroxene need only 1.09× the time in our design. Blue shows each mixture before broadening, purple shows what our instrument would record, and the shaded areas are the two minerals on their own.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>Hematite with magnetite is the hardest pair, and it stays separable with our head.</b> Hematite and magnetite have outer lines around ±8 mm/s that broaden and overlap. With our current design, this pair needs 1.65× the counting time and retains 82% of its spectral difference. With the source 8 mm back, it needs 5.3× the time and retains 34%. The nearby doublets of olivine and pyroxene need only 1.09× the time in our design. Blue shows each mixture before broadening, purple shows what our instrument would record, and the shaded areas are the two minerals on their own.</p>
     </div>
 
     <h2 class="part" id="heads"><span>V</span>Comparing three designs</h2>
@@ -159,22 +137,23 @@
 
     <div class="fig fig--light">
       <canvas id="f9" class="story" aria-label="ver1 (2.9× counts, 4.5% stretch), ver2 (1×, 1.8%) and ver3 (2.0×, 1.8%) heads side by side in 3-D with translucent collimators and detected rays colored by angle"></canvas>
-      <p class="cap"><span class="tag-model">simulated</span>All three designs turn together and sit at the same scale. The source sits 20.5 mm behind the opening in ver1, 19.7 mm in ver2 and 19.9 mm in ver3 once it is moved 12.1 mm back from where the CAD file puts it. The lead collimator, source capsule and detector housing are see-through, and the black ring marks the limiting opening. Orange is the 8 mm active area of the source and teal is the 7.7 mm detector chip. Each design shows 45 detected photon paths, colored by their angle to the drive axis, so ver1’s wider spread of angles shows up as more purple. The count rate compares detected 14.4 keV photons per source decay, with ver2 as the baseline.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>ver3 with its source moved back matches the stretch of ver2 at twice the counts.</b> All three designs turn together and sit at the same scale. The source sits 20.5 mm behind the opening in ver1, 19.7 mm in ver2 and 19.9 mm in ver3 once it is moved 12.1 mm back from where the CAD file puts it. The lead collimator, source capsule and detector housing are see-through, and the black ring marks the limiting opening. Orange is the 8 mm active area of the source and teal is the 7.7 mm detector chip. Each design shows 45 detected photon paths, colored by their angle to the drive axis, so ver1’s wider spread of angles shows up as more purple. The count rate compares detected 14.4 keV photons per source decay, with ver2 as the baseline.</p>
     </div>
 
     <div class="fig fig--light">
       <canvas id="f10" class="story" aria-label="Simulated hematite spectrum through each head, with the outermost line enlarged"></canvas>
-      <p class="cap"><span class="tag-model">simulated</span>The left plot compares the original hematite sextet (blue) with the spectra predicted for all three designs. The right plot enlarges line 6, the shaded band on the left. In ver1, it falls below half its original height and is 2.9× as wide. The ver2 and ver3 curves overlap, so the model predicts the same resolution at twice the count rate.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>ver2 and ver3 give the same hematite spectrum, and ver1 blurs the outer lines.</b> The left plot compares the original hematite sextet (blue) with the spectra predicted for all three designs. The right plot enlarges line 6, the shaded band on the left. In ver1, it falls below half its original height and is 2.9× as wide. The ver2 and ver3 curves overlap, so the model predicts the same resolution at twice the count rate.</p>
     </div>
 
-    <h2 class="part" id="next"><span>VI</span>Model limits and thesis work</h2>
-    <p>The model predicts 1.3 to 1.6 times the stretch we measured. I use it to compare designs based on their relative predicted stretch.</p>
-    <p>My thesis covers <a href="entropy.html">entropy in alloys</a> and this work on how to measure rocks faster with a compact spectrometer. Our team at Caltech and JPL developed the <a href="instrument.html">spectrometer head, drive and counting electronics</a>. I measured the drive motion, checked the counting chain, measured the geometry from photos and wrote the Monte Carlo model.</p>
+    <h2 class="part" id="limits"><span>VI</span>How far to trust the model</h2>
+    <p class="lead-line">The model ranks designs well, but it covers only the broadening that comes from photon angle.</p>
+    <p>In our backscatter spectra of α-Fe and hematite, the part of the line width that grows with velocity agrees with the model within the errors. The measured line centers shift less than the model predicts, to about 0.7 to 0.85 of its value, which may come from the velocity calibration rather than the geometry. Part of the measured width does not depend on velocity at all, so it comes from the drive, the source line or the detector, which the <a href="instrument.html#models">instrument page</a> covers. I use the model to compare designs by their relative stretch.</p>
     <ul class="caveats">
-      <li>The model isolates broadening from photon angles. Detector resolution, source line width and drive error are outside its scope.</li>
-      <li>Moving the ver3 source back 12.1 mm would require a longer collimator nose or a revised mount.</li>
-      <li>The simplified geometry in Section II illustrates how source position affects the width of a line.</li>
+      <li>Detector resolution, source line width and drive error are outside the model.</li>
+      <li>Moving the ver3 source back 12.1 mm would need a longer collimator nose or a new mount.</li>
+      <li>Section II uses a simplified geometry to show the trend. Sections III to V use the real heads.</li>
     </ul>
+    <p>Our team at Caltech and JPL built the head, the drive and the counting electronics, and the <a href="instrument.html">instrument page</a> covers that hardware and the rest of my work on it. I measured the geometry from photos and wrote this model. It is one half of my thesis, with <a href="entropy.html">entropy in alloys</a>.</p>
 
     <details class="details">
       <summary>How I made the figures</summary>
