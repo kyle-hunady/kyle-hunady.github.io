@@ -1,6 +1,7 @@
 /* EIS primer figures for battery.html: simulated Nyquist plots of ideal circuits.
    #eis-rc   series R_s + (R || C), apex at omega = 1/RC marked
-   #eis-cell Li | electrolyte | steel: R_b + (R_gb || CPE_gb) + ((R_ct + W) || CPE_dl) + CPE_ss
+   #eis-cell Li | electrolyte | Li: R_b + (R_gb || CPE_gb) + ((R_ct + W) || CPE_dl); the Electrodes select adds
+             W (diffusion) or swaps the right-hand disk for blocking steel (+ CPE_ss)
    Equal aspect on both axes. Model curves are lines; dots mark each decade of frequency. */
 (function () {
   'use strict';
@@ -128,14 +129,16 @@
     draw();
   }
 
-  /* ---------- figure b: Li | Li2OHCl | stainless steel ----------
-     Kyle recalls his cells as Li | electrolyte | SS (2026-11-19). One raw folder in
-     lab/data/gamry/... (BM102 12H) is labelled "LiSym", so the configuration of that set is uncertain. */
+  /* ---------- figure b: Li | Li2OHCl | Li ----------
+     The measured cells were lithium on both sides: the sintered and BM102 raw folders are labelled
+     "LiSym", and every spectrum returns toward the real axis at 1 Hz, which a blocking steel face
+     cannot do (2026-11-22 check). Kyle had recalled Li | electrolyte | SS (2026-11-19), so steel is
+     kept as an option for contrast. */
   function figCell() {
     const root = document.getElementById('eis-cell'); if (!root) return;
     const cv = root.querySelector('canvas'), out = root.querySelector('.fig-out');
     const iG = root.querySelector('.b-rgb'), iT = root.querySelector('.b-rct'),
-      iN = root.querySelector('.b-n'), iW = root.querySelector('.b-w');
+      iN = root.querySelector('.b-n'), iE = root.querySelector('.b-el');
     const Rb = 300, Cgb = 1e-9, Cdl = 1e-6, Qss = 1e-4;
     root.state = {};
     // R || CPE, with Q set so the effective capacitance stays at C as n changes
@@ -156,13 +159,14 @@
     // steel side: blocking, the double layer only charges, Z = 1/(Q (jw)^n)
     function cpe(w, Q, n) { const m = Q * Math.pow(w, n), ph = n * Math.PI / 2; return [Math.cos(ph) / m, -Math.sin(ph) / m]; }
     function draw() {
-      const Rgb = +iG.value, Rct = +iT.value, n = +iN.value, sw = +iW.value;
+      const Rgb = +iG.value, Rct = +iT.value, n = +iN.value, el = iE.value, sw = el === 'liw' ? 400 : 0;
+      root.dataset.el = el === 'ss' ? 'ss' : 'li';
       // [grain boundary, Li side with W, Li side without W, steel side]
-      const parts = f => { const w = 2 * Math.PI * f; return [rq(w, Rgb, Cgb, n), randles(w, Rct, Cdl, n, sw), randles(w, Rct, Cdl, n, 0), cpe(w, Qss, n)]; };
+      const parts = f => { const w = 2 * Math.PI * f; return [rq(w, Rgb, Cgb, n), randles(w, Rct, Cdl, n, sw), randles(w, Rct, Cdl, n, 0), el === 'ss' ? cpe(w, Qss, n) : [0, 0]]; };
       const Zf = f => { const [a, b, , c] = parts(f); return [Rb + a[0] + b[0] + c[0], a[1] + b[1] + c[1]]; };
       const fG = Rgb > 0 ? 1 / (2 * Math.PI * Rgb * Cgb) : 0, fT = Rct > 0 ? 1 / (2 * Math.PI * Rct * Cdl) : 0;
       const zLow = Zf(0.1);
-      Object.assign(root.state, { Rb, Rgb, Rct, n, sw, fG, fT, z01Hz: zLow });
+      Object.assign(root.state, { Rb, Rgb, Rct, n, el, sw, fG, fT, z01Hz: zLow });
       const a = axes(cv, 6000, 1500); if (!a) return;
       const { g, X, Y } = a, acc = css('--accent', '#D9B26F'), steel = css('--steel', '#7FA7C9'),
         rust = css('--rust', '#C98A7F'), wht = css('--white', '#eee');
@@ -185,10 +189,13 @@
       g.textAlign = 'left';
       g.restore();
       out.textContent = 'R_gb = ' + Rgb + ' Ω' + (Rgb > 0 ? ' (top near ' + fmtF(fG) + ')' : '') +
-        ', R_ct = ' + Rct + ' Ω' + (Rct > 0 ? ' (top near ' + fmtF(fT) + ')' : '') +
-        ', n = ' + n.toFixed(2) + ', σ_W = ' + sw + ' Ω·s^−½. The steel side keeps −Z″ rising below a few hertz.';
+        ', R_ct = ' + Rct + ' Ω' + (Rct > 0 ? ' (top near ' + fmtF(fT) + ')' : '') + ', n = ' + n.toFixed(2) + '. ' +
+        (el === 'ss' ? 'The steel face blocks lithium, so −Z″ keeps rising below a few hertz.'
+          : el === 'liw' ? 'Diffusion (σ_W = ' + sw + ' Ω·s^−½) adds a 45° tail after the lithium-face arc.'
+          : 'At low frequency the curve returns to the axis at ' + (Rb + Rgb + Rct) + ' Ω, the DC resistance.');
     }
-    [iG, iT, iN, iW].forEach(el => el.addEventListener('input', draw));
+    [iG, iT, iN, iE].forEach(e => e.addEventListener('input', draw));
+    iE.addEventListener('change', draw);
     window.addEventListener('resize', draw);
     draw();
   }
