@@ -16,15 +16,7 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<link rel="stylesheet" href="assets/css/site.css?v=20261122180254">
-=======
-<link rel="stylesheet" href="assets/css/site.css?v=20261122180254">
->>>>>>> claude/logo-centering-c2847c
-=======
-<link rel="stylesheet" href="assets/css/site.css?v=20261122180254">
->>>>>>> claude/mobile-layout-75e526
+<link rel="stylesheet" href="assets/css/site.css?v=20261122180452">
 <style>
   .fig + p, p + .fig, .fig + h3 { margin-top: 1.4rem; }
   .fig--light img { border-radius: .3rem; }
@@ -298,75 +290,7 @@
   <small>Kyle Hunady · Pasadena, CA · updated November 2026</small>
 </footer>
 
-<<<<<<< HEAD
 <script src="assets/js/site.js?v=20261117065748"></script>
 <script src="assets/js/eis-primer.js?v=20261122120000"></script>
-=======
-<script src="assets/js/site.js?v=20261122m1"></script>
-<script src="assets/js/eis-primer.js?v=20261119081726"></script>
-<script>
-(function () {
-  const root = document.getElementById('eis-toy'); if (!root) return;
-  const cv = root.querySelector('canvas'), out = root.querySelector('.fig-out');
-  const q = s => root.querySelector(s);
-  const R0 = 200, Cgb = 9e-9, Qct = 2e-6, nct = 0.85, Qdl = 5e-6, ndl = 0.92, sigW = 600;
-  // complex helpers
-  const C = (re, im) => ({ re, im });
-  const add = (a, b) => C(a.re + b.re, a.im + b.im);
-  const div = (a, b) => { const d = b.re * b.re + b.im * b.im; return C((a.re * b.re + a.im * b.im) / d, (a.im * b.re - a.re * b.im) / d); };
-  const jwn = (w, n) => { const m = Math.pow(w, n), ph = n * Math.PI / 2; return C(m * Math.cos(ph), m * Math.sin(ph)); };
-  const rq = (w, R, Q, n) => { if (R <= 0) return C(0, 0); const y = jwn(w, n); return div(C(R, 0), C(1 + R * Q * y.re, R * Q * y.im)); };
-  const cpe = (w, Q, n) => { const y = jwn(w, n); return div(C(1, 0), C(Q * y.re, Q * y.im)); };
-  function Z(w, p) {
-    // Q chosen so the effective capacitance stays ~9 nF as n changes: C = (Q R^(1-n))^(1/n)
-    const Qgb = Math.pow(Cgb, p.n) / Math.pow(p.rgb, 1 - p.n);
-    let z = add(C(R0, 0), rq(w, p.rgb, Qgb, p.n));
-    if (p.el === 'ss') return add(z, cpe(w, Qdl, ndl));
-    z = add(z, rq(w, p.rct, Qct, nct));
-    if (p.el === 'liw') { const s = sigW / Math.sqrt(w); z = add(z, C(s, -s)); }
-    return z;
-  }
-  function css(v, fb) { const s = getComputedStyle(document.documentElement).getPropertyValue(v).trim(); return s || fb; }
-  function draw() {
-    const p = { rgb: +q('.t-rgb').value, n: +q('.t-n').value, rct: +q('.t-rct').value, el: q('.t-el').value };
-    q('.t-rct').disabled = p.el === 'ss';
-    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
-    if (!W || !H) return;
-    cv.width = W * dpr; cv.height = H * dpr; const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    g.clearRect(0, 0, W, H);
-    const fs = [], pts = [];
-    for (let e = 6; e >= -1; e -= 0.02) fs.push(Math.pow(10, e));
-    fs.forEach(f => pts.push(Z(2 * Math.PI * f, p)));
-    // fixed scale so changes are visible: 0..6 kOhm wide, equal aspect
-    const pad = { l: 46, r: 12, t: 10, b: 34 }, pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
-    const xmax = 6000, scale = pw / xmax, ymax = ph / scale;
-    const X = v => pad.l + v * scale, Y = v => pad.t + ph - v * scale;
-    const ink = css('--muted', '#999'), rule = css('--rule', '#333'), acc = css('--accent', '#D9B26F'), wht = css('--white', '#eee');
-    g.strokeStyle = rule; g.lineWidth = 1; g.font = '11px ' + css('--sans', 'sans-serif'); g.fillStyle = ink;
-    for (let x = 0; x <= xmax; x += 1000) { g.beginPath(); g.moveTo(X(x), pad.t); g.lineTo(X(x), pad.t + ph); g.stroke(); g.fillText((x / 1000) + '', X(x) - 3, pad.t + ph + 14); }
-    for (let y = 0; y <= ymax; y += 1000) { g.beginPath(); g.moveTo(pad.l, Y(y)); g.lineTo(pad.l + pw, Y(y)); g.stroke(); g.fillText((y / 1000) + '', pad.l - 16, Y(y) + 4); }
-    g.fillText("Z′ (kΩ)", pad.l + pw / 2 - 16, H - 4);
-    g.save(); g.translate(12, pad.t + ph / 2 + 18); g.rotate(-Math.PI / 2); g.fillText("−Z″ (kΩ)", 0, 0); g.restore();
-    g.save(); g.beginPath(); g.rect(pad.l, pad.t, pw, ph); g.clip();
-    g.strokeStyle = acc; g.lineWidth = 2; g.beginPath();
-    pts.forEach((z, i) => { const x = X(z.re), y = Y(-z.im); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
-    g.fillStyle = wht;
-    for (let e = 6; e >= -1; e--) { const z = Z(2 * Math.PI * Math.pow(10, e), p); g.beginPath(); g.arc(X(z.re), Y(-z.im), 3, 0, 2 * Math.PI); g.fill(); }
-    g.restore();
-    const fpk = 1 / (2 * Math.PI * p.rgb * Cgb);
-    const fk = fpk >= 1e3 ? (fpk / 1e3).toFixed(0) + ' kHz' : fpk.toFixed(0) + ' Hz';
-    out.textContent = 'Grain-boundary arc width is ' + p.rgb + ' Ω. It peaks near ' + fk + '.' +
-      (p.el === 'ss' ? ' The curve rises at low frequencies because steel blocks lithium ions.'
-        : p.el === 'liw' ? ' Diffusion adds a 45° tail after the contact arc.'
-        : p.rct === 0 ? ' With zero contact resistance, the contact arc disappears.'
-        : ' The contact arc is ' + p.rct + ' Ω wide and peaks near ' + (Math.pow(1 / (p.rct * Qct), 1 / nct) / (2 * Math.PI)).toFixed(0) + ' Hz.');
-  }
-  root.querySelectorAll('input,select').forEach(el => el.addEventListener('input', draw));
-  root.querySelector('select').addEventListener('change', draw);
-  window.addEventListener('resize', draw);
-  draw();
-})();
-</script>
->>>>>>> claude/mobile-layout-75e526
 </body>
 </html>

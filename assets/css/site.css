@@ -1144,10 +1144,6 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 /* battery.html #cathode: dense vs porous cathode schematic (#cathode-paths) */
 #cathode-paths .pore-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 @media (max-width: 640px) { #cathode-paths .pore-pair { grid-template-columns: 1fr; gap: 1.4rem; } }
@@ -1164,14 +1160,13 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .pores .hd { fill: var(--white); font: 500 12px var(--sans); text-anchor: middle; }
 .pores .lb { fill: var(--muted); font: 10px var(--sans); text-anchor: middle; }
 .pores .t-ion { fill: var(--white); font: 11px var(--sans); }
-=======
+
 /* battery.html #eis-cell: the Electrodes select swaps the right-hand disk (lithium or blocking steel) */
 #eis-cell .ss-only { display: none; }
 #eis-cell[data-el="ss"] .ss-only { display: inline; }
 #eis-cell[data-el="ss"] .li-only { display: none; }
 #eis-cell .fig-controls select { max-width: 100%; }
->>>>>>> claude/eis-section-a6bb37
-=======
+
 /* ---- logo alignment 2026-11 ----
    Measured ink centre vs. container centre on every logo/icon (1280 + 375 px).
    Georgia Tech: the SVG viewBox was 200 wide with the GT ink at x 5–179, so the
@@ -1181,8 +1176,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
    right and up; shifted back so the latte hero cup is centred. */
 .edu__item img[src*="gatech"] { padding: 0.46rem; }
 .cafe-cup svg, .cup svg { transform: translate(-2.083%, 2.083%); }
->>>>>>> claude/logo-centering-c2847c
-=======
+
 /* ---- mobile audit 2026-11 ----
    Phone pass over every public page at 375 / 390 / 430 px (2026-11-22).
    Everything here is either touch-only (touch-action) or inside a phone
@@ -1267,8 +1261,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 /* The SCHEMATIC / MODEL chip used --faint (a light grey for dark panels),
    so on the light figure panels it was invisible at every width. */
 .fig--light .tag-model { color: var(--paper-muted); border-color: #b9b9b2; }
->>>>>>> claude/mobile-layout-75e526
-=======
+
 /* ---- lit card prompt 2026-11 ---- */
 /* Terminal panel on the "Getting up to speed" card thumb (index.html .lit-prompt, motion in cards.js litPrompt).
    The markup holds the finished line, which is what no-JS and reduced-motion visitors see; cards.js retypes it.
@@ -1293,4 +1286,3 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .lit-prompt.is-live > :not(.lit-prompt__p) { transition: opacity 0.4s ease; }
 .lit-prompt.is-clearing > :not(.lit-prompt__p) { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .lit-prompt__caret { display: none; } .lit-prompt__rest { visibility: visible; } }
->>>>>>> claude/lit-thumb-ff6156
