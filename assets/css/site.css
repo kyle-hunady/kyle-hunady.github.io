@@ -1302,6 +1302,8 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 /* ---- subway thumb 2026-11 ---- */
 /* data-motion="video" (cards.js clip): the looping clip fills the thumb like the poster <img> under it */
 .thumb-motion video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* 1% overscan on the clip and its poster: hides a decoder's edge rows (some hardware decoders paint a green/magenta line there) */
+.thumb-motion video, [data-motion="video"] > img { transform: scale(1.01); }
 
 .lit-prompt.is-live .lit-prompt__run > :not(.lit-prompt__p) { transition: opacity 0.4s ease; }
 .lit-prompt.is-clearing .lit-prompt__run > :not(.lit-prompt__p) { opacity: 0; }
