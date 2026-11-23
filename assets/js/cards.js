@@ -10,7 +10,9 @@
    data-motion="mc"   the Monte Carlo head redrawn live: the fe_8mm geometry from mc-story-data.js
                       (montecarlo.html, frame 6), turning 360 deg per loop, photons flying source ->
                       sample -> detector and collecting on the chip. Only the left panel is redrawn;
-                      the sextet on the right is the static PNG showing through. */
+                      the sextet on the right is the static PNG showing through.
+   data-motion="video" a muted looping clip (data-video MP4, optional data-webm) laid over its own poster frame;
+                      loads on first view, plays only while visible. Used by the subway card. */
 "use strict";
 (function () {
   var thumbs = document.querySelectorAll(".project__thumb[data-motion]");
@@ -38,6 +40,7 @@
       if (kind === "mc") m = mcHead(el);
       if (kind === "drift") m = drift(el);
       if (kind === "melt" && !slowNet) m = meltSlabs(el);
+      if (kind === "video" && !slowNet) m = clip(el);
       if (!m) return;
       m.el = el; m.visible = false; live.push(m); io.observe(el);
     });
@@ -58,6 +61,32 @@
     el.classList.add("is-drift");
     return { layer: { remove: function () { el.classList.remove("is-drift", "is-on"); } },
       start: function () { el.classList.add("is-on"); }, stop: function () { el.classList.remove("is-on"); } };
+  }
+
+  /* ---------------------------------------------------------------- video clip (subway card) */
+  // A short muted looping clip from data-video (MP4) / data-webm. Nothing downloads until the card first
+  // scrolls into view; it plays only while on screen. The static <img> (the clip's poster frame) stays underneath.
+  function clip(el) {
+    var mp4 = el.getAttribute("data-video"); if (!mp4) return null;
+    var v = document.createElement("video");
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none";
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("disablepictureinpicture", "");
+    var img = el.querySelector("img"); if (img) v.poster = img.currentSrc || img.src;
+    var layer = layerOn(el, v), loaded = false;
+    v.addEventListener("playing", function () { layer.classList.add("is-ready"); });
+    function play() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    return { layer: layer,
+      start: function () {
+        if (!loaded) {
+          loaded = true;
+          [[el.getAttribute("data-webm"), "video/webm"], [mp4, "video/mp4"]].forEach(function (s) {
+            if (!s[0]) return; var so = document.createElement("source"); so.src = s[0]; so.type = s[1]; v.appendChild(so);
+          });
+          v.load();
+        }
+        play();
+      },
+      stop: function () { v.pause(); } };
   }
 
   /* ---------------------------------------------------------------- literature strip */
