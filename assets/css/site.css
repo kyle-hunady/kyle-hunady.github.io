@@ -1123,6 +1123,13 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .edu__item b { color: var(--white); font-weight: 500; font-size: 0.78rem; }
 .edu__item:hover b { color: var(--accent); }
 
+/* melting.html */
+.kinds.kinds--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kinds.kinds--2 canvas { height: 14rem; }
+.fig .m-slab { height: 12rem; }
+.fig .m-slab + .m-slab { margin-top: 0.4rem; }
+.fig .m-slab + .m-frac { margin-top: 0.8rem; }
+
 /* project-card motion (assets/js/cards.js): a layer over the static thumbnail, which stays as the fallback */
 .project__thumb[data-motion] { position: relative; }
 .thumb-motion { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
