@@ -1290,3 +1290,8 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 /* entropy.html: three side-by-side panels (one per alloy family), stacked on phones */
 .fig-row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 760px) { .fig-row--3 { grid-template-columns: 1fr; } }
+
+/* ---- instrument.html: model tags readable on the light figure paper ---- */
+.pg-instrument .fig--light .tag-model { color: var(--paper-muted); border-color: #b9b9b2; }
+.pg-instrument .fig--light details.details { border-color: #d6d3ca; }
+.pg-instrument .fig--light details.details summary { color: var(--paper-ink); }
