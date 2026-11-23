@@ -141,6 +141,8 @@
       });
     }
     onResize(draw); draw();
+    var det = root.querySelector('details');           // the eight-alloy chart sits in a closed fold
+    if (det) det.addEventListener('toggle', function () { if (det.open) draw(); });
     var cv2 = $(root, 'canvas.hea-delta');
     function drawDelta() {
       var g = ctx2d(cv2), c = g.c, L = 12, R = 12, T = 22, B = 46;
@@ -194,6 +196,40 @@
     }
     return ys[ys.length - 1];
   }
+  /* Small multiples: one Cp/T panel per family, the Al-free alloy (blue) against the alloy with
+   * the most Al (gold). The area between the two curves up to 385 K is the change in measured
+   * entropy, shaded and labelled with the published Table 3 value. */
+  var DS385 = { cantor: ['CCFN1', 'ACCFN1', -0.38], cantor5: ['CCFMN1', 'A1p25CCFMN1', -0.44],
+                refractory: ['NTTZ1', 'Ap3NTTZ1', -0.34] };
+  function cppair(root) {
+    var cvs = root.querySelectorAll('canvas.hea-cpt[data-fam]');
+    withCp(function (J) {
+      function byId(id) { return J.samples.filter(function (s) { return s.id === id; })[0]; }
+      function draw() {
+        cvs.forEach(function (cv) {
+          var f = cv.dataset.fam, d = DS385[f], a = byId(d[0]), b = byId(d[1]), ymax = f === 'refractory' ? 32 : 24;
+          var ct = function (s) { return s.Cp.map(function (v, k) { return 1000 * v / s.T[k]; }); };
+          var ya = ct(a), yb = ct(b);
+          var ax = linePlot(cv, [{ x: a.T, y: ya, color: BLUE, dots: true, r: 1.7 }, { x: b.T, y: yb, color: GOLD, dots: true, r: 1.7 }],
+            { xmin: 0, xmax: 400, ymin: 0, ymax: ymax, xticks: [0, 100, 200, 300, 400],
+              yticks: [0, 10, 20, 30].filter(function (v) { return v <= ymax; }),
+              xlabel: 'temperature (K)', ylabel: 'Cp/T  (10⁻³ kB/atom/K)' });
+          var c = cv.getContext('2d'), top = [], bot = [];
+          a.T.forEach(function (t, k) { if (t <= 385) { top.push([ax.X(t), ax.Y(ya[k])]); bot.push([ax.X(t), ax.Y(interp(b.T, yb, t))]); } });
+          c.fillStyle = 'rgba(169,155,201,0.32)'; c.beginPath();
+          top.forEach(function (p, i) { if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); });
+          for (var i = bot.length - 1; i >= 0; i--) c.lineTo(bot[i][0], bot[i][1]);
+          c.fill();
+          c.font = '10px "IBM Plex Mono", monospace'; c.textAlign = 'right';
+          c.fillStyle = WHITE; c.fillText(FAM[f].title.replace('0.5', '₀.₅'), ax.X(395), ax.Y(ymax) + 10);
+          c.fillStyle = LILAC; c.fillText('ΔS(385 K) = ' + d[2].toFixed(2) + ' kB', ax.X(395), ax.Y(ymax) + 24);
+          c.fillStyle = BLUE; c.fillText(sub(a.label), ax.X(395), ax.Y(ymax * 0.18) + 0);
+          c.fillStyle = GOLD; c.fillText(sub(b.label), ax.X(395), ax.Y(ymax * 0.18) + 13);
+        });
+      }
+      onResize(draw); draw();
+    });
+  }
   function cpdata(root) {
     var fam = $(root, '.hea-fam'), tt = $(root, '.hea-t'), out = $(root, '.fig-out'), leg = $(root, '.legend'),
         cA = $(root, 'canvas.hea-cp'), cB = $(root, 'canvas.hea-cpt'), cC = $(root, 'canvas.hea-s');
@@ -231,6 +267,30 @@
    * hea-sim.json (written by tools/hea_phonons.py): phonon S(T) from the MACE medium-omat-0
    * force field (the model name recorded in hea-sim.json) with phonopy, drawn as a line against
    * the measured entropy as dots. A Cp/T panel is drawn only if the page has a canvas.hea-sim. */
+  /* Side by side: one S(T) panel per alloy named in data-id, measured dots against the MACE
+   * phonon line, with the 385 K gap read out on the panel. */
+  function simpair(root) {
+    var cvs = root.querySelectorAll('canvas.hea-dos[data-id]');
+    withCp(function (J) {
+      fetch(root.dataset.sim).then(function (r) { return r.json(); }).then(function (S) {
+        function draw() {
+          cvs.forEach(function (cv) {
+            var id = cv.dataset.id, a = S.alloys.filter(function (x) { return x.id === id; })[0],
+                m = J.samples.filter(function (s) { return s.id === id; })[0];
+            var T = [], St = []; a.T.forEach(function (t, k) { if (t <= 400) { T.push(t); St.push(a.S[k]); } });
+            var ax = linePlot(cv, [{ x: T, y: St, color: GOLD, width: 1.8 }, { x: m.T, y: m.S, color: SAGE, dots: true, r: 1.8 }],
+              { xmin: 0, xmax: 400, ymin: 0, ymax: 6, xticks: [0, 100, 200, 300, 400], yticks: [0, 2, 4, 6],
+                xlabel: 'temperature (K)', ylabel: 'S  (kB/atom)' });
+            var ds = interp(m.T, m.S, 385) - interp(T, St, 385), c = cv.getContext('2d');
+            c.font = '10px "IBM Plex Mono", monospace'; c.textAlign = 'left';
+            c.fillStyle = WHITE; c.fillText(sub(a.label), ax.X(12), ax.Y(5.6));
+            c.fillStyle = INK; c.fillText('measured − calculated at 385 K: ' + (ds >= 0 ? '+' : '−') + Math.abs(ds).toFixed(2) + ' kB', ax.X(12), ax.Y(5.6) + 14);
+          });
+        }
+        onResize(draw); draw();
+      });
+    });
+  }
   function sim(root) {
     var cv = $(root, 'canvas.hea-sim'), pick = $(root, '.hea-pick'), out = $(root, '.fig-out'),
         cvD = $(root, 'canvas.hea-dos');
@@ -264,12 +324,14 @@
    * hea-xrd.json: the eight Cu K-alpha patterns, each scaled to its strongest peak and
    * stacked. The dashed line is where the B2 {100} superlattice peak falls for a = 2.88 A. */
   function xrd(root) {
-    var cv = $(root, 'canvas.hea-xrd'), fam = $(root, '.hea-fam');
+    // one canvas per family (data-fam), side by side; an older single canvas + select still works
+    var cvs = root.querySelectorAll('canvas.hea-xrd'), fam = $(root, '.hea-fam');
     fetch(root.dataset.src).then(function (r) { return r.json(); }).then(function (J) {
       var GROUP = { cantor: ['CCFN1', 'Ap2CCFN2', 'ACCFN1', 'CCFMN1', 'A1p25CCFMN1'],
                     refractory: ['NTTZ1', 'Ap2NTTZ1', 'Ap3NTTZ1'] };
-      function draw() {
-        var ids = GROUP[fam.value], P = J.patterns.filter(function (p) { return ids.indexOf(p.id) >= 0; });
+      function drawAll() { cvs.forEach(function (cv) { drawOne(cv, cv.dataset.fam || fam.value); }); }
+      function drawOne(cv, fv) {
+        var ids = GROUP[fv], P = J.patterns.filter(function (p) { return ids.indexOf(p.id) >= 0; });
         var ser = P.map(function (p, i) {
           var off = (P.length - 1 - i) * 1.05, col = p.structure === 'B2' ? GOLD : (p.structure === 'BCC' ? SAGE : BLUE);
           return { x: p.tt, y: p.I.map(function (v) { return v + off; }), color: col, dots: true, r: 0.9 };
@@ -277,14 +339,15 @@
         var b2 = 2 * Math.asin(1.5418 / (2 * 2.88)) * 180 / Math.PI;
         var ax = linePlot(cv, ser, { xmin: 20, xmax: 90, ymin: 0, ymax: P.length * 1.05 + 0.1,
           xticks: [20, 30, 40, 50, 60, 70, 80, 90], yticks: [], xlabel: '2θ  (degrees, Cu Kα)', ylabel: 'intensity, offset',
-          marks: fam.value === 'cantor' ? [{ x: b2, label: 'B2 {100}', color: GOLD }] : [] });
+          // refractory: where a B2 {100} peak would fall (2θ ≈ 26°, the paper); none is seen
+          marks: fv === 'cantor' ? [{ x: b2, label: 'B2 {100}', color: GOLD }] : [{ x: 26, label: 'no B2 {100}', color: 'rgba(242,243,240,0.4)' }] });
         var c = cv.getContext('2d'); c.font = '10px "IBM Plex Mono", monospace'; c.textAlign = 'right';
         P.forEach(function (p, i) {
           var off = (P.length - 1 - i) * 1.05;
           c.fillStyle = ser[i].color; c.fillText(sub(p.label) + '  ' + p.structure, ax.X(75.5), ax.Y(off + 0.62));
         });
       }
-      fam.addEventListener('change', draw); onResize(draw); draw();
+      if (fam) fam.addEventListener('change', drawAll); onResize(drawAll); drawAll();
     });
   }
 
@@ -343,9 +406,10 @@
     }
     function drawBar() {
       var g = ctx2d(bar), c = g.c, L = 8, R = 8, y0 = 22, h = 22;
-      var parts = [{ v: 4.71 - 0.155, col: SAGE, lab: 'vibrational + magnetic  4.55' },
+      var narrow = g.w < 560;                         // phone width: short labels fit inside the bars
+      var parts = [{ v: 4.71 - 0.155, col: SAGE, lab: narrow ? 'vib. + mag. 4.55' : 'vibrational + magnetic  4.55' },
                    { v: 0.155, col: BLUE, lab: 'electronic 0.16' },
-                   { v: Math.log(5), col: GOLD, lab: 'configurational (ideal)  1.61' }];
+                   { v: Math.log(5), col: GOLD, lab: narrow ? 'mixing 1.61' : 'configurational (ideal)  1.61' }];
       var tot = parts.reduce(function (a, p) { return a + p.v; }, 0), X = function (v) { return L + v / 6.6 * (g.w - L - R); }, x = 0;
       parts.forEach(function (p, i) {
         c.fillStyle = p.col; c.fillRect(X(x), y0, X(x + p.v) - X(x) - 1, h);
@@ -661,8 +725,9 @@
         c.fillRect(L + j * bw + 1, g.h - B - h, bw - 2, h);
       }
       c.fillStyle = INK; c.textAlign = 'center';
-      [0, 2, 4, 6, 8].forEach(function (v) { c.fillText(v, L + v / fmax * (g.w - L - R), g.h - B + 13); });
-      c.fillText('vibration frequency (THz, trillion cycles per second)', (L + g.w - R) / 2, g.h - 2);
+      // energy axis in meV (1 THz = 4.1357 meV); the modes are stored in THz
+      [0, 10, 20, 30].forEach(function (v) { c.fillText(v, L + v / 4.1357 / fmax * (g.w - L - R), g.h - B + 13); });
+      c.fillText('vibration energy (meV)', (L + g.w - R) / 2, g.h - 2);
       c.save(); c.translate(12, (Tp + g.h - B) / 2); c.rotate(-Math.PI / 2); c.fillText('Number of modes', 0, 0); c.restore();
       out.textContent = T + ' K  ·  the ' + F.length + ' modes in the 160-atom cell give S_vib = ' + (S / 160).toFixed(2) +
         ' kB per atom  ·  Brighter bars show more entropy per mode';
@@ -675,7 +740,7 @@
     onResize(function () { draw(); drawDos(); }); draw(); if (!reduced) requestAnimationFrame(frame);
   }
 
-  var FIGS = { count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell, md: md, phon: phon };
+  var FIGS = { cppair: cppair, simpair: simpair, count: count, name: name, gibbs: gibbs, budget: budget, cpdata: cpdata, sim: sim, xrd: xrd, kinds: kinds, cell: cell, md: md, phon: phon };
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-hea]').forEach(function (el) {
       // one figure failing (e.g. a canvas with no width yet) must not stop the ones after it

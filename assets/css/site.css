@@ -1286,3 +1286,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .lit-prompt.is-live > :not(.lit-prompt__p) { transition: opacity 0.4s ease; }
 .lit-prompt.is-clearing > :not(.lit-prompt__p) { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .lit-prompt__caret { display: none; } .lit-prompt__rest { visibility: visible; } }
+
+/* entropy.html: three side-by-side panels (one per alloy family), stacked on phones */
+.fig-row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 760px) { .fig-row--3 { grid-template-columns: 1fr; } }
