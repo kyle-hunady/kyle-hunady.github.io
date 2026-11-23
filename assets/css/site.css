@@ -1136,3 +1136,13 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .project__thumb.is-drift.is-on img { animation-play-state: running; }
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
+
+/* ---- logo alignment 2026-11 ----
+   Measured ink centre vs. container centre on every logo/icon (1280 + 375 px).
+   Georgia Tech: the SVG viewBox was 200 wide with the GT ink at x 5–179, so the
+   mark sat 1.2 px left (the old 0.42rem top padding only hid the vertical part).
+   The viewBox is now the ink box plus a 2-unit margin, so padding is uniform.
+   Cup glyph (#i-cup): ink spans x 4–21, y 3–20 of a 24 box, i.e. half a unit
+   right and up; shifted back so the latte hero cup is centred. */
+.edu__item img[src*="gatech"] { padding: 0.46rem; }
+.cafe-cup svg, .cup svg { transform: translate(-2.083%, 2.083%); }
