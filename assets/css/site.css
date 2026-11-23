@@ -1136,3 +1136,28 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .project__thumb.is-drift.is-on img { animation-play-state: running; }
 @keyframes thumb-drift { from { transform: scale(1.01); } to { transform: scale(1.09) translate(var(--dx, 0), var(--dy, 0)); } }
 @media (prefers-reduced-motion: reduce) { .project__thumb.is-drift img { animation: none; } }
+
+/* ---- lit card prompt 2026-11 ---- */
+/* Terminal panel on the "Getting up to speed" card thumb (index.html .lit-prompt, motion in cards.js litPrompt).
+   The markup holds the finished line, which is what no-JS and reduced-motion visitors see; cards.js retypes it.
+   Real DOM text over the paper pages: a near-opaque dark panel keeps it readable on white pages. Font follows
+   the thumb's width (container units), 10.5px fallback. */
+.project__thumb[data-motion="lit"] { container-type: inline-size; }
+.lit-prompt { position: absolute; left: 0.5rem; right: 0.5rem; bottom: 0.5rem; z-index: 2;
+  font-family: var(--mono); font-size: 10.5px; font-size: clamp(10px, 3.5cqi, 12.5px); line-height: 1.45;
+  color: var(--white); text-align: left; overflow-wrap: break-word;
+  background: rgba(11, 12, 11, 0.88); border: 1px solid rgba(242, 243, 240, 0.16); border-radius: 0.4rem;
+  padding: 0.4em 0.6em 0.45em; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45); }
+.lit-prompt__p, .lit-prompt__cmd { color: var(--accent); }
+.lit-prompt__cmd { font-weight: 500; }
+.lit-prompt__st { display: block; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lit-prompt__ok { color: #8FD18F; }
+.lit-prompt__spin { display: inline-block; width: 1em; text-align: center; color: var(--accent); }
+.lit-prompt__rest { visibility: hidden; }
+.lit-prompt__caret { display: inline-block; width: 0.55em; height: 1.05em; margin: 0 -0.55em 0 1px; vertical-align: -0.2em;
+  background: var(--accent); animation: lit-caret 1s steps(1) infinite; }
+.lit-prompt.is-typing .lit-prompt__caret { animation: none; }
+@keyframes lit-caret { 50% { opacity: 0; } }
+.lit-prompt.is-live > :not(.lit-prompt__p) { transition: opacity 0.4s ease; }
+.lit-prompt.is-clearing > :not(.lit-prompt__p) { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .lit-prompt__caret { display: none; } .lit-prompt__rest { visibility: visible; } }
