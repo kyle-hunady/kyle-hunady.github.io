@@ -218,3 +218,24 @@
     if (e.key === 'ArrowRight') show(i + 1);
   });
 })();
+
+/* Phone: a horizontal swipe on an open lightbox steps photos (mobile audit
+ * 2026-11). It presses the existing prev/next buttons, so it serves both this
+ * file's gallery lightbox and latte.html's own. */
+(function () {
+  var lb = document.getElementById('lightbox');
+  if (!lb) return;
+  var x0 = null, y0 = 0;
+  lb.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, { passive: true });
+  lb.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
+    var b = document.getElementById(dx < 0 ? 'lightbox-next' : 'lightbox-prev');
+    if (b) b.click();
+  }, { passive: true });
+})();

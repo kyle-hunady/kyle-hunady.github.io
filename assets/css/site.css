@@ -1146,6 +1146,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* battery.html #cathode: dense vs porous cathode schematic (#cathode-paths) */
 #cathode-paths .pore-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 @media (max-width: 640px) { #cathode-paths .pore-pair { grid-template-columns: 1fr; gap: 1.4rem; } }
@@ -1180,3 +1181,89 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .edu__item img[src*="gatech"] { padding: 0.46rem; }
 .cafe-cup svg, .cup svg { transform: translate(-2.083%, 2.083%); }
 >>>>>>> claude/logo-centering-c2847c
+=======
+/* ---- mobile audit 2026-11 ----
+   Phone pass over every public page at 375 / 390 / 430 px (2026-11-22).
+   Everything here is either touch-only (touch-action) or inside a phone
+   media query, so the desktop layout is unchanged. Targets: taps of about
+   40 px or more, labels no smaller than --fs-label, multi-line copy no
+   smaller than --fs-prose, form fields at 16 px so iOS does not zoom on
+   focus, and no figure that traps a vertical swipe.                       */
+:root {
+  --fs-label: 0.7rem;      /* 11.2 px: smallest label on a phone */
+  --fs-prose: 0.875rem;    /* 14 px: smallest running text on a phone */
+  --tap: 2.5rem;           /* 40 px minimum tap height */
+}
+
+/* Story canvases (instrument, montecarlo) were touch-action: none, so a
+   swipe over a full-width figure could not scroll the page. Vertical swipes
+   now scroll; a horizontal drag still reaches the canvas (rotates the 3-D
+   heads). Same rule entropy's MD cells and melting's viewers already use. */
+.fig--light canvas.story { touch-action: pan-y pinch-zoom; }
+
+@media screen and (max-width: 640px) {
+  /* bottom icon rail: 39 px -> 42 px targets */
+  nav a { padding: 0.8rem; }
+
+  /* hero social icons were 17 px targets */
+  .header__socials { gap: 0; }
+  .header__socials a { padding: 0.7rem; }
+
+  /* chips, footer links, breadcrumbs, outline, report bar: grow the hit
+     area without moving the layout (padding + matching negative margin) */
+  .project__links a, .project__links .chip--state, .art-links a { min-height: var(--tap); }
+  .foot-links a, .crumbs a, .rframe__bar a, .bcitem__name a { display: inline-block; padding: 0.6rem 0.15rem; margin: -0.6rem -0.15rem; }
+  .parts a { padding: 0.4rem 0; }
+  .parts li + li { margin-top: 0.1rem; }
+  .gfold > summary, details.details summary { padding: 0.6rem 0; }
+
+  /* figure controls: one control per row, full-width sliders with a 40 px
+     hit area, 16 px selects (iOS zooms the page into anything smaller) */
+  .fig-controls { gap: 0.6rem 1rem; }
+  .fig-controls label { font-size: 0.8rem; flex: 1 1 100%; min-height: var(--tap); }
+  .fig-controls label:has(input[type=checkbox]) { flex: 0 1 auto; }
+  .fig-controls input[type=range] { flex: 1; width: auto; min-width: 8rem; height: var(--tap); }
+  .fig-controls select, select { font-size: 16px; min-height: var(--tap); }
+  .fig-controls .btn, .btn--light { min-height: var(--tap); }
+  .fig--light .seg { display: flex; }
+  .fig--light .seg button { flex: 1 1 auto; min-height: var(--tap); font-size: 0.76rem; border-bottom: 1px solid #b9b9b2; margin-bottom: -1px; }
+
+  /* lightbox: 27 px buttons -> 44 px; site.js adds swipe left/right */
+  .lightbox { padding: 0.75rem; }
+  .lightbox-btn { min-width: 2.75rem; min-height: 2.75rem; font-size: 1rem; }
+
+  /* labels below 11 px come up to --fs-label */
+  .project__tag, .thread__tag, .pubs__label, .tag-model, .tag-data, .gallery--wonky .placard,
+  .route, .pcard__meta, .pcard__who, .project__more, .chips span, .project__links a,
+  .project__links .chip--state, .art-links a, .cafe-month b { font-size: var(--fs-label); }
+  .fig-out, .legend, .turn, .term__bar span { font-size: 0.78rem; }
+
+  /* running text below 14 px comes up to --fs-prose */
+  .fig figcaption, .fig .cap, .cap-under, .gallery figcaption, .project__body p, .thread p,
+  .org p, .exp__item p, .pubs p, .kinds figcaption, .annot-key div, .pcard__sum,
+  .ex span, .callout > div, .caveats, .duo p, .models p { font-size: var(--fs-prose); }
+
+  /* latte.html: 16 month bars + labels were 4 px wider than a 375 px
+     screen. Bars may shrink; every other month keeps its label. */
+  .cafe-months { gap: 0.2rem; }
+  .cafe-month { min-width: 0; }
+  .cafe-month:nth-child(even) b { visibility: hidden; }
+
+  /* montecarlo.html: the two tables inside "Details" were 430-570 px wide */
+  details.details table { display: block; overflow-x: auto; }
+}
+
+/* Two-panel story figures with no phone layout (f1, f2, f5): below 520 px
+   their panel titles and labels collide. Like the wide schematics above,
+   they keep a readable width and pan sideways inside their own box. */
+@media screen and (max-width: 520px) {
+  .fig--light canvas.story:is(#f1, #f2, #f5) { touch-action: pan-x pan-y pinch-zoom; }
+  .fig--light canvas#f1.story { min-width: 52rem; }   /* its two panel titles need the full width */
+  .fig--light canvas#f2.story { min-width: 32rem; }
+  .fig--light canvas#f5.story { min-width: 40rem; }
+}
+
+/* The SCHEMATIC / MODEL chip used --faint (a light grey for dark panels),
+   so on the light figure panels it was invisible at every width. */
+.fig--light .tag-model { color: var(--paper-muted); border-color: #b9b9b2; }
+>>>>>>> claude/mobile-layout-75e526
