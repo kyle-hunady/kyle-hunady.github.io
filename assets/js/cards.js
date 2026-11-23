@@ -5,7 +5,8 @@
    loop point has no jump.
 
    data-motion="lit"  sideways-scrolling strip of paper first pages (assets/img/proj-literature-strip.jpg,
-                      built by tools/lit_strip.py; CSS animation, repeat-x so the wrap is seamless)
+                      built by tools/lit_strip.py; CSS animation, repeat-x so the wrap is seamless), under the
+                      .lit-prompt terminal panel, which retypes a real /lit-fetch question (litPrompt)
    data-motion="melt" the two Pb coexistence slabs from melting.html, crystal growing at 590 K and melting at 663 K
    data-motion="mc"   the Monte Carlo head redrawn live: the fe_8mm geometry from mc-story-data.js
                       (montecarlo.html, frame 6), turning 360 deg per loop, photons flying source ->
@@ -34,7 +35,7 @@
     if (RM && RM.matches) return;
     thumbs.forEach(function (el) {
       var kind = el.getAttribute("data-motion"), m = null;
-      if (kind === "lit" && !slowNet) m = litStrip(el);
+      if (kind === "lit") m = litCard(el, !slowNet);
       if (kind === "mc") m = mcHead(el);
       if (kind === "drift") m = drift(el);
       if (kind === "melt" && !slowNet) m = meltSlabs(el);
@@ -74,6 +75,60 @@
     return { layer: layer,
       start: function () { if (!loaded) { loaded = true; img.src = src; } layer.classList.add("is-on"); },
       stop: function () { layer.classList.remove("is-on"); } };
+  }
+
+  /* lit card prompt 2026-11: the .lit-prompt panel in index.html holds the finished line (what no-JS and
+     reduced-motion visitors see). Here it is retyped on a loop: /lit-fetch + question, a spinner counting the
+     papers read, the finished status, a hold, then it clears. The full text stays in the DOM (the untyped rest
+     is invisible), so the panel never changes size. Timing is a function of (elapsed mod period). */
+  function litPrompt(el) {
+    var box = el.querySelector(".lit-prompt"); if (!box) return null;
+    var segs = Array.prototype.map.call(box.querySelectorAll("[data-type]"), function (s) {
+      var full = s.textContent, typed = document.createElement("span"), rest = document.createElement("span");
+      rest.className = "lit-prompt__rest"; s.textContent = ""; s.appendChild(typed); s.appendChild(rest);
+      return { el: s, full: full, typed: typed, rest: rest, ms: +s.getAttribute("data-type") };
+    });
+    var st = box.querySelector(".lit-prompt__st"), stFinal = st.innerHTML, nPapers = +st.getAttribute("data-count") || 0;
+    var caret = document.createElement("i"); caret.className = "lit-prompt__caret";
+    var tT = 0; segs.forEach(function (s) { s.t0 = tT; tT += s.full.length * s.ms; });
+    var PAUSE = 350, COUNT = 1600, HOLD = 4500, FADE = 450, P = tT + PAUSE + COUNT + HOLD + FADE;
+    var GLYPH = "·✢✳✶✻✽", last = "", raf = 0, acc = 0, base = 0;
+    function render(e) {
+      var key, stHTML = null;
+      segs.forEach(function (s) {
+        var n = Math.max(0, Math.min(s.full.length, Math.floor((e - s.t0) / s.ms)));
+        if (s.n !== n) { s.n = n; s.typed.textContent = s.full.slice(0, n); s.rest.textContent = s.full.slice(n); }
+        if (e >= s.t0 && (e < s.t0 + s.full.length * s.ms || s === segs[segs.length - 1]) && caret.nextSibling !== s.rest) s.el.insertBefore(caret, s.rest);
+      });
+      if (e < tT + PAUSE) key = "type";
+      else if (e < tT + PAUSE + COUNT) {
+        var k = Math.round(nPapers * (e - tT - PAUSE) / COUNT);
+        key = "n" + k + "g" + Math.floor(e / 110) % GLYPH.length;
+        stHTML = '<span class="lit-prompt__spin">' + GLYPH[Math.floor(e / 110) % GLYPH.length] + "</span> " + k + " papers read";
+      } else { key = e < P - FADE ? "done" : "fade"; stHTML = stFinal; }
+      box.classList.toggle("is-typing", e < tT);
+      if (key === last) return; last = key;
+      st.style.visibility = stHTML === null ? "hidden" : "";
+      if (stHTML !== null) st.innerHTML = stHTML;
+      box.classList.toggle("is-clearing", key === "fade");
+    }
+    function frame(now) { acc = now - base; render(acc % P); raf = requestAnimationFrame(frame); }
+    box.classList.add("is-live");
+    return {
+      start: function () { if (!raf) { base = performance.now() - acc; raf = requestAnimationFrame(frame); } },
+      stop: function () { cancelAnimationFrame(raf); raf = 0; },
+      reset: function () {   // back to the finished line, as in the markup
+        cancelAnimationFrame(raf); raf = 0; caret.remove();
+        segs.forEach(function (s) { s.el.textContent = s.full; });
+        st.innerHTML = stFinal; st.style.visibility = ""; box.classList.remove("is-live", "is-typing", "is-clearing");
+      } };
+  }
+  function litCard(el, withStrip) {
+    var s = withStrip ? litStrip(el) : null, p = litPrompt(el);
+    if (!s && !p) return null;
+    return { layer: { remove: function () { if (s) s.layer.remove(); if (p) p.reset(); } },
+      start: function () { if (s) s.start(); if (p) p.start(); },
+      stop: function () { if (s) s.stop(); if (p) p.stop(); } };
   }
 
   /* ---------------------------------------------------------------- Monte Carlo head */
