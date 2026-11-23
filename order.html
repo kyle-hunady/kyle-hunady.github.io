@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order and Disorder · Kyle Hunady</title>
+<meta name="description" content="A small Monte Carlo model of an A50B50 alloy: how order melts at one temperature, what it does to a powder X-ray pattern, and why short-range order survives above it.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<style>
+/* Page-local rules for order.html. Move into site.css when the page is published. */
+.ord-sim { display: grid; grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
+.fig canvas.lat { height: auto; aspect-ratio: 1 / 1; border-radius: 0.5rem; background: var(--bg); touch-action: manipulation; cursor: pointer; }
+.fig canvas.ord-plot { height: 15rem; }
+.fig canvas.ord-xrd { height: 18rem; }
+.ord-read { display: grid; gap: 0.7rem; }
+.ord-read dl { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; margin: 0; font-size: 0.8rem; }
+.ord-read dt { color: var(--faint); font-family: var(--mono); }
+.ord-read dd { margin: 0; color: var(--white); font-family: var(--mono); }
+.ord-state { color: var(--accent); font-family: var(--mono); font-size: 0.82rem; min-height: 2.6em; }
+.sp { display: inline-block; width: 0.8rem; height: 0.8rem; margin-right: 0.35rem; vertical-align: -1px; }
+.sp-a { background: var(--accent); border-radius: 50%; }
+.sp-b { background: var(--steel); border-radius: 0.12rem; }
+.ord-ctl { display: flex; flex-wrap: wrap; gap: 0.7rem 1.2rem; align-items: center; margin-top: 0.9rem; }
+.ord-ctl label { display: flex; align-items: center; gap: 0.6rem; font-size: 0.74rem; color: var(--muted); min-height: 44px; }
+.ord-ctl input[type=range] { width: 11rem; height: 44px; accent-color: var(--accent); }
+.seg { display: inline-flex; border: 1px solid var(--accent-deep); border-radius: 0.4rem; overflow: hidden; }
+.seg button, .ord-ctl > button { min-height: 44px; min-width: 44px; padding: 0 0.9rem; background: transparent; color: var(--accent);
+  font-family: var(--mono); font-size: 0.74rem; border: 0; cursor: pointer; }
+.ord-ctl > button { border: 1px solid var(--accent-deep); border-radius: 0.4rem; }
+.seg button + button { border-left: 1px solid var(--accent-deep); }
+.seg button[aria-pressed=true], .seg button:hover, .ord-ctl > button:hover { background: var(--accent-deep); color: var(--bg); }
+.seg button[aria-pressed=true] { background: var(--accent); color: var(--bg); }
+.ord-hint { font-family: var(--sans); font-size: 0.76rem; color: var(--faint); margin-top: 0.4rem; }
+[data-mode=ord] .only-clu, [data-mode=clu] .only-ord { display: none; }
+.atable { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.84rem; }
+.atable th { text-align: left; color: var(--faint); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--rule); padding: 0.3rem 0.5rem; }
+.atable td { vertical-align: top; padding: 0.55rem 0.5rem; border-bottom: 1px solid var(--rule); color: var(--muted); line-height: 1.5; }
+.atable td:first-child { color: var(--white); width: 28%; }
+.refs { font-family: var(--sans); font-size: 0.8rem; color: var(--faint); padding-left: 1.1rem; }
+.refs li { list-style: decimal; margin: 0.3rem 0; line-height: 1.5; }
+@media (max-width: 760px) {
+  .ord-sim { grid-template-columns: 1fr; }
+  .ord-ctl input[type=range] { width: min(11rem, 55vw); }
+  .atable thead { display: none; }
+  .atable tr { display: block; padding: 0.5rem 0; border-bottom: 1px solid var(--rule); }
+  .atable td, .atable td:first-child { display: block; width: auto; border: 0; padding: 0.1rem 0; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.4 9.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8"/><path d="M16.5 5.3a3.4 3.4 0 0 1 0 6.4"/><path d="M18 14.6c2.2.6 3.5 2.4 3.5 5.4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+<nav aria-label="Sections">
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
+</nav>
+
+<header class="page__head">
+  <div class="container header__container">
+    <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Order and disorder</li></ol></div>
+    <p class="header__eyebrow">Statistical mechanics · a toy model</p>
+    <h1>Order and Disorder</h1>
+    <p class="header__line">Heat an ordered alloy and the atoms forget their places at one temperature. Drag the slider to find it.</p>
+  </div>
+</header>
+
+<main id="main" class="page">
+  <div class="container">
+
+    <div class="fig" id="sim" data-mode="ord">
+      <div class="ord-sim">
+        <canvas class="lat" id="lat" role="img" aria-label="A square grid of A and B atoms. A atoms are gold circles and B atoms are blue squares. At low temperature they alternate like a checkerboard; at high temperature they mix at random."></canvas>
+        <div class="ord-read">
+          <div class="legend"><span><span class="sp sp-a"></span>A atom (circle)</span><span><span class="sp sp-b"></span>B atom (square)</span></div>
+          <dl>
+            <dt>T / T<sub>c</sub></dt><dd id="rT">0.30</dd>
+            <dt class="only-ord">order η</dt><dt class="only-clu">segregation ψ</dt><dd id="rEta">1.00</dd>
+            <dt>α<sub>1</sub></dt><dd id="rAlpha">−1.00</dd>
+          </dl>
+          <p class="ord-state" id="rState"></p>
+          <p class="ord-hint">Tap an atom to swap it with an unlike neighbour.</p>
+        </div>
+      </div>
+      <div class="ord-ctl">
+        <label>Temperature <input id="cT" type="range" min="0.2" max="2" step="0.01" value="0.3" aria-label="Temperature in units of T c"> <output id="oT">0.30 T<sub>c</sub></output></label>
+        <div class="seg" role="group" aria-label="Temperature sweep"><button id="bAnneal" type="button" title="Start random at 2.0 Tc and cool slowly to 0.2 Tc">Anneal</button><button id="bQuench" type="button" title="Start random at 2.0 Tc and drop to 0.2 Tc at once">Quench</button></div>
+        <div class="seg" role="group" aria-label="Interaction"><button id="mOrd" type="button" aria-pressed="true">Ordering (J&nbsp;&gt;&nbsp;0)</button><button id="mClu" type="button" aria-pressed="false">Clustering (J&nbsp;&lt;&nbsp;0)</button></div>
+        <button id="bPlay" type="button" aria-label="Pause">Pause</button>
+      </div>
+      <p class="cap"><span class="tag-model">model</span><b>An A<sub>50</sub>B<sub>50</sub> alloy on a square lattice.</b> <span class="only-ord">Unlike neighbours lower the energy by J, so the low-temperature state alternates like a checkerboard.</span><span class="only-clu">Like neighbours lower the energy by J, so the low-temperature state separates into an A region and a B region.</span> Anneal cools slowly from a random start. Quench drops to 0.2 T<sub>c</sub> at once, and the atoms get stuck in patches that do not match.</p>
+    </div>
+
+    <div class="fig-row" id="plots" data-mode="ord">
+      <div class="fig">
+        <canvas class="ord-plot" id="pEta" role="img" aria-label="Order parameter against temperature, with the live simulation point, the exact curve and the mean-field curve"></canvas>
+        <p class="cap"><b class="only-ord">Long-range order falls to zero at T<sub>c</sub>.</b><b class="only-clu">Segregation falls away near T<sub>c</sub>.</b> Dots are what the simulation measured at each temperature, the ring is the present state. <span class="only-ord">The solid line is Onsager&rsquo;s exact result for this lattice and the dashed line is mean-field (Bragg&ndash;Williams), which puts the transition 1.76 times too high.</span></p>
+      </div>
+      <div class="fig">
+        <canvas class="ord-plot" id="pAlpha" role="img" aria-label="Nearest-neighbour Warren-Cowley parameter against temperature"></canvas>
+        <p class="cap"><b>Short-range order outlasts long-range order.</b> &alpha;<sub>1</sub> is the Warren&ndash;Cowley parameter for nearest neighbours. It is &minus;1 for perfect unlike pairing and 0 for random mixing. Above T<sub>c</sub> it stays well away from zero, while mean-field theory (dashed) says it vanishes.</p>
+      </div>
+    </div>
+
+    <div class="fig" id="xrdfig" data-mode="ord">
+      <canvas class="ord-xrd" id="pXrd" role="img" aria-label="Simulated diffraction from the lattice: a powder pattern in ordering mode, low-angle diffuse intensity in clustering mode"></canvas>
+      <div class="ord-ctl only-ord">
+        <label>Scattering contrast <input id="cC" type="range" min="0" max="0.5" step="0.01" value="0.33" aria-label="Scattering contrast"> <output id="oC">0.33</output></label>
+        <div class="seg" role="group" aria-label="Contrast presets"><button id="pFeAl" type="button">Fe&ndash;Al-like</button><button id="pCuZn" type="button">Cu&ndash;Zn-like</button></div>
+      </div>
+      <p class="fig-out" id="xOut"></p>
+      <p class="cap only-ord"><span class="tag-model">model</span><b>Order shows up as extra peaks.</b> The same ordering as above, read as a B2 crystal (a = 2.91 &Aring;) with Cu K&alpha; radiation (1.5406 &Aring;). White peaks come from the average lattice and do not change. Gold peaks need A and B on different sublattices, so they grow and shrink with &eta;. The dashed outline is the perfectly ordered pattern. Contrast is (f<sub>A</sub>&minus;f<sub>B</sub>)/(f<sub>A</sub>+f<sub>B</sub>), taken from atomic numbers: 26 and 13 for Fe&ndash;Al, 29 and 30 for Cu&ndash;Zn.</p>
+      <p class="cap only-clu"><span class="tag-model">model</span><b>Clustering scatters at low angle.</b> Intensity from the simulated lattice, averaged over all directions, against wavevector q (units of 1/lattice spacing). Random mixing gives 1 at every q. Segregated regions pile intensity up at small q. A crystal with this kind of clustering gives small-angle or diffuse scattering and no new Bragg peaks.</p>
+    </div>
+
+    <h2>What you&rsquo;re seeing</h2>
+    <p>Each site holds an A or a B atom, half and half. Every step picks a neighbouring pair and swaps it if the energy drops. If the energy would rise, the swap still happens with probability exp(&minus;&Delta;E/kT). That is the Metropolis rule, and swapping keeps the composition fixed. Temperature is in units of T<sub>c</sub>, the temperature where long-range order disappears. For this lattice kT<sub>c</sub> = 2.269 J, which Onsager worked out exactly.</p>
+    <p>Below T<sub>c</sub> the grid divides into two sublattices and A prefers one of them. The order parameter &eta; measures how completely. It is 1 for a perfect checkerboard and falls to zero at T<sub>c</sub>. Above T<sub>c</sub> an A atom still has more B neighbours than chance would give it, but the pattern does not carry across the grid. That leftover is short-range order, and &alpha;<sub>1</sub> measures it. A quench shows a different failure: the atoms order locally in several patches whose checkerboards are shifted against each other, and &eta; stays small.</p>
+    <p>A powder X-ray pattern reports on the same thing. Peaks from the average lattice have structure factor F = f<sub>A</sub> + f<sub>B</sub> and do not depend on order. Superlattice peaks have F = &eta;(f<sub>A</sub> &minus; f<sub>B</sub>), so their intensity goes as &eta;<sup>2</sup>(f<sub>A</sub> &minus; f<sub>B</sub>)<sup>2</sup>. Fe and Al differ by a factor of two in scattering power, so the peaks are clear. Cu and Zn differ by one electron, which makes those peaks roughly 400 times weaker, and a laboratory pattern shows almost nothing. Neutrons, or X-rays tuned near an absorption edge, see a larger difference between such neighbours.</p>
+
+    <h2>Assumptions</h2>
+    <table class="atable">
+      <thead><tr><th>Choice</th><th>What the model assumes</th><th>What it leaves out</th></tr></thead>
+      <tbody>
+        <tr><td>2D square lattice, nearest neighbours</td><td>Ising-equivalent energy, one constant J. Exact T<sub>c</sub> = 2.269 J/k.</td><td>Real B2 alloys are three-dimensional with longer-range interactions. The transition temperature and the shape of the &eta; curve differ.</td></tr>
+        <tr><td>Fixed lattice</td><td>Atoms swap sites and nothing else moves.</td><td>Vibrations, relaxation around size mismatch, vacancies and the diffusion that sets real timescales.</td></tr>
+        <tr><td>T in units of T<sub>c</sub></td><td>One number sets the whole curve.</td><td>Absolute temperatures. Steps are Monte Carlo sweeps, not seconds.</td></tr>
+        <tr><td>Small grid</td><td>32&times;32 on a desktop, 20&times;20 on a phone, periodic edges.</td><td>The transition is rounded, and &eta; does not reach zero above T<sub>c</sub> because a finite grid always has some leftover imbalance.</td></tr>
+        <tr><td>Powder pattern</td><td>The 2D order is read as B2 order. Both atoms share one form-factor fall-off. Fixed peak width of 0.5&deg;.</td><td>Debye&ndash;Waller damping, thermal diffuse scattering, absorption and instrument effects.</td></tr>
+        <tr><td>Clustering mode</td><td>Same transition, but composition is conserved, so &psi; is the weight at the longest wavelength.</td><td>The sharp order parameter of the ordering mode. &psi; is a finite-size proxy.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Where it shows up</h2>
+    <p>&beta;-brass (Cu&ndash;Zn near 50&ndash;50) orders into B2 below about 460&nbsp;&deg;C, and Fe&ndash;Al near equal composition forms B2 order on cooling. Textbook treatments are in Porter, Easterling and Sherif, and in Cullity and Stock.</p>
+    <ol class="refs">
+      <li>W. L. Bragg and E. J. Williams, <i>Proc. R. Soc. A</i> 145, 699 (1934): the mean-field theory of order.</li>
+      <li>L. Onsager, <i>Phys. Rev.</i> 65, 117 (1944): the exact 2D solution.</li>
+      <li>J. M. Cowley, <i>Phys. Rev.</i> 77, 669 (1950): short-range order parameters.</li>
+      <li>N. Metropolis <i>et al.</i>, <i>J. Chem. Phys.</i> 21, 1087 (1953): the Monte Carlo rule. K. Kawasaki, <i>Phys. Rev.</i> 145, 224 (1966): swap dynamics.</li>
+      <li>B. D. Cullity and S. R. Stock, <i>Elements of X-ray Diffraction</i>, 3rd ed. (Prentice Hall, 2001).</li>
+      <li>D. A. Porter, K. E. Easterling and M. Y. Sherif, <i>Phase Transformations in Metals and Alloys</i>.</li>
+    </ol>
+
+    <div class="next-links"><a class="btn" href="entropy.html">Alloy entropy</a><a class="btn" href="index.html#research">All research</a></div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-links"><a href="index.html">Home</a><a href="https://github.com/kyle-hunady" target="_blank" rel="noreferrer">GitHub</a></div>
+  <small>Kyle Hunady · Pasadena, CA</small>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var TC = 2.269185;                       // kT_c / J, Onsager
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var phone = window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+  var L = phone ? 20 : 32, N = L * L, SW = phone ? 8 : 4;   // sweeps per frame
+  function $(id) { return document.getElementById(id); }
+  var root = $('sim');
+
+  /* colours come from the site tokens */
+  var C = {};
+  function loadColors() {
+    var cs = getComputedStyle(document.documentElement);
+    function t(n, f) { var v = cs.getPropertyValue(n).trim(); return v || f; }
+    C.bg = t('--bg', '#0B0C0B'); C.acc = t('--accent', '#D9B26F'); C.steel = t('--steel', '#7FA7C9');
+    C.white = t('--white', '#F2F3F0'); C.muted = t('--muted', 'rgba(242,243,240,.58)'); C.faint = t('--faint', 'rgba(242,243,240,.5)');
+    C.rule = t('--rule', 'rgba(242,243,240,.1)'); C.rust = t('--rust', '#C98A7F');
+  }
+  loadColors();
+
+  /* ------------------------------------------------------------ lattice --- */
+  var s = new Int8Array(N), nb = new Int16Array(N * 4);
+  for (var y0 = 0; y0 < L; y0++) for (var x0 = 0; x0 < L; x0++) {
+    var i0 = y0 * L + x0;
+    nb[i0 * 4] = y0 * L + (x0 + 1) % L; nb[i0 * 4 + 1] = y0 * L + (x0 + L - 1) % L;
+    nb[i0 * 4 + 2] = ((y0 + 1) % L) * L + x0; nb[i0 * 4 + 3] = ((y0 + L - 1) % L) * L + x0;
+  }
+  var mode = 1;                            // +1 ordering: E = +J sum s_i s_j ; -1 clustering: E = -J sum s_i s_j
+  var T = 0.3;                             // in T_c
+  function ground() {
+    for (var y = 0; y < L; y++) for (var x = 0; x < L; x++)
+      s[y * L + x] = mode > 0 ? (((x + y) & 1) ? 1 : -1) : (y < L / 2 ? 1 : -1);
+  }
+  function randomize() {
+    var a = [], k;
+    for (k = 0; k < N; k++) a.push(k < N / 2 ? 1 : -1);
+    for (k = N - 1; k > 0; k--) { var r = (Math.random() * (k + 1)) | 0, t = a[k]; a[k] = a[r]; a[r] = t; }
+    for (k = 0; k < N; k++) s[k] = a[k];
+  }
+  function sweep(beta) {                   // Kawasaki: swap unlike nearest neighbours, Metropolis
+    for (var n = 0; n < N; n++) {
+      var i = (Math.random() * N) | 0, j = nb[i * 4 + ((Math.random() * 4) | 0)];
+      if (s[i] === s[j]) continue;
+      var si = s[nb[i * 4]] + s[nb[i * 4 + 1]] + s[nb[i * 4 + 2]] + s[nb[i * 4 + 3]] - s[j];
+      var sj = s[nb[j * 4]] + s[nb[j * 4 + 1]] + s[nb[j * 4 + 2]] + s[nb[j * 4 + 3]] - s[i];
+      var dE = 2 * mode * s[i] * (sj - si);
+      if (dE <= 0 || Math.random() < Math.exp(-dE * beta)) { s[i] = -s[i]; s[j] = -s[j]; }
+    }
+  }
+  function betaOf(t) { return 1 / (t * TC); }
+
+  /* ---------------------------------------------------------- measurement --- */
+  var cosT = new Float32Array(L), sinT = new Float32Array(L);
+  for (var q0 = 0; q0 < L; q0++) { cosT[q0] = Math.cos(2 * Math.PI * q0 / L); sinT[q0] = Math.sin(2 * Math.PI * q0 / L); }
+  var NQ = 16, Sq = new Float32Array(NQ);  // radial S(q), smoothed
+  var sqValid = false;
+  function measure() {
+    var stag = 0, bond = 0, c1 = 0, s1 = 0, c2 = 0, s2 = 0;
+    for (var y = 0; y < L; y++) for (var x = 0; x < L; x++) {
+      var i = y * L + x, v = s[i];
+      stag += (((x + y) & 1) ? -v : v);
+      bond += v * (s[nb[i * 4]] + s[nb[i * 4 + 2]]);
+      c1 += v * cosT[x]; s1 += v * sinT[x]; c2 += v * cosT[y]; s2 += v * sinT[y];
+    }
+    var psi = Math.max(Math.hypot(c1, s1), Math.hypot(c2, s2)) / N / (2 / Math.PI);
+    return { ord: mode > 0 ? Math.abs(stag) / N : Math.min(psi, 1), alpha: bond / (2 * N) };
+  }
+  function structureFactor() {             // 2D DFT, radially averaged: S = |sum s e^{ikr}|^2 / N (random mixing gives 1)
+    var H = L / 2 + 1, re = new Float32Array(L * H), im = new Float32Array(L * H), x, y, kx, ky;
+    for (y = 0; y < L; y++) for (kx = 0; kx < H; kx++) {
+      var a = 0, b = 0;
+      for (x = 0; x < L; x++) { var ph = (kx * x) % L; a += s[y * L + x] * cosT[ph]; b -= s[y * L + x] * sinT[ph]; }
+      re[y * H + kx] = a; im[y * H + kx] = b;
+    }
+    var acc = new Float32Array(NQ), cnt = new Float32Array(NQ);
+    for (kx = 0; kx < H; kx++) for (ky = 0; ky < L; ky++) {
+      var A = 0, B = 0;
+      for (y = 0; y < L; y++) {
+        var p = (ky * y) % L, cr = cosT[p], ci = -sinT[p], r0 = re[y * H + kx], i0 = im[y * H + kx];
+        A += r0 * cr - i0 * ci; B += r0 * ci + i0 * cr;
+      }
+      var mx = kx, my = ky > L / 2 ? L - ky : ky;
+      if (!mx && !my) continue;
+      var qm = 2 * Math.PI / L * Math.sqrt(mx * mx + my * my), bin = Math.floor(qm / Math.PI * NQ);
+      if (bin >= NQ) continue;
+      acc[bin] += (A * A + B * B) / N; cnt[bin]++;
+    }
+    for (var k = 0; k < NQ; k++) if (cnt[k]) {
+      var v = acc[k] / cnt[k];
+      Sq[k] = sqValid ? Sq[k] * 0.75 + v * 0.25 : v;
+    }
+    sqValid = true;
+  }
+
+  /* running state */
+  var ordS = 1, alS = -1, fresh = true;
+  var NB = 37, binO = new Float32Array(NB), binA = new Float32Array(NB), binOk = new Uint8Array(NB);
+  function resetBins() { binOk.fill(0); fresh = true; sqValid = false; }
+  function record(m) {
+    if (fresh) { ordS = m.ord; alS = m.alpha; fresh = false; } else { ordS += 0.12 * (m.ord - ordS); alS += 0.12 * (m.alpha - alS); }
+    var b = Math.round((T - 0.2) / 0.05);
+    if (b < 0 || b >= NB) return;
+    if (!binOk[b]) { binO[b] = ordS; binA[b] = alS; binOk[b] = 1; }
+    else { binO[b] += 0.15 * (m.ord - binO[b]); binA[b] += 0.15 * (m.alpha - binA[b]); }
+  }
+
+  /* ------------------------------------------------------------ controls --- */
+  var playing = !reduced, visible = true, raf = 0, frameN = 0;
+  var anneal = { on: false, done: 0, total: 4000 };
+  var cT = $('cT'), oT = $('oT'), bPlay = $('bPlay');
+  function setT(t) { T = Math.max(0.2, Math.min(2, t)); cT.value = T.toFixed(2); oT.innerHTML = T.toFixed(2) + ' T<sub>c</sub>'; }
+  function nudge(n) { var b = betaOf(T); for (var k = 0; k < n; k++) sweep(b); }
+  function refresh(instant) { var m = measure(); if (instant) fresh = true; record(m); if (mode < 0) structureFactor(); drawAll(); }
+  function setPlaying(p) {
+    playing = p; bPlay.textContent = p ? 'Pause' : 'Play'; bPlay.setAttribute('aria-label', p ? 'Pause' : 'Play');
+    kick();
+  }
+  function startFromRandom() { randomize(); setT(2); nudge(80); resetBins(); }
+  cT.addEventListener('input', function () {
+    anneal.on = false; setT(+cT.value);
+    if (!playing) { nudge(60); refresh(false); }
+  });
+  $('bAnneal').addEventListener('click', function () { startFromRandom(); anneal.on = true; anneal.done = 0; setPlaying(true); refresh(true); });
+  $('bQuench').addEventListener('click', function () { startFromRandom(); anneal.on = false; setT(0.2); setPlaying(true); refresh(true); });
+  function setMode(m) {
+    mode = m;
+    var v = m > 0 ? 'ord' : 'clu';
+    ['sim', 'plots', 'xrdfig'].forEach(function (id) { $(id).setAttribute('data-mode', v); });
+    $('mOrd').setAttribute('aria-pressed', m > 0); $('mClu').setAttribute('aria-pressed', m < 0);
+    anneal.on = false; ground(); nudge(30); resetBins(); refresh(true);
+  }
+  $('mOrd').addEventListener('click', function () { if (mode < 0) setMode(1); });
+  $('mClu').addEventListener('click', function () { if (mode > 0) setMode(-1); });
+  bPlay.addEventListener('click', function () { setPlaying(!playing); });
+
+  var cC = $('cC'), oC = $('oC'), contrast = 0.33;
+  function setC(c) { contrast = c; cC.value = c; oC.textContent = (+c).toFixed(2); drawXrd(); }
+  cC.addEventListener('input', function () { setC(+cC.value); });
+  $('pFeAl').addEventListener('click', function () { setC(0.33); });
+  $('pCuZn').addEventListener('click', function () { setC(0.02); });
+
+  var lat = $('lat');
+  lat.addEventListener('pointerdown', function (e) {   // tap: swap with a random unlike neighbour
+    var r = lat.getBoundingClientRect(), x = Math.floor((e.clientX - r.left) / r.width * L), y = Math.floor((e.clientY - r.top) / r.height * L);
+    if (x < 0 || y < 0 || x >= L || y >= L) return;
+    var i = y * L + x, opts = [];
+    for (var k = 0; k < 4; k++) if (s[nb[i * 4 + k]] !== s[i]) opts.push(nb[i * 4 + k]);
+    if (!opts.length) return;
+    var j = opts[(Math.random() * opts.length) | 0]; s[i] = -s[i]; s[j] = -s[j];
+    refresh(false);
+  });
+
+  /* ------------------------------------------------------------- drawing --- */
+  function setup(cv) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+    return { c: c, w: w, h: h };
+  }
+  function drawLattice() {
+    var g = setup(lat), c = g.c, cell = g.w / L, k = 0;
+    for (var y = 0; y < L; y++) for (var x = 0; x < L; x++, k++) {
+      var cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
+      if (s[k] > 0) { c.fillStyle = C.acc; c.beginPath(); c.arc(cx, cy, cell * 0.4, 0, 6.2832); c.fill(); }
+      else { c.fillStyle = C.steel; var q = cell * 0.68; c.fillRect(cx - q / 2, cy - q / 2, q, q); }
+    }
+  }
+  function axes(g, o) {
+    var c = g.c, p = { l: 44, r: 12, t: 14, b: 38 };
+    var X = function (v) { return p.l + (v - o.x0) / (o.x1 - o.x0) * (g.w - p.l - p.r); };
+    var Y = o.log ? function (v) { return p.t + (1 - (Math.log10(v) - Math.log10(o.y0)) / (Math.log10(o.y1) - Math.log10(o.y0))) * (g.h - p.t - p.b); }
+                  : function (v) { return p.t + (1 - (v - o.y0) / (o.y1 - o.y0)) * (g.h - p.t - p.b); };
+    c.font = '10.5px "IBM Plex Mono", monospace'; c.lineWidth = 1; c.strokeStyle = C.rule; c.fillStyle = C.faint;
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    o.xt.forEach(function (v) { c.beginPath(); c.moveTo(X(v), p.t); c.lineTo(X(v), g.h - p.b); c.stroke(); c.fillText(o.xf ? o.xf(v) : v, X(v), g.h - p.b + 5); });
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    o.yt.forEach(function (v) { c.beginPath(); c.moveTo(p.l, Y(v)); c.lineTo(g.w - p.r, Y(v)); c.stroke(); c.fillText(o.yf ? o.yf(v) : v, p.l - 6, Y(v)); });
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(o.xl, p.l + (g.w - p.l - p.r) / 2, g.h - 3);
+    c.save(); c.translate(11, p.t + (g.h - p.t - p.b) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'top'; c.fillText(o.yl, 0, 0); c.restore();
+    return { X: X, Y: Y, p: p };
+  }
+  function vline(c, a, x, col, label, y0) {
+    c.save(); c.setLineDash([4, 4]); c.strokeStyle = col; c.beginPath(); c.moveTo(x, a.p.t); c.lineTo(x, y0); c.stroke(); c.restore();
+    if (label) { c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(label, x, a.p.t + 1); }
+  }
+  function onsager(t) { if (t >= 1) return 0; var sh = Math.sinh(2 / (t * TC)); return Math.pow(1 - Math.pow(sh, -4), 0.125); }
+  var TMF = 4 / TC;
+  function bw(t) { if (t >= TMF) return 0; var m = 1; for (var k = 0; k < 300; k++) m = Math.tanh(TMF * m / t); return m; }
+  function curve(c, a, f, t0, t1, col, dash) {
+    c.save(); c.strokeStyle = col; c.lineWidth = 1.6; if (dash) c.setLineDash(dash); c.beginPath();
+    for (var t = t0, first = true; t <= t1 + 1e-9; t += 0.01) { var px = a.X(t), py = a.Y(f(t)); if (first) { c.moveTo(px, py); first = false; } else c.lineTo(px, py); }
+    c.stroke(); c.restore();
+  }
+  function pointsAndRing(c, a, bins, cur) {
+    c.fillStyle = C.steel;
+    for (var b = 0; b < NB; b++) if (binOk[b]) { c.beginPath(); c.arc(a.X(0.2 + 0.05 * b), a.Y(bins[b]), 2.6, 0, 6.2832); c.fill(); }
+    c.strokeStyle = C.acc; c.lineWidth = 2; c.beginPath(); c.arc(a.X(T), a.Y(cur), 6, 0, 6.2832); c.stroke();
+  }
+  function drawEta() {
+    var g = setup($('pEta')), c = g.c;
+    var a = axes(g, { x0: 0, x1: 2, y0: 0, y1: 1.05, xt: [0, 0.5, 1, 1.5, 2], yt: [0, 0.5, 1], xl: 'T / Tc', yl: mode > 0 ? 'order parameter η' : 'segregation ψ', yf: function (v) { return v.toFixed(1); } });
+    var yb = g.h - a.p.b;
+    vline(c, a, a.X(1), C.white, 'Tc', yb);
+    if (mode > 0) {
+      vline(c, a, a.X(TMF), C.faint, 'mean-field Tc', yb);
+      curve(c, a, onsager, 0.2, 1, C.white, null);
+      curve(c, a, bw, 0.2, 2, C.faint, [5, 4]);
+    }
+    pointsAndRing(c, a, binO, ordS);
+  }
+  function drawAlpha() {
+    var g = setup($('pAlpha')), c = g.c, sg = mode > 0 ? -1 : 1;
+    var a = axes(g, { x0: 0, x1: 2, y0: sg < 0 ? -1.05 : -0.05, y1: sg < 0 ? 0.05 : 1.05, xt: [0, 0.5, 1, 1.5, 2], yt: sg < 0 ? [-1, -0.5, 0] : [0, 0.5, 1], xl: 'T / Tc', yl: 'α₁ (nearest neighbours)', yf: function (v) { return v.toFixed(1); } });
+    vline(c, a, a.X(1), C.white, 'Tc', g.h - a.p.b);
+    curve(c, a, function (t) { var m = bw(t); return sg * m * m; }, 0.2, 2, C.faint, [5, 4]);
+    pointsAndRing(c, a, binA, alS);
+  }
+
+  /* powder pattern */
+  var LAM = 1.5406, A0 = 2.91, HKL = [[1, 0, 0, 6], [1, 1, 0, 12], [1, 1, 1, 8], [2, 0, 0, 6], [2, 1, 0, 24], [2, 1, 1, 24]];
+  var PK = HKL.map(function (r) {
+    var d = A0 / Math.sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]), th = Math.asin(LAM / (2 * d)), sn = Math.sin(th);
+    var lp = (1 + Math.cos(2 * th) * Math.cos(2 * th)) / (sn * sn * Math.cos(th)), sv = sn / LAM;
+    return { hkl: '' + r[0] + r[1] + r[2], tt: 2 * th * 180 / Math.PI, mult: r[3], lp: lp, g2: Math.exp(-5 * sv * sv), sup: (r[0] + r[1] + r[2]) & 1 };
+  });
+  var FW = 0.5;                            // degrees, fixed
+  function pv(x, x0, fw, eta) {            // pseudo-Voigt, unit height (research_kit.sim.lineshape)
+    var d = x - x0, h = fw / 2, sg = fw / (2 * Math.sqrt(2 * Math.LN2));
+    return eta * h * h / (d * d + h * h) + (1 - eta) * Math.exp(-0.5 * d * d / (sg * sg));
+  }
+  function peakI(p, eta) {                 // F_fund = 2g, F_super = 2 c eta g
+    var f = p.sup ? contrast * eta : 1; return p.mult * 4 * f * f * p.g2 * p.lp;
+  }
+  function drawXrd() {
+    var g = setup($('pXrd')), c = g.c;
+    if (mode < 0) return drawDiffuse(g);
+    var eta = ordS, ref = peakI(PK[1], 1);
+    var a = axes(g, { x0: 25, x1: 90, y0: 0, y1: 118, xt: [30, 40, 50, 60, 70, 80, 90], yt: [0, 50, 100], xl: '2θ (degrees, Cu Kα)', yl: 'relative intensity (110 = 100)' });
+    var supPk = PK.filter(function (p) { return p.sup; }), fundPk = PK.filter(function (p) { return !p.sup; });
+    function peaks(list, etaV) { return function (x) { var v = 0; list.forEach(function (p) { v += peakI(p, etaV) / ref * 100 * pv(x, p.tt, FW, 0.5); }); return v; }; }
+    function line(fn, col, dash, fillCol) {
+      c.save(); c.strokeStyle = col; c.lineWidth = 1.7; if (dash) c.setLineDash(dash); c.beginPath();
+      for (var xx = 25; xx <= 90; xx += 0.1) { var px = a.X(xx), py = a.Y(Math.min(fn(xx), 118)); if (xx === 25) c.moveTo(px, py); else c.lineTo(px, py); }
+      c.stroke();
+      if (fillCol) { c.lineTo(a.X(90), a.Y(0)); c.lineTo(a.X(25), a.Y(0)); c.closePath(); c.fillStyle = fillCol; c.fill(); }
+      c.restore();
+    }
+    line(peaks(supPk, 1), C.acc, [4, 4]);
+    line(peaks(fundPk, 1), C.white, null);
+    line(peaks(supPk, eta), C.acc, null, 'rgba(217,178,111,0.28)');
+    c.font = '10.5px "IBM Plex Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    PK.forEach(function (p) {
+      var h = peakI(p, 1) / ref * 100; c.fillStyle = p.sup ? C.acc : C.white;
+      c.fillText(p.hkl, a.X(p.tt), Math.max(a.p.t + 10, a.Y(Math.min(h, 112)) - 3));
+    });
+    var s100 = peakI(PK[0], eta) / ref * 100;
+    $('xOut').textContent = 'η = ' + eta.toFixed(2) + ' · contrast ' + contrast.toFixed(2) + ' · the 100 peak is ' + (s100 >= 10 ? s100.toFixed(0) : s100 >= 1 ? s100.toFixed(1) : s100.toFixed(2)) + ' % of the 110 peak' + (s100 < 1 ? ' (about as small as noise in a lab pattern)' : '');
+  }
+  function drawDiffuse(g) {
+    var c = g.c, a = axes(g, { x0: 0, x1: Math.PI, y0: 0.1, y1: 1000, log: true, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3], yt: [0.1, 1, 10, 100, 1000], xl: 'q (1 / lattice spacing)', yl: 'S(q), random mixing = 1', xf: function (v) { return v.toFixed(1); }, yf: function (v) { return v >= 1 ? '' + v : v.toFixed(1); } });
+    c.strokeStyle = C.faint; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(a.X(0), a.Y(1)); c.lineTo(a.X(Math.PI), a.Y(1)); c.stroke(); c.setLineDash([]);
+    function val(k) { return Math.max(0.1, Math.min(1000, Sq[k] || 1)); }
+    c.strokeStyle = C.acc; c.lineWidth = 1.8; c.beginPath();
+    for (var k = 0; k < NQ; k++) { var x = a.X((k + 0.5) / NQ * Math.PI), y = a.Y(val(k)); if (k) c.lineTo(x, y); else c.moveTo(x, y); }
+    c.stroke(); c.fillStyle = C.acc;
+    for (k = 0; k < NQ; k++) { c.beginPath(); c.arc(a.X((k + 0.5) / NQ * Math.PI), a.Y(val(k)), 2.6, 0, 6.2832); c.fill(); }
+    $('xOut').textContent = 'T = ' + T.toFixed(2) + ' Tc · intensity at the smallest q is ' + (Sq[0] >= 10 ? Sq[0].toFixed(0) : Sq[0].toFixed(1)) + ' times the random-mixing level';
+  }
+
+  function readouts() {
+    $('rT').textContent = T.toFixed(2);
+    $('rEta').textContent = ordS.toFixed(2);
+    $('rAlpha').textContent = (alS < 0 ? '−' : '') + Math.abs(alS).toFixed(2);
+    var st;
+    if (mode > 0) st = T < 0.93 ? 'Long-range order. A sits on one sublattice.' : T < 1.07 ? 'Near T<sub>c</sub>. Order comes and goes in patches.' : 'Disordered at long range, with unlike pairs still favoured.';
+    else st = T < 0.93 ? 'Separated into an A region and a B region.' : T < 1.07 ? 'Near T<sub>c</sub>. Clusters form and dissolve.' : 'Mixed at long range, with like pairs still favoured.';
+    if (anneal.on) st = 'Annealing, ' + Math.round(anneal.done / anneal.total * 100) + ' % done. ' + st;
+    var el = $('rState');
+    if (el._t !== st) { el.innerHTML = st; el._t = st; }
+  }
+  function drawAll() { drawLattice(); drawEta(); drawAlpha(); drawXrd(); readouts(); }
+
+  /* ---------------------------------------------------------------- loop --- */
+  function frame() {
+    raf = 0; if (!playing || !visible || document.hidden) return;
+    if (anneal.on) {
+      for (var k = 0; k < SW; k++) { setT(2 - 1.8 * anneal.done / anneal.total); sweep(betaOf(T)); if (++anneal.done >= anneal.total) { anneal.on = false; setT(0.2); break; } }
+    } else nudge(SW);
+    record(measure());
+    frameN++;
+    drawLattice(); readouts();
+    if (frameN % 3 === 0) { if (mode < 0) structureFactor(); drawEta(); drawAlpha(); drawXrd(); }
+    kick();
+  }
+  function kick() { if (!raf && playing && visible && !document.hidden) raf = requestAnimationFrame(frame); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) { kick(); drawAll(); } }, { threshold: 0.05 }).observe($('sim'));
+  document.addEventListener('visibilitychange', kick);
+  var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(drawAll, 80); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+
+  /* ---------------------------------------------------------------- start --- */
+  ground(); setT(0.3); nudge(40); setC(0.33);
+  if (!playing) { bPlay.textContent = 'Play'; bPlay.setAttribute('aria-label', 'Play'); }
+  refresh(true); kick();
+})();
+</script>
+</body>
+</html>
