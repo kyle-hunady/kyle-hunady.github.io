@@ -1114,7 +1114,12 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 /* Education strip under About: Caltech "C" and Georgia Tech "GT" marks
    (2026-11-19), taken from each school's own site. Round tiles in the
    school's colour; the padding keeps the mark inside the circle. */
-.edu { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9rem 2.2rem; margin-top: 1.6rem; }
+/* Grid, not wrapping flex: a wrapped flex row centres each line on its own, so at mid widths the two
+   schools' logos sat at different x. One centred column keeps them left-aligned; two columns once both
+   fit side by side (365 + 499 px items + gap ~ 56.5rem, measured 2026-11-23). */
+.about__content { container-type: inline-size; }
+.edu { display: grid; grid-template-columns: minmax(0, max-content); justify-content: center; gap: 0.9rem 2.2rem; margin-top: 1.6rem; }
+@container (min-width: 56.5rem) { .edu { grid-template-columns: repeat(2, max-content); } }
 .edu__item { display: flex; align-items: center; gap: 0.7rem; color: var(--muted); text-align: left; transition: var(--transition); }
 .edu__item img { width: 2.6rem; height: 2.6rem; border-radius: 50%; object-fit: contain; flex: none; }
 .edu__item img[src*="caltech"] { background: #F37324; padding: 0.32rem; }
