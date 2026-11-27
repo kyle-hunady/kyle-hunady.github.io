@@ -230,14 +230,6 @@ header { padding-top: 6rem; overflow: hidden; }
 
 .project__thumb { aspect-ratio: 16 / 10; background: var(--surface-2); overflow: hidden; }
 .project__thumb img { height: 100%; }
-.project__thumb--empty {
-  display: grid;
-  place-items: center;
-  color: var(--faint);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
 
 .project__body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; flex: 1; }
 .project__tag { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
@@ -313,17 +305,6 @@ footer small { color: var(--faint); font-size: 0.72rem; }
    No mailto: anywhere (Kyle, 2026-08-19) -- it hands the visitor to whatever
    the OS thinks their mail client is. These copy the address instead and say
    so, via a .copied class that site.js toggles for a moment. */
-.icon-btn {
-  background: none;
-  cursor: pointer;
-  color: inherit;
-  display: flex;
-  line-height: 0;
-  padding: 0;
-  transition: var(--transition);
-}
-.icon-btn:hover { color: var(--white); }
-.icon-btn svg { width: 1.05rem; height: 1.05rem; }
 
 button.btn { font-size: 0.8rem; }
 
@@ -382,11 +363,6 @@ button.btn { font-size: 0.8rem; }
    as the research entries; only the paragraph spacing is new.              */
 .exp__item p + p { margin-top: 0.7rem; }
 
-.projects__note {
-  margin-top: 1.4rem;
-  text-align: center;
-  font-size: 0.78rem;
-}
 
 .contact__line {
   text-align: center;
@@ -565,7 +541,6 @@ button.btn { font-size: 0.8rem; }
 .fig canvas { display: block; width: 100%; }
 .fig .plot { height: 15rem; }
 .fig .plot--short { height: 9rem; }
-.fig .plot--scene { height: 13rem; }
 .fig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .fig-controls { display: flex; flex-wrap: wrap; gap: 0.9rem 1.4rem; align-items: center; margin-top: 0.8rem; }
 .fig-controls label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: var(--muted); }
@@ -580,11 +555,9 @@ button.btn { font-size: 0.8rem; }
              color: var(--faint); border: 1px dashed var(--rule); border-radius: 0.25rem; padding: 0.05rem 0.4rem; margin-right: 0.4rem; }
 .legend { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; }
 .legend i { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: -1px; }
-.legend[data-mode=pure] .lg-alloy, .legend[data-mode=alloy] .lg-pure { display: none; }
 
 /* ---- entropy page ---- */
 .fig .plot--tall { height: 21rem; }
-.fig-row--wide { grid-template-columns: 1.6fr 1fr; }
 .fig canvas + .legend + canvas { margin-top: 1.2rem; }
 .tag-data { display: inline-block; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
             color: var(--bg); background: var(--accent); border-radius: 0.25rem; padding: 0.05rem 0.4rem; margin-right: 0.5rem; vertical-align: 1px; }
@@ -599,7 +572,6 @@ button.btn { font-size: 0.8rem; }
 .cap-under { font-size: 0.8rem; margin-top: 0.6rem; }
 .cap-under b { color: var(--white); font-weight: 500; }
 @media (max-width: 760px) {
-  .fig-row--wide { grid-template-columns: 1fr; }
   .swaps, .kinds, .examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -646,10 +618,6 @@ h2.part span { color: var(--accent); font-size: 0.8em; }
 .pin { position: absolute; transform: translate(-50%, -50%); width: 1.5rem; height: 1.5rem; border-radius: 50%;
        background: var(--accent); color: var(--bg); font-size: 0.72rem; font-weight: 600; display: grid; place-items: center;
        box-shadow: 0 0 0 3px rgba(11,12,11,0.55); }
-.annot-key { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.4rem 1.2rem; margin-top: 0.7rem; }
-.annot-key div { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
-.annot-key b { display: inline-grid; place-items: center; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--accent);
-               color: var(--bg); font-size: 0.65rem; margin-right: 0.45rem; }
 
 /* ---- schematic SVGs drawn inline ---- */
 .schem { width: 100%; height: auto; }
@@ -729,8 +697,6 @@ a.thread:hover .thread__title { color: var(--accent); }
 .org__logo { width: 4.2rem; height: 4.2rem; border-radius: 0.6rem; background: var(--surface); border: 1px solid var(--rule);
              display: grid; place-items: center; overflow: hidden; }
 .org__logo img { width: 78%; height: auto; object-fit: contain; }
-.org__logo--light { background: #EDEBE4; }
-.org__logo--wide img { width: 92%; }
 .org__logo--none { color: var(--faint); }
 .org__logo--none svg { width: 1.4rem; height: 1.4rem; }
 .org__role { font-size: 0.92rem; color: var(--white); }
@@ -751,9 +717,9 @@ a.thread:hover .thread__title { color: var(--accent); }
    The latte log is a hobby, so it gets a warmer, sillier room of its own:
    same layout and fonts, latte colors instead of sage. Linked only from the
    footer cup, not from Projects (2026-11-16). */
-body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,178,111,0.16); --bg: #120E0B; --surface: #1C1612; --surface-2: #261E18; }
-.cafe .header__eyebrow { color: #D9B26F; }
-.cafe-cup { width: 3.4rem; height: 3.4rem; margin: 0 auto 1.2rem; color: #D9B26F; animation: steam 3.2s ease-in-out infinite; }
+body.cafe { --bg: #120E0B; --surface: #1C1612; --surface-2: #261E18; }
+.cafe .header__eyebrow { color: var(--accent); }
+.cafe-cup { width: 3.4rem; height: 3.4rem; margin: 0 auto 1.2rem; color: var(--accent); animation: steam 3.2s ease-in-out infinite; }
 .cafe-cup svg { width: 100%; height: 100%; }
 @keyframes steam { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-4px) rotate(3deg); } }
 .cafe .latte-cell { border-radius: 50%; }
@@ -773,7 +739,6 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .org__badge { position: absolute; left: 0.45rem; bottom: 0.45rem; width: 2.6rem; height: 2.6rem; border-radius: 0.5rem;
               background: rgba(11,12,11,0.78); display: grid; place-items: center; backdrop-filter: blur(4px); }
 .org__badge--light { background: rgba(237,235,228,0.92); }
-.org__badge img { width: 78%; height: auto; object-fit: contain; }
 @media screen and (max-width: 640px) { .org--photo { grid-template-columns: 1fr; } }
 
 /* a card that covers two projects shows one photo of each, side by side */
@@ -782,13 +747,10 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 
 .org__badges { position: absolute; left: 0.45rem; bottom: 0.45rem; display: flex; gap: 0.35rem; }
 .org__badges .org__badge { position: static; }
-.org__badge--wide { width: auto; padding: 0 0.5rem; }
-.org__badge--wide img { width: 4.2rem; }
-.org__badge--text { width: auto; padding: 0 0.6rem; color: var(--white); font-family: var(--mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; }
 
 /* Logo PNGs carry their own uniform margin (content trimmed, then padded to
    76% of a square), so every tile and badge shows them edge to edge. */
-.org__logo img, .org__logo--wide img, .org__badge img { width: 100%; height: 100%; object-fit: contain; }
+.org__logo img, .org__badge img { width: 100%; height: 100%; object-fit: contain; }
 .org__badge { padding: 0; }
 .org__badge--wide { width: auto; padding: 0; }
 .org__badge--wide img { width: auto; height: 2.6rem; }
@@ -802,8 +764,6 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .term pre { margin: 0; padding: 0.9rem 1rem; font-family: var(--mono); font-size: 0.74rem; line-height: 1.6; color: var(--muted);
             white-space: pre-wrap; word-break: break-word; max-height: 30rem; overflow: auto; }
 .term .t-cmd { color: var(--white); }
-.term .t-ok { color: var(--accent); }
-.term .t-miss { color: var(--rust); }
 .term--hero { border-color: var(--accent-deep); margin: 0.2rem 0 0.4rem; }
 .term--hero pre { font-size: 1rem; line-height: 1.5; padding: 1.1rem 1.2rem; }
 @media screen and (max-width: 520px) { .term--hero pre { font-size: 0.85rem; } }
@@ -817,17 +777,6 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .out .note { color: var(--faint); font-family: var(--mono); font-size: 0.72rem; line-height: 1.5; }
 .out img { display: block; width: 100%; height: auto; border-radius: 0.4rem; background: var(--paper); }
 .you-do { color: var(--white); margin: 0; }
-.ptable { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.84rem; margin: 0.2rem 0 0.9rem; }
-.ptable td:first-child { width: 44%; }
-.ptable th { text-align: left; color: var(--faint); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--rule); padding: 0.3rem 0.45rem; }
-.ptable td { vertical-align: top; padding: 0.5rem 0.45rem; border-bottom: 1px solid var(--rule); color: var(--muted); line-height: 1.45; }
-.ptable td:first-child a { color: var(--white); }
-.ptable td:nth-child(2) { width: 16%; color: var(--faint); font-family: var(--mono); font-size: 0.72rem; }
-@media screen and (max-width: 640px) {
-  .ptable thead { display: none; }
-  .ptable tr { display: block; padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
-  .ptable td, .ptable td:first-child, .ptable td:nth-child(2) { display: block; width: auto; border: 0; padding: 0.1rem 0; }
-}
 /* automation.html: the report itself, embedded, with an escape hatch to the full page */
 .rframe { border: 1px solid var(--accent-deep); border-radius: 0.6rem; overflow: hidden; margin: 0.9rem 0 1.1rem; background: var(--paper); }
 .rframe__bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.45rem 0.75rem;
@@ -881,9 +830,6 @@ body.cafe { --accent: #D9B26F; --accent-deep: #8A6A3E; --accent-dim: rgba(217,17
 .route.r-miss { color: var(--rust); border: 1px solid rgba(201,138,127,0.45); }
 
 /* B.C. card: a typographic thumbnail; the list itself lives on bc.html */
-.project__thumb--bc { display: grid; place-content: center; text-align: center; background: var(--surface-2); }
-.project__thumb--bc span { font-family: var(--mono); font-size: 2.6rem; font-weight: 600; color: var(--accent); letter-spacing: 0.06em; }
-.project__thumb--bc small { font-size: 0.68rem; letter-spacing: 0.14em; color: var(--faint); }
 .bcitem { display: grid; grid-template-columns: 4rem 1fr; gap: 1rem; padding: 1.2rem 0; border-top: 1px solid var(--rule); }
 .bcitem__year { color: var(--faint); font-size: 0.8rem; padding-top: 0.15rem; }
 .page h2.bcitem__name { margin-top: 0; font-size: 1rem; }
@@ -929,19 +875,9 @@ a.org__badge:hover { transform: translateY(-2px); box-shadow: 0 0 0 2px var(--ac
 .fig--light .cap b, .fig--light figcaption b { color: var(--paper-ink); }
 .fig--light .fig-out { color: var(--accent-deep); }
 .fig--light img { display: block; width: 100%; height: auto; }
-.setback .col-title { font-weight: 600; font-size: 0.95rem; text-align: center; margin: 0 0 0.3rem; }
-.setback .col-num { text-align: center; margin: 0.2rem 0 0; }
-.setback .col-num b { font-size: 1.5rem; }
-.setback .col-num span, .head-nums span { display: block; font-size: 0.75rem; color: var(--paper-muted); }
-.head-nums p { text-align: center; margin: 0.2rem 0; }
-.head-nums b { font-size: 1.15rem; }
 .fig--light .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.75rem; color: var(--paper-muted); margin: 0.6rem 0 0; }
 .legend .sw { display: inline-block; border-radius: 1px; width: 1.1rem; height: 0.22rem; vertical-align: middle; margin-right: 0.35rem; }
-.legend .sw--fill { height: 0.6rem; background: rgba(154,160,166,0.35); border-top: 1.5px solid #9aa0a6; }
 .fig--light .plot { width: 100%; height: 300px; }
-.fig--light .plot--3d { height: 340px; }
-.fig--light .plot--square { height: 400px; }
-.fig--light .plot--heads { height: 400px; }
 .pipe { list-style: none; padding: 0; margin: 1rem 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; counter-reset: none; }
 .pipe > li { margin: 0; }
 .pipe .fig { position: relative; height: 100%; margin: 0; }
@@ -952,24 +888,13 @@ details.details { border: 1px solid var(--rule); border-radius: 0.6rem; padding:
 details.details summary { cursor: pointer; color: var(--white); font-size: 0.85rem; }
 @media screen and (max-width: 760px) {
   .pipe { grid-template-columns: 1fr; }
-  .fig--light .plot--heads { height: 760px; }
 }
 .pipe > li.pipe__wide { grid-column: 1 / -1; }
-.pipe__wide .plot--square { max-width: 34rem; margin: 0 auto; }
-.fig--light .plot--build { height: 230px; display: block; }
-.fig--light .plot--lib { height: 360px; }
-.fig--light .plot--rocks { height: 330px; }
-.fig--light .plot--cases { height: 560px; }
 .btn--light { color: var(--paper-ink); border-color: #b9b9b2; font-size: 0.72rem; padding: 0.25rem 0.7rem; }
 .tablewrap { overflow-x: auto; margin-top: 0.6rem; }
 table.mini { border-collapse: collapse; font-family: var(--sans); font-size: 0.78rem; color: #2b2f2a; width: 100%; }
 table.mini th, table.mini td { padding: 0.3rem 0.5rem; border-bottom: 1px solid #deded8; text-align: left; }
 table.mini th small { color: #6b7068; font-weight: 400; }
-@media screen and (max-width: 760px) {
-  .fig--light .plot--lib { height: 620px; }
-  .fig--light .plot--rocks { height: 620px; }
-  .fig--light .plot--cases { height: 1000px; }
-}
 
 /* ===================================================== cross-page pass ======
    2026-11-17 consistency pass over every page. Small, shared rules that let
@@ -1030,14 +955,12 @@ img.rounded { border-radius: 0.4rem; }
 }
 
 /* montecarlo.html animated figures (assets/js/mc-story.js): one canvas engine, segmented controls */
-.fig--light canvas.story { display: block; width: 100%; touch-action: none; }
+.fig--light canvas.story { display: block; width: 100%; touch-action: pan-y pinch-zoom; }
 .fig--light .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid #b9b9b2; border-radius: 6px; overflow: hidden; }
 .fig--light .seg button { font: inherit; font-size: 0.72rem; background: #fff; color: var(--paper-ink); border: 0; border-right: 1px solid #b9b9b2; padding: 0.28rem 0.7rem; cursor: pointer; }
 .fig--light .seg button:last-child { border-right: 0; }
 .fig--light .seg button.on { background: var(--paper-ink); color: #fff; }
 .fig--light .fig-controls label { color: var(--paper-ink); }
-.fig--light .story-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-@media (max-width: 760px) { .fig--light .story-two { grid-template-columns: 1fr; } }
 .fig--light #f6b { cursor: grab; background: #fbfaf7; border-radius: 6px; }
 .fig--light #f8-table table { margin-top: 0.6rem; }
 .fig--light #f8-table tr.on td { background: #f0ebfa; font-weight: 600; }
@@ -1123,14 +1046,12 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 .edu__item { display: flex; align-items: center; gap: 0.7rem; color: var(--muted); text-align: left; transition: var(--transition); }
 .edu__item img { width: 2.6rem; height: 2.6rem; border-radius: 50%; object-fit: contain; flex: none; }
 .edu__item img[src*="caltech"] { background: #F37324; padding: 0.32rem; }
-.edu__item img[src*="gatech"] { background: #003057; padding: 0.42rem 0.36rem 0.36rem; }
+.edu__item img[src*="gatech"] { background: #003057; padding: 0.46rem; }
 .edu__item span { display: flex; flex-direction: column; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.03em; line-height: 1.45; }
 .edu__item b { color: var(--white); font-weight: 500; font-size: 0.78rem; }
 .edu__item:hover b { color: var(--accent); }
 
 /* melting.html */
-.kinds.kinds--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.kinds.kinds--2 canvas { height: 14rem; }
 .fig .m-slab { height: 12rem; }
 .fig .m-slab + .m-slab { margin-top: 0.4rem; }
 .fig .m-slab + .m-frac { margin-top: 0.8rem; }
@@ -1179,7 +1100,6 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
    The viewBox is now the ink box plus a 2-unit margin, so padding is uniform.
    Cup glyph (#i-cup): ink spans x 4–21, y 3–20 of a 24 box, i.e. half a unit
    right and up; shifted back so the latte hero cup is centred. */
-.edu__item img[src*="gatech"] { padding: 0.46rem; }
 .cafe-cup svg, .cup svg { transform: translate(-2.083%, 2.083%); }
 
 /* ---- mobile audit 2026-11 ----
@@ -1195,11 +1115,8 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
   --tap: 2.5rem;           /* 40 px minimum tap height */
 }
 
-/* Story canvases (instrument, montecarlo) were touch-action: none, so a
-   swipe over a full-width figure could not scroll the page. Vertical swipes
-   now scroll; a horizontal drag still reaches the canvas (rotates the 3-D
-   heads). Same rule entropy's MD cells and melting's viewers already use. */
-.fig--light canvas.story { touch-action: pan-y pinch-zoom; }
+/* Story canvases scroll on a vertical swipe (touch-action above); a horizontal
+   drag still reaches the canvas. */
 
 @media screen and (max-width: 640px) {
   /* bottom icon rail: 39 px -> 42 px targets */
@@ -1240,7 +1157,7 @@ a.pub__cover:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,
 
   /* running text below 14 px comes up to --fs-prose */
   .fig figcaption, .fig .cap, .cap-under, .gallery figcaption, .project__body p, .thread p,
-  .org p, .exp__item p, .pubs p, .kinds figcaption, .annot-key div, .pcard__sum,
+  .org p, .exp__item p, .pubs p, .kinds figcaption, .pcard__sum,
   .ex span, .callout > div, .caveats, .duo p, .models p { font-size: var(--fs-prose); }
 
   /* latte.html: 16 month bars + labels were 4 px wider than a 375 px
