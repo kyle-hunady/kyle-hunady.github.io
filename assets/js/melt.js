@@ -282,7 +282,7 @@
         capS.innerHTML = '<b>' + s.label + '</b>' + tt(s) + s.natoms + ' atoms · ' + s.cn.toFixed(1) + ' neighbors · ' + s.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(s) + ' ps shown';
         capL.innerHTML = '<b>' + l.label + '</b>' + tt(l) + l.natoms + ' atoms · ' + l.cn.toFixed(1) + ' neighbors · ' + l.vol_per_atom.toFixed(1) + ' Å³ per atom · ' + ps(l) + ' ps shown';
         var dv = (l.vol_per_atom / s.vol_per_atom - 1) * 100;
-        out.textContent = el + ' on melting: neighbors ' + s.cn.toFixed(1) + ' → ' + l.cn.toFixed(1) + '  ·  volume ' + (dv >= 0 ? '+' : '') + dv.toFixed(1) + ' %' +
+        out.textContent = el + ' on melting: neighbors ' + s.cn.toFixed(1) + ' → ' + l.cn.toFixed(1) + '  ·  volume ' + (dv >= 0 ? '+' : '') + dv.toFixed(1) + '%' +
           (dv < 0 ? '  ·  the liquid is denser than the crystal' : '') + '  ·  ' + VIEWHINT;
       }
       function draw() { vS.draw(); vL.draw(); }
@@ -597,7 +597,7 @@
           fmt: function (v) { return v.toFixed(3) + ' kB/atom'; } }
   };
   function pctOff(v, e) { return (v - e) / e * 100; }
-  function sgn(p) { return (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(0) + ' %'; }
+  function sgn(p) { return (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(0) + '%'; }
   function answer(root) {
     var rows = CMP.rows, out = $(root, '.fig-out'), n = rows.length;
     var idle = function () { return 'Hover or tap a row for its numbers.'; };
