@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Getting up to speed with Claude Code · Kyle Hunady</title>
+<title>Getting up to speed on a question with Claude Code · Kyle Hunady</title>
 <meta name="description" content="How I use Claude Code to learn quickly what the literature says on a question. The example: GRCop-42 or GRCop-84 for a 3-D printed rocket chamber liner.">
 <link rel="canonical" href="https://kyle-hunady.github.io/automation.html">
 <meta property="og:type" content="website">
@@ -40,12 +40,12 @@
   <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
 </svg>
 <nav aria-label="Sections">
-  <a href="index.html" aria-label="Home" title="Home"><svg><use href="index.html#i-home"/></svg></a>
-  <a href="index.html#about" aria-label="About" title="About"><svg><use href="index.html#i-user"/></svg></a>
-  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="index.html#i-flask"/></svg></a>
-  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="index.html#i-grid"/></svg></a>
-  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="index.html#i-users"/></svg></a>
-  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="index.html#i-mail"/></svg></a>
+  <a href="index.html" aria-label="Home" title="Home"><svg><use href="#i-home"/></svg></a>
+  <a href="index.html#about" aria-label="About" title="About"><svg><use href="#i-user"/></svg></a>
+  <a href="index.html#research" aria-label="Research" title="Research"><svg><use href="#i-flask"/></svg></a>
+  <a href="index.html#projects" aria-label="Projects" title="Projects"><svg><use href="#i-grid"/></svg></a>
+  <a href="index.html#outreach" aria-label="Outreach" title="Outreach"><svg><use href="#i-users"/></svg></a>
+  <a href="index.html#contact" aria-label="Contact" title="Contact"><svg><use href="#i-mail"/></svg></a>
 </nav>
 
 <header class="page__head">
@@ -68,7 +68,7 @@
     <p class="turn"><b>1</b> · Claude returns</p>
     <div class="out">
       <p>It searched for papers, read 20, and wrote the report as a short article: an answer, an introduction, one question per claim, figures re-plotted from the papers' own tables, the crystal structures of the two phases, and micrographs from the papers.</p>
-      <p>Its answer, shortened: GRCop-42 has about half the Cr2Nb of GRCop-84. It gives up some room-temperature strength for 5-15 % more thermal conductivity and about 20 % faster printing. Both alloys have been fired as printed liners, but never side by side.</p>
+      <p>Its answer, shortened: GRCop-42 has about half the Cr2Nb of GRCop-84. It gives up some room-temperature strength for 5-15% more thermal conductivity and about 20% faster printing. Both alloys have been fired as printed liners, but never side by side.</p>
       <div class="rframe"><div class="rframe__bar"><span>The report it built (version 1)</span><a href="lit/grcop-v1.html" target="_blank" rel="noreferrer">Open full page &#8599;</a></div><iframe src="lit/grcop-v1.html" title="The report it built (version 1)" loading="lazy"></iframe></div>
       <h3 class="ghead">The 20 papers it got and read</h3>
       <p class="glegend"><span class="route r-oa">open-access PDF</span> <span class="route r-lib">Caltech library or XML full text</span> · one line per paper on what it adds, from Claude's summary</p>
@@ -128,8 +128,7 @@
         <li>Microstructure: printed GRCop-42 starts with particles half the size of GRCop-84's (45 against 90 nm). After 900 °C for 5 h they are as large or larger, so the particle strengthening that small size adds is gone after a 900 °C cycle. This added a figure.</li>
         <li>Creep: version 1 quoted a refit that gave GRCop-42 almost four times the creep strain. The review reads NASA's original tests as "slightly inferior but comparable", so the report now gives both.</li>
       </ul>
-      <p><img src="assets/img/lit-grcop-seltzman2023-fig8.jpg" alt="Grid of electron micrographs: printed GRCop-84 and GRCop-42, each as printed and after 900 C for 5 hours. The precipitates are finest in as-printed GRCop-42 and coarsen after heat treatment." width="900" height="967" loading="lazy" style="max-width:520px;margin:0 auto"></p>
-      <p class="note">The new micrograph: both alloys, as printed and after 900 °C for 5 h (Seltzman &amp; Wukitch 2023, Fig. 8, CC BY-NC-ND 4.0). The verdict, GRCop-42, stands. The three papers still missing are process studies, and none is likely to change it.</p>
+      <figure><img src="assets/img/lit-grcop-seltzman2023-fig8.jpg" alt="Grid of electron micrographs: printed GRCop-84 and GRCop-42, each as printed and after 900 C for 5 hours. The precipitates are finest in as-printed GRCop-42 and coarsen after heat treatment." width="900" height="967" loading="lazy" style="max-width:520px;margin:0 auto"><figcaption class="note">The new micrograph: both alloys, as printed and after 900 °C for 5 h (Seltzman &amp; Wukitch 2023, Fig. 8, CC BY-NC-ND 4.0). The verdict, GRCop-42, stands. The three papers still missing are process studies, and none is likely to change it.</figcaption></figure>
       <div class="rframe"><div class="rframe__bar"><span>The updated report (version 2)</span><a href="lit/grcop.html" target="_blank" rel="noreferrer">Open full page &#8599;</a></div><iframe src="lit/grcop.html" title="The updated report (version 2)" loading="lazy"></iframe></div>
     </div>
 

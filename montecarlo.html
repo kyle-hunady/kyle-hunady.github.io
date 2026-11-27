@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monte Carlo photon model of a Mössbauer head · Kyle Hunady</title>
+<title>Simulating photon paths in a Mössbauer spectrometer · Kyle Hunady</title>
 <meta name="description" content="A Monte Carlo photon model of a backscatter Mössbauer head: how its layout trades count rate against line sharpness, and three head designs compared.">
 <link rel="canonical" href="https://kyle-hunady.github.io/montecarlo.html">
 <meta property="og:type" content="website">
@@ -67,6 +67,7 @@
 
     <figure class="fig hero-photo"><img src="assets/img/proj-montecarlo.png?v=20261119" alt="Model of the head: photons leave the cobalt-57 source as a cone, hit the sample, and some reach the detector; at right, the six iron lines the sample makes and the broader lines the detector records" width="1252" height="782">
       <figcaption><b>The model of the head.</b> Photons leave the ⁵⁷Co source, scatter off the sample and reach the detector at a spread of angles, which broadens the lines. All spectra on this page are simulated. The instrument itself is on <a href="instrument.html">Reading rocks with gamma rays</a>.</figcaption></figure>
+
     <div class="nbmap" role="navigation" aria-label="On this page"><ol class="parts">
       <li><a href="#read"><b>I. The input spectra</b><span>Where each mineral puts its lines</span></a></li>
       <li><a href="#trade"><b>II. Why photon angle matters</b><span>Count rate against line width</span></a></li>
@@ -82,16 +83,17 @@
     <div class="fig fig--light">
       <canvas id="f2" class="story" aria-label="Nuclear level splitting and spectra for six iron minerals and the α-Fe calibration standard, compared on one velocity axis"></canvas>
       <div class="fig-controls"><span class="seg" id="f2-min"></span></div>
-      <p class="cap"><span class="tag-model">model</span><b>The magnetic minerals have lines far from zero, where broadening is largest.</b> Six iron minerals and the α-Fe calibration standard. A field gradient splits a line into a doublet, and a magnetic field splits it into a sextet; the arrows match the lines they make. On the velocity axis, 1 mm/s is 48 neV. Line positions come from rover measurements [<a href="https://doi.org/10.1029/2005JE002584">Morris et al. 2006</a>].</p>
+      <p class="cap"><span class="tag-model">model</span><b>The magnetic minerals have lines far from zero, where broadening is largest.</b> Six iron minerals and the α-Fe calibration standard. A field gradient splits a line into a doublet, and a magnetic field splits it into a sextet; the arrows match the lines they make. On the velocity axis, 1 mm/s is 48 neV. Line positions come from rover measurements [<a href="https://doi.org/10.1029/2005JE002584" target="_blank" rel="noreferrer">Morris et al. 2006</a>].</p>
     </div>
+
     <h2 class="part" id="trade"><span>II</span>Why photon angle matters</h2>
-    <p class="lead-line">In this example, moving the source from 30 to 8 mm behind the aperture makes the count rate eight times higher and more than doubles the width of line 6, the outermost peak.</p>
+    <p class="lead-line">In this example, moving the source from 30 to 8 mm behind the aperture makes the count rate 8× higher and more than doubles the width of line 6, the outermost peak.</p>
     <p>For a photon leaving at angle θ to the drive axis, only the velocity component along its path, v cos θ, shifts its energy, so a line at v<sub>0</sub> appears at v<sub>0</sub>/cos θ. Photons leave at a range of angles, so the recorded lines spread outward, most of all far from zero velocity. I call the average fractional shift, ⟨1/cos θ⟩ − 1, the <i>stretch</i>. A closer source admits a wider range of angles. This figure uses a simplified geometry; section V compares the real designs.</p>
 
     <div class="fig fig--light">
       <canvas id="f5" class="story" aria-label="Side view of a source behind an aperture with rays at angle theta, the Monte Carlo angle distributions for the source 30 mm and 8 mm back, and an iron sextet through each"></canvas>
       <div class="fig-controls"><label>Photon angle (θ) <input type="range" id="f5-th" min="0" max="35" step="1" value="12"></label><span class="seg" id="f5-sb"></span><span class="seg" id="f5-zoom"></span></div>
-      <p class="cap"><span class="tag-model">simulated</span><b>A closer source collects eight times the counts and more than doubles the outer line width.</b> The slider sets the angle of one photon; the red arrow is its velocity component along the path. Upper right: how often photons at each angle reach the detector. Lower right: an α-Fe sextet (gray, lines 0.28 mm/s wide), whose line 6 widens to 0.31 mm/s at 30 mm (blue) and 0.73 mm/s at 8 mm (purple). Dashed red: the selected angle alone.</p>
+      <p class="cap"><span class="tag-model">simulated</span><b>A closer source collects 8× the counts and more than doubles the outer line width.</b> The slider sets the angle of one photon; the red arrow is its velocity component along the path. Upper right: how often photons at each angle reach the detector. Lower right: an α-Fe sextet (gray, lines 0.28 mm/s wide), whose line 6 widens to 0.31 mm/s at 30 mm (blue) and 0.73 mm/s at 8 mm (purple). Dashed red: the selected angle alone.</p>
     </div>
 
     <h2 class="part" id="pipeline"><span>III</span>Modeling the current head</h2>
@@ -99,7 +101,7 @@
     <p>I measured the assembled instrument from a photograph to capture the positions of the parts as built. This example uses the geometry from our September 2026 run on metallic iron (α-Fe), labeled ver2.</p>
 
     <ol class="pipe">
-      <li><figure class="fig fig--light"><span class="pipe__n">1</span><img src="assets/img/mc/pipe_annotated.jpg" alt="Top-down photo of the head with clicked landmarks: sample edge S1–S2, aperture cup C1–C2, detector D1–D2, enclosure corners" width="763" height="586" loading="lazy"><figcaption><b>Measure the geometry.</b> I mark the sample edge (S), aperture cup (C), detector face (D) and enclosure corners (E). A known length on the enclosure sets the scale for calculating angles and distances.</figcaption></figure></li>
+      <li><figure class="fig fig--light"><span class="pipe__n">1</span><img src="assets/img/mc/pipe_annotated.jpg" alt="Top-down photo of the head with clicked landmarks: sample edge S1–S2, aperture cup C1–C2, detector D1–D2, enclosure corners" width="763" height="586" loading="lazy" decoding="async"><figcaption><b>Measure the geometry.</b> I mark the sample edge (S), aperture cup (C), detector face (D) and enclosure corners (E). A known length on the enclosure sets the scale for calculating angles and distances.</figcaption></figure></li>
       <li><figure class="fig fig--light"><span class="pipe__n">2</span><canvas id="f6a" class="story" aria-label="Photo of the head with simulated photon paths animated on it"></canvas><figcaption><span class="tag-model">simulated</span><b>Check the paths on the photo.</b> Paths from a run of one million photons are drawn back onto the photo. A misplaced landmark shows up at once as a beam that misses the sample.</figcaption></figure></li>
       <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">3</span><canvas id="f6b" class="story" aria-label="3-D model of the same head: translucent lead collimator, the limiting opening, the source capsule and its active area, the detector housing and chip, with rays colored by their angle to the drive axis"></canvas><div class="fig-controls"><span class="seg" id="f6-head"></span></div><figcaption><span class="tag-model">simulated</span><b>Build the head in 3-D.</b> The collimator, source capsule and detector housing are see-through, so the parts that set the angles show: the 8 mm source, the 7.8 mm limiting opening and the 7.7 mm detector chip. Rays are colored by angle to the drive axis; gray rays are stopped by the opening. The switch changes the head in both the photo and the model.</figcaption></figure></li>
       <li class="pipe__wide"><figure class="fig fig--light"><span class="pipe__n">4</span><canvas id="fk" class="story" aria-label="Histogram of the angle between each detected photon and the source axis, and the kernel matrix that maps each true line position to the recorded velocity"></canvas><figcaption><span class="tag-model">simulated</span><b>Turn the angles into a kernel.</b> The 33,430 detected photons averaged 9.7° off the source axis, none past 22°, a stretch of 1.8%. On the right, each column starts at a true line position and shows where the drive would record it; the columns fan upward from the diagonal because 1/cos θ is at least 1. This matrix turns any input spectrum into the one the instrument would record.</figcaption></figure></li>
@@ -119,7 +121,7 @@
     <div class="fig fig--light">
       <canvas id="fc" class="story" aria-label="Four mineral pairs, each mixture before and after our head's broadening"></canvas>
       <div class="tablewrap"><table class="mini">
-        <thead><tr><th>pair (equal iron)<br><small>time factor · spectral difference retained</small></th><th>our head<br><small>1.8 % stretch</small></th><th>source 8 mm back<br><small>7.2 %</small></th></tr></thead>
+        <thead><tr><th>Pair (equal iron)<br><small>time factor · spectral difference retained</small></th><th>Our head<br><small>1.8% stretch</small></th><th>Source 8 mm back<br><small>7.2%</small></th></tr></thead>
         <tbody id="mc-cases-table"></tbody>
       </table></div>
       <p class="cap"><span class="tag-model">simulated</span><b>Hematite with magnetite is the hardest pair, and it stays separable with our head.</b> Hematite and magnetite have outer lines around ±8 mm/s that broaden and overlap. With our current design, this pair needs 1.65× the counting time and retains 82% of its spectral difference. With the source 8 mm back, it needs 5.3× the time and retains 34%. The doublets of olivine and pyroxene need only 1.09×. Blue is each mixture before broadening, purple what our head would record, and the shaded areas are the two minerals alone.</p>
@@ -161,7 +163,7 @@
       <p>The figures draw on work I presented at the November 2026 PICASSO review.</p>
     </details>
 
-    <div class="next-links"><a class="btn" href="instrument.html">The instrument</a><a class="btn" href="index.html#projects">All projects</a></div>
+    <div class="next-links"><a class="btn" href="instrument.html">Mössbauer instrument</a><a class="btn" href="index.html#projects">All projects</a></div>
   </div>
 </main>
 

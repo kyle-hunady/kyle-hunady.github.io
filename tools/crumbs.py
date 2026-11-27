@@ -24,7 +24,9 @@ PROJECTS = ("Projects", "index.html#projects")
 # page -> (section or None, short label for this page)
 PAGES = {
     "entropy.html": (RESEARCH, "Alloy entropy"),
+    "instrument.html": (RESEARCH, "Reading rocks with gamma rays"),
     "sinrg.html": (RESEARCH, "Reading rocks with gamma rays"),
+    "melting.html": (PROJECTS, "Faster entropy estimates"),
     "montecarlo.html": (PROJECTS, "Spectrometer modeling"),
     "battery.html": (PROJECTS, "Battery materials"),
     "automation.html": (PROJECTS, "Literature workflow"),
